@@ -1,0 +1,64 @@
+.btnStyle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  background-color: white;
+  width: 50%;
+  height: 30%;
+  z-index: -1;
+  border-bottom-left-radius: 20px;
+  border: 5px solid white;
+  border-bottom-width: 10px;
+}
+.btnStyle {
+  padding-left: 5px;
+  position: relative;
+  padding-block: 20px;
+  z-index: 10;
+  padding-right: 20px;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+.btnStyle::after {
+  content: "";
+  position: absolute;
+  bottom: 0%;
+  left: 20%;
+  background-color: white;
+  width: 50%;
+  height: 30%;
+  z-index: -1;
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 10px;
+}
+
+.mainContainer {
+  display: flex;
+  height: max-content;
+  position: fixed;
+  transform: translateX(0);
+  transition: all 0.3s linear 0.1s;
+  z-index: 100;
+  top: 10vh;
+}
+.closed {
+  transform: translateX(-13vw);
+}
+.listInit {
+  position: relative;
+  display: flex;
+  transform: translateY(0);
+  transition: transform 0.2s linear, opacity 0.2s linear, visibility 0.2s linear;
+  opacity: 1;
+  visibility: visible;
+}
+
+.listClickes {
+  position: relative;
+  display: flex; /* Keep the element in the layout but make it invisible */
+  transform: translateY(-20px);
+  transition: all 0.3s linear;
+  opacity: 0;
+  visibility: hidden;
+}

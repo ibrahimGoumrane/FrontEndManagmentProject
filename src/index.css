@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.kanbanBoard {
+  @apply bg-purple-600 text-black box-border;
+}
+.kanbanBoard::-webkit-scrollbar {
+  width: 4px;
+}
+.kanbanBoard::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+.kanbanBoard::-webkit-scrollbar-thumb {
+  @apply bg-purple-300 rounded-xl;
+}
+.task::-webkit-scrollbar {
+  width: 4px;
+}
+.task::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+.task::-webkit-scrollbar-thumb {
+  @apply bg-purple-500 rounded-xl;
+  cursor: pointer;
+}
+/* Scrollbar styles */
+.project-container::-webkit-scrollbar {
+  width: 8px;
+}
+.project-container::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+.project-container::-webkit-scrollbar-thumb {
+  @apply bg-purple-500 rounded-xl;
+}
+
+.project-container::-webkit-scrollbar-thumb:hover {
+  background: #7d13e0; /* Darker purple color on hover */
+}
+
+/* Container for the project card */
+.project-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Content that is initially visible */
+.project-card .project-content {
+  transition: opacity 0.3s ease-in-out;
+  height: 100%;
+  position: relative;
+}
+
+/* Button that is initially hidden */
+.project-card .project-button {
+  opacity: 0;
+  pointer-events: none; /* Prevents the button from being interacted with when hidden */
+  transition: opacity 0.3s ease-in-out;
+  z-index: 12;
+}
+
+.project-card:hover .project-content::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  @apply bg-purple-300/50;
+  z-index: 10;
+}
+
+.project-card:hover .project-button {
+  opacity: 1;
+  pointer-events: all; /* Allows the button to be interacted with when visible */
+}
