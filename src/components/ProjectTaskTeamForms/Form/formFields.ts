@@ -1,7 +1,7 @@
 import { Project, ProjectCreation } from "../../../models/Projects";
 import { Id, Task, TaskCreationCredentials } from "../../../models/Tasks";
 import { TeamCreation } from "../../../models/Teams";
-import { getProjectMembers } from "../../../network/ProjectApi";
+import { User } from "../../../models/Users";
 import { getProjectStatus, getTaskStatus } from "../../../network/StatusApi";
 
 interface Field<T> {
@@ -117,9 +117,16 @@ async function getProjectModificationFields(): Promise<
   return projectModificationFields;
 }
 async function getTaskModificationFields(
-  id: number | string
+  id: number | string,
+  members: User[]
 ): Promise<TaskModificationField[]> {
-  const ProjectUsers = await getProjectMembers(id);
+  const ProjectUsers = [
+    ...members,
+    {
+      id: 0,
+      name: "No Assignee",
+    },
+  ];
   const TaskStatus = await getTaskStatus(id);
   const formattedUsers = ProjectUsers.map((user) => ({
     label: user.name,
@@ -135,7 +142,7 @@ async function getTaskModificationFields(
       labelText: "Creator",
       labelFor: "creator",
       id: "creator",
-      name: "CreatorId",
+      name: "creatorId",
       type: "select",
       isRequired: false,
       placeholder: "Enter Task Creator ",
@@ -192,9 +199,9 @@ async function getTaskModificationFields(
   return taskModificationFields;
 }
 export {
-  teamCreationFields,
-  projectCreationFields,
-  taskCreationFields,
   getProjectModificationFields,
   getTaskModificationFields,
+  projectCreationFields,
+  taskCreationFields,
+  teamCreationFields,
 };

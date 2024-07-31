@@ -1,10 +1,3 @@
-import { ThemeProvider } from "@mui/material";
-import { purple } from "@mui/material/colors";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { createTheme } from "@mui/material/styles";
 import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 
@@ -20,38 +13,10 @@ interface SelectModelControl {
   [x: string]: unknown;
 }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: purple[500], // Change primary color to purple
-    },
-  },
-  components: {
-    MuiSelect: {
-      styleOverrides: {
-        select: {
-          backgroundColor: "white",
-          color: "slategray",
-        },
-        icon: {
-          color: "white",
-        },
-        outlined: {
-          borderColor: "white",
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: "black",
-          fontSize: "14px",
-          fontWeight: "300",
-        },
-      },
-    },
-  },
-});
+const fixedInputClass =
+  "rounded-md appearance-none  relative block w-full px-3 py-2  rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
+const fixedLabelClass =
+  "block text-gray-700 text-sm font-light font-semibold  text-white";
 
 export default function SelectUniqueModal({
   labelText,
@@ -64,36 +29,32 @@ export default function SelectUniqueModal({
 }: SelectModelControl) {
   const [items, setItems] = useState<number>(+value);
 
-  const handleChange = (event: SelectChangeEvent<typeof items>) => {
-    setItems(event.target.value as number);
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setItems(event.target.value as unknown as number);
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="my-2">
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" htmlFor={labelFor}>
-            {labelText}
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id={labelFor}
-            value={items}
-            label={labelText}
-            {...register(name)}
-            onChange={handleChange}
-          >
-            {options.map((option, index) => (
-              <MenuItem key={index} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-          {error && (
-            <span className="text-red-500 text-sm italic">{error}</span>
-          )}
-        </FormControl>
-      </div>
-    </ThemeProvider>
+    <div>
+      <label
+        htmlFor={labelFor}
+        className={` ${fixedLabelClass}  ${error ? "text-red-400" : ""}`}
+      >
+        {labelText}
+      </label>
+      <select
+        id={labelFor}
+        className={` ${fixedInputClass}  ${error ? "text-red-400" : ""}`}
+        value={items}
+        {...register(name)}
+        onChange={handleChange}
+      >
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {error && <span className="text-red-500 text-sm italic">{error}</span>}
+    </div>
   );
 }

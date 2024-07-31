@@ -12,6 +12,7 @@ import SelectUnique from "../../LoginSignUp/utils/SelectUnique";
 import { Button, Stack } from "@mui/material";
 import Input from "../../LoginSignUp/utils/Input";
 import CircularIndeterminate from "../../LoginSignUp/utils/spinner";
+import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
 
 interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => void;
@@ -31,6 +32,7 @@ export default function TaskModif({
   const [errorText, setErrorText] = useState<string | null>(null);
   const [fields, setFields] = useState<TaskModificationField[]>([]);
   const [editedSuccessfully, setEditedSuccessfully] = useState(false);
+  const { members } = useProject();
 
   const formOptions = {
     resolver: yupResolver(validationSchemaTaskModification),
@@ -38,8 +40,17 @@ export default function TaskModif({
 
   useEffect(() => {
     async function fetchFields() {
-      const fields = await getTaskModificationFields(projectId);
-      setFields(fields);
+      const fields = await getTaskModificationFields(projectId, members);
+      const selectFields: TaskModificationField[] = [];
+      const inputFields: TaskModificationField[] = [];
+      fields.forEach((field) => {
+        if (field.type === "select") {
+          selectFields.push(field);
+        } else {
+          inputFields.push(field);
+        }
+      });
+      setFields([...inputFields, ...selectFields]);
     }
     fetchFields();
   }, [projectId]);
@@ -89,31 +100,36 @@ export default function TaskModif({
         {editedSuccessfully && (
           <div className="text-green-500">Task Updated Successfully</div>
         )}
-        {fields.map((field) =>
-          field.type === "select" ? (
-            <SelectUnique
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              name={field.name}
-              register={register}
-              options={field.options ? field.options : []}
-              error={getErrorMessage(field.name as keyof TaskModification)}
-              value={task?.[field.name]?.toString() ?? ""}
-            />
-          ) : (
-            <Input
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              register={register}
-              placeholder={field.placeholder}
-              name={field.name}
-              type={field.type}
-              error={getErrorMessage(field.name as keyof TaskModification)}
-              value={task?.[field.name]?.toString() ?? ""}
-            />
-          )
-        )}
-        <Stack direction="row" spacing={2}>
+        <div className="grid space-y-5 mb-2">
+          {fields.map((field, index) =>
+            field.type === "select" ? (
+              <SelectUnique
+                key={index}
+                labelText={field.labelText}
+                labelFor={field.labelFor}
+                name={field.name}
+                register={register}
+                options={field.options ? field.options : []}
+                error={getErrorMessage(field.name as keyof TaskModification)}
+                value={task?.[field.name]?.toString() ?? ""}
+              />
+            ) : (
+              <Input
+                key={index}
+                labelText={field.labelText}
+                labelFor={field.labelFor}
+                register={register}
+                placeholder={field.placeholder}
+                name={field.name}
+                type={field.type}
+                error={getErrorMessage(field.name as keyof TaskModification)}
+                value={task?.[field.name]?.toString() ?? ""}
+              />
+            )
+          )}
+        </div>
+
+        <Stack direction="row" spacing={2} mt={"20px"}>
           <Button
             variant="contained"
             color="error"

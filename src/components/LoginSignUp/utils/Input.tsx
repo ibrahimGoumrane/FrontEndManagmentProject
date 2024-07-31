@@ -30,7 +30,7 @@ export default function Input({
   ...props
 }: InputProps) {
   return (
-    <div className="mb-5 w-full h-16 ">
+    <div className=" w-full h-16 ">
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${

@@ -14,7 +14,7 @@ export interface Task {
   updatedAt?: Date;
   parentTaskId?: number | null;
   description?: string | null;
-  CreatorId?: Id;
+  creatorId?: Id;
 }
 export interface TaskModification {
   name?: string | undefined;
@@ -23,7 +23,7 @@ export interface TaskModification {
   StoryPoint?: number | undefined;
   endDate?: Date | undefined;
   description?: string | undefined;
-  CreatorId?: Id;
+  creatorId?: Id;
 }
 
 export interface TaskCreationCredentials {

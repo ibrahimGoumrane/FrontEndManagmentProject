@@ -16,7 +16,6 @@ export interface CommentData {
   content: string;
   taskId: number;
   userId: number;
-  userName:string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
