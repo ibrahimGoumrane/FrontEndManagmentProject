@@ -21,10 +21,8 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   children,
 }) => {
   const [task, setTask] = useState<Task | null>(() => {
-    console.log(projectId)
     const tasksDataLS = localStorage.getItem(`tasks${projectId}`);
     const tasksData: Task[] = tasksDataLS ? JSON.parse(tasksDataLS) : [];
-    console.log(tasksData);
     if (tasksData) {
       const taskData = tasksData.find((task) => task.id === taskId);
       return taskData ? taskData : null;

@@ -39,7 +39,6 @@ export default function TaskModif({
 
   useEffect(() => {
     async function fetchFields() {
-      console.log(task?.projectId);
       const Foundedfields = await getTaskModificationFields(
         task?.projectId ?? "",
         members
@@ -118,6 +117,7 @@ export default function TaskModif({
                 labelText={field.labelText}
                 labelFor={field.labelFor}
                 name={field.name}
+            
                 register={register}
                 options={field.options ? field.options : []}
                 error={getErrorMessage(field.name as keyof TaskModification)}

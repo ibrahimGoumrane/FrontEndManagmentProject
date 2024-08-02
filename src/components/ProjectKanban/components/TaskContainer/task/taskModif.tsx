@@ -72,9 +72,6 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
     }
     fetchData();
   }, [task]);
-  useEffect(() => {
-    console.log(taskState, task);
-  }, [taskState]);
 
   const [showTaskModif, setShowTaskModif] = useState(true);
   const ToggleShowModif = () => setShowTaskModif(!showTaskModif);
@@ -88,7 +85,7 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
         <div className="bg-purple-400  p-10 rounded-l-md mt-10 flex items-start justify-start  flex-col h-full w-full ">
           <div className="flex flex-col items-start w-full gap-1 my-5 text-black text-nowrap text-left  basis-1/3">
             <h1 className="font-light  duration-150 italic ">
-              <div className="font-mono text-3xl  text-white relative task inline-block">
+              <div className="font-mono text-3xl  text-white relative effect inline-block">
                 <span>{taskState?.name}</span>
                 <span className="font-light text-sm absolute bottom-0 right-0  text-black">
                   {State?.name}
@@ -176,9 +173,11 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
                         )
                     )}
                 </div>
-                <button className="text-xs hover:bg-purple-100 duration-300 px-3 py-2 border-xl bg-white rounded-xl mt-2  text-purple-500 lowercase font-serif hover:cursor-pointer self-end">
-                  View All
-                </button>
+                {comments?.length && comments?.length > 0 && (
+                  <button className="text-xs hover:bg-purple-100 duration-300 px-3 py-2 border-xl bg-white rounded-xl mt-2  text-purple-500 lowercase font-serif hover:cursor-pointer self-end">
+                    View All
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -64,7 +64,6 @@ const TaskContainer = ({
     );
   }
   if (editMode) {
-    console.log(task);
     return (
       <TaskProvider
         projectId={project?.id || ""}

@@ -33,13 +33,9 @@ export default function SelectUniqueModal({
     const selectedValue = options.find(
       (option) => option.value === item
     )?.label;
-    console.log(options, item, selectedValue);
     setLabelvalue(selectedValue || "");
   }, [item, options]);
   const [updateValue, setUpdateValue] = useState<boolean>(false);
-  useEffect(() => {
-    console.log(name, updateValue, Labelvalue);
-  }, [options]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setItem(+event.target.value);

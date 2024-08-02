@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { useTask } from "../../../utils/Contexte/TaskContext/taskContexte";
 import { toDateTimeLocal } from "../../../utils/utility";
@@ -35,21 +35,8 @@ export default function Input({
   ...props
 }: InputProps) {
   const { task } = useTask();
-  const [item, setItem] = useState<string | number>(() => {
-    if (type === "number" && value === "") {
-      return 0;
-    } else if (type === "datetime-local" && value === "") {
-      return new Date().toISOString();
-    } else {
-      return value;
-    }
-  });
-  const [Labelvalue, setLabelvalue] = useState<string | number>(item);
-
-  useEffect(() => {
-    setLabelvalue(item);
-  }, [item]);
-
+  const valueState = useRef<string | number>(value);
+  const [Labelvalue, setLabelvalue] = useState<string | number>(value);
   const [updateValue, setUpdateValue] = useState<boolean>(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,20 +46,26 @@ export default function Input({
         const startDateValue = new Date(task?.startDate);
         const endDateValue = new Date(newValue);
         if (endDateValue < startDateValue) {
-          setItem(toDateTimeLocal(task?.startDate));
+          event.target.value = toDateTimeLocal(task?.startDate);
           return;
         }
       }
     }
-    setItem(newValue);
+    valueState.current = newValue;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      setLabelvalue(valueState.current);
       setUpdateValue(false);
     }
   };
+  useEffect(() => {
+    if (value) {
+      setLabelvalue(value);
+    }
+  }, [value]);
 
   return (
     <div className="w-full h-16">
@@ -103,7 +96,9 @@ export default function Input({
         type={type} // Apply the type prop to the input
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        value={item}
+        value={
+          updateValue || Labelvalue === "" ? valueState.current : Labelvalue
+        } // Use value instead of defaultValue
         className={`${stylesInput ? stylesInput : fixedInputClass} ${
           error ? "border-red-400" : ""
         } ${updateValue || !Labelvalue ? "" : "hidden"}`}
