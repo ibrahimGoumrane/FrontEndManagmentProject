@@ -42,7 +42,7 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
       }
     }
   }, [description]);
-  
+
   const updateTaskData = () => {
     updateTask({ description: description });
     setupdateDescription(false);
@@ -72,6 +72,10 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
     }
     fetchData();
   }, [task]);
+  useEffect(() => {
+    console.log(taskState, task);
+  }, [taskState]);
+
   const [showTaskModif, setShowTaskModif] = useState(true);
   const ToggleShowModif = () => setShowTaskModif(!showTaskModif);
   const onSubmitSuccessfull = (task: TaskModification) => {

@@ -1,7 +1,6 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import { TaskProvider } from "../../../../utils/Contexte/TaskContext/TaskContexteprovider.tsx";
 import { ColumnContainerProps } from "../../propsInterfaces/interfaces.ts";
 import TrashIcon from "../PlusIcon/Trash";
 import PlusIcon from "../PlusIcon/icons";
@@ -20,7 +19,6 @@ const ColumnContainer = ({
   deleteTask,
   updateTask,
   setUpdateMade,
-  ProjectId,
 }: ColumnContainerProps) => {
   //Storable state of our component
   const [name, setProjectName] = useState<string>(state.name);
@@ -132,29 +130,22 @@ const ColumnContainer = ({
         </div>
 
         {/* Column task container */}
-        <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto w-full">
+        <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto w-full task">
           <SortableContext items={TasksId}>
             {ownTasks?.map((task) => (
-              <TaskProvider
-                projectId={ProjectId || ""}
-                taskId={parseInt(task.id.toString().split("-")[1])}
+              <TaskContainer
                 key={task.id}
-              >
-                <TaskContainer
-                  key={task.id}
-                  task={task}
-                  deleteTask={deleteTask}
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  updateTask={updateTask}
-                  createMode={createMode}
-                  setCreateMode={setCreateMode}
-                  editMode={editModeTask}
-                  setEditMode={setEditModeTask}
-                  setUpdateMade={setUpdateMade}
-                  ProjectId={ProjectId}
-                />
-              </TaskProvider>
+                task={task}
+                deleteTask={deleteTask}
+                tasks={tasks}
+                setTasks={setTasks}
+                updateTask={updateTask}
+                createMode={createMode}
+                setCreateMode={setCreateMode}
+                editMode={editModeTask}
+                setEditMode={setEditModeTask}
+                setUpdateMade={setUpdateMade}
+              />
             ))}
           </SortableContext>
         </div>

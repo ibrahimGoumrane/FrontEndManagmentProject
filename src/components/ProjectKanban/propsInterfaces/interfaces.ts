@@ -12,7 +12,6 @@ interface ColumnContainerProps {
     setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
     setErrorMsg?: React.Dispatch<React.SetStateAction<string>>
   ) => void;
-  ProjectId: Id;
   updateStatus?: (
     id: Id,
     name: string,
@@ -64,6 +63,5 @@ interface TaskContainerProps {
   editMode: boolean;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setUpdateMade: React.Dispatch<React.SetStateAction<boolean>>;
-  ProjectId: Id;
 }
 export type { ColumnContainerProps, TaskContainerProps };

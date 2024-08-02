@@ -5,6 +5,8 @@ import { TaskContainerProps } from "../../propsInterfaces/interfaces.ts";
 import TrashIcon from "../PlusIcon/Trash";
 import "./taskContainer.css";
 import TaskModifModel from "./task/taskModif";
+import { TaskProvider } from "../../../../utils/Contexte/TaskContext/TaskContexteprovider.tsx";
+import { useProject } from "../../../../utils/Contexte/ProjectContext/projectContexte.ts";
 
 const TaskContainer = ({
   task,
@@ -17,12 +19,11 @@ const TaskContainer = ({
   editMode,
   setEditMode,
   setUpdateMade,
-}: // ProjectId,
-TaskContainerProps) => {
+}: TaskContainerProps) => {
   const [mouseIsOver, setMouseIsOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [name, setName] = useState(task.name);
-
+  const { project } = useProject();
   const {
     attributes,
     listeners,
@@ -63,7 +64,16 @@ TaskContainerProps) => {
     );
   }
   if (editMode) {
-    return <TaskModifModel setEditMode={setEditMode} />;
+    console.log(task);
+    return (
+      <TaskProvider
+        projectId={project?.id || ""}
+        taskId={parseInt(task.id.toString().split("-")[1])}
+        key={task.id}
+      >
+        <TaskModifModel setEditMode={setEditMode} />
+      </TaskProvider>
+    );
   }
 
   const removeCreateMode = () => {

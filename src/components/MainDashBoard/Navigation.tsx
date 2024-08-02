@@ -41,8 +41,8 @@ const MainNav = () => {
 
   if (showProjectCreation) {
     return (
-      <div className="fixed top-0 -left-20 h-screen w-[110vw] bg-purple-400/60  flex items-start pt-10 justify-center z-20 mx-0 ">
-        <div className="bg-white rounded flex items-start justify-start">
+      <div className="fixed top-0 left-0 h-screen w-[100vw] bg-purple-200  flex items-center  justify-center z-20 mx-0 ">
+        <div className="bg-white rounded flex items-start justify-start w-2/3">
           <ProjectCreationModal
             onCreatedSuccessfully={onCreatedSuccessfully}
             onCancelCreation={TogglePojectCreation}

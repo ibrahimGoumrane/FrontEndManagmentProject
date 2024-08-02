@@ -67,10 +67,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     async (newProject: Project | null) => {
       setProject(newProject);
       if (newProject) {
-        localStorage.setItem(`project${projectId}`, JSON.stringify(newProject));
-        await saveProjectData(newProject);
+        const Project = await saveProjectData(newProject);
+        localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
+        setProject(Project);
       } else {
         localStorage.removeItem(`project${projectId}`);
+        setProject(null);
       }
     },
     [projectId]
@@ -78,10 +80,8 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const updateTasks = useCallback(
     async (newTasks: Task[]) => {
-      setTask(newTasks);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
       await deleteTasks(projectId);
-      await Promise.all(
+      const tasksDb = await Promise.all(
         newTasks.map((t) =>
           saveTask({
             ...t,
@@ -89,15 +89,17 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           })
         )
       );
+      setTask(tasksDb);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(tasksDb));
     },
     [projectId]
   );
 
   const updateMembers = useCallback(
     async (newMembers: User[]) => {
-      setMembers(newMembers);
-      localStorage.setItem(`members${projectId}`, JSON.stringify(newMembers));
-      await updateProjectMembers(projectId, newMembers);
+      const members = await updateProjectMembers(projectId, newMembers);
+      setMembers(members);
+      localStorage.setItem(`members${projectId}`, JSON.stringify(members));
     },
     [projectId]
   );
@@ -129,12 +131,9 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const updateTaskStatus = useCallback(
     async (newTaskStatus: TaskStatus[]) => {
-      setTaskStatus(newTaskStatus);
-      localStorage.setItem(
-        `taskStatus${projectId}`,
-        JSON.stringify(newTaskStatus)
-      );
-      await saveTaskStatus(newTaskStatus);
+        const taskS = await saveTaskStatus(projectId, newTaskStatus);
+        setTaskStatus(taskS);
+        localStorage.setItem(`taskStatus${projectId}`, JSON.stringify(taskS));
     },
     [projectId]
   );

@@ -21,9 +21,10 @@ export const getTaskStatus = async (projectId: Id): Promise<TaskStatus[]> => {
   return response;
 };
 export const saveTaskStatus = async (
+  projectId: Id,
   data: TaskStatus[]
 ): Promise<TaskStatus[]> => {
-  const response = await fetchData(`/api/status/tasks`, {
+  const response = await fetchData(`/api/status/tasks/${projectId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

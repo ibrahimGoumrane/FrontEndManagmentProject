@@ -47,7 +47,7 @@ export default function ProjectCreationModal({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex items-center justify-start  gap-10 h-full w-full "
+      className="flex items-center justify-start gap-10 h-full w-full "
     >
       <div className="flex items-start justify-start h-full w-1/2">
         <img
@@ -58,7 +58,7 @@ export default function ProjectCreationModal({
       </div>
       <div className="w-[50%] px-10  ">
         <div>
-          <h1 className="text-3xl font-serif text-nowrap font-bold text-center uppercase text-purple-900/90">
+          <h1 className="text-3xl font-serif text-nowrap font-bold text-center uppercase text-purple-900/90 mb-5">
             Create a new Project
           </h1>
         </div>

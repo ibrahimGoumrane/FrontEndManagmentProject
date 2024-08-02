@@ -46,7 +46,6 @@ const MainTaskData = ({
           onSubmitSuccessfull={onSubmitSuccessfull}
           onTaskModifError={() => {}}
           setEditMode={setEditMode}
-          projectId={0}
         />
       </div>
     </div>

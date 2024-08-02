@@ -10,14 +10,13 @@ import {
 import { TaskModification, Task } from "../../../models/Tasks";
 import SelectUnique from "../../LoginSignUp/utils/SelectUnique";
 import { Button, Stack } from "@mui/material";
-import Input from "../../LoginSignUp/utils/Input";
+import Input from "../../LoginSignUp/utils/InputProject";
 import CircularIndeterminate from "../../LoginSignUp/utils/spinner";
 import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
 
 interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => void;
   onTaskModifError: (error: UnauthorizedError) => void;
-  projectId: number | string;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   task: Task | null;
 }
@@ -26,7 +25,6 @@ export default function TaskModif({
   onSubmitSuccessfull,
   onTaskModifError,
   setEditMode,
-  projectId,
   task: taskState,
 }: TaskModifProps) {
   const [task, setTask] = useState(taskState);
@@ -41,10 +39,14 @@ export default function TaskModif({
 
   useEffect(() => {
     async function fetchFields() {
-      const fields = await getTaskModificationFields(projectId, members);
+      console.log(task?.projectId);
+      const Foundedfields = await getTaskModificationFields(
+        task?.projectId ?? "",
+        members
+      );
       const selectFields: TaskModificationField[] = [];
       const inputFields: TaskModificationField[] = [];
-      fields.forEach((field) => {
+      Foundedfields.forEach((field) => {
         if (field.type === "select") {
           selectFields.push(field);
         } else {
@@ -54,7 +56,7 @@ export default function TaskModif({
       setFields([...inputFields, ...selectFields]);
     }
     fetchFields();
-  }, [projectId]);
+  }, [members, task?.projectId]);
 
   const {
     register,
@@ -64,7 +66,7 @@ export default function TaskModif({
 
   async function onSubmit(credentials: TaskModification) {
     try {
-      console.log(credentials)
+      console.log(credentials);
       // onSubmitSuccessfull(credentials);
       setEditedSuccessfully(true);
       setErrorText("");

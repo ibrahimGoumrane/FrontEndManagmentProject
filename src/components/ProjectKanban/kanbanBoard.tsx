@@ -6,7 +6,9 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { Stack } from "@mui/material";
+import { Button as FbButton } from "flowbite-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { TaskStatus } from "../../models/Status";
 import { Id, Task } from "../../models/Tasks";
 import ColumnContainer from "./components/ColumnContainer/ColumnContainer";
@@ -25,9 +27,6 @@ import {
   onDragOver,
   onDragStart,
 } from "./utility/draggingFunctions";
-import { Stack } from "@mui/material";
-import { Button as FbButton } from "flowbite-react";
-import { TaskProvider } from "../../utils/Contexte/TaskContext/TaskContexteprovider";
 
 interface KanbanBoardProps {
   projectId: Id;
@@ -124,7 +123,6 @@ const KanbanBoard = ({
                     deleteTask={deleteTask}
                     updateTask={updateTask}
                     setUpdateMade={setUpdateMade}
-                    ProjectId={projectId}
                   />
                 ))}
               </SortableContext>
@@ -148,15 +146,9 @@ const KanbanBoard = ({
                 deleteTask={deleteTask}
                 updateTask={updateTask}
                 setUpdateMade={setUpdateMade}
-                ProjectId={projectId}
               />
             )}
             {activeTask && (
-              <TaskProvider
-                projectId={projectId || ""}
-                taskId={parseInt(activeTask.id.toString().split("-")[1])}
-                key={activeTask.id}
-              >
                 <TaskCard
                   key={activeTask.id}
                   task={activeTask}
@@ -169,9 +161,7 @@ const KanbanBoard = ({
                   editMode={false}
                   setEditMode={() => {}}
                   setUpdateMade={setUpdateMade}
-                  ProjectId={projectId}
                 />
-              </TaskProvider>
             )}
           </DragOverlay>
         </DndContext>

@@ -67,7 +67,7 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
             name={field.name}
             register={register}
             placeholder={field.placeholder}
-            autoComplete = {field.autoComplete}
+            autoComplete={field.autoComplete}
             error={errors[field.name]?.message}
             type={field.type}
           />

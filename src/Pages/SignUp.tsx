@@ -21,7 +21,7 @@ const Login = ({ Successfull }: SignUp) => {
   };
   return (
     <>
-      <main className="h-screen w-1/2 mx-auto flex items-center justify-start mt-32 flex-col ">
+      <main className="max-h-screen w-1/2 mx-auto flex items-center justify-start mt-5 flex-col ">
         <Header heading="My Site" Img={img()} extra="Create an account" />
         <SignUpForm onSignUpSuccessfull={handleSignUpSuccess} />
       </main>

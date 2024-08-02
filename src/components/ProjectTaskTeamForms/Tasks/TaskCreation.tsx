@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { UnauthorizedError } from "../../../errors/http_errors";
 import { Task, TaskCreationCredentials } from "../../../models/Tasks";
 import { createTask } from "../../../network/TasksApi";
-import Input from "../../LoginSignUp/utils/Input";
+import Input from "../../LoginSignUp/utils/InputProject";
 import { projectCreationFields } from "../Form/formFields";
 import { validationSchemaTaskCreation } from "../Form/ValidationSchema";
 interface TaskCreationProps {

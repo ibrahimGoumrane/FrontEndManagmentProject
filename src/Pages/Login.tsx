@@ -23,7 +23,7 @@ const Login = ({ Successfull }: login) => {
   };
   return (
     <>
-      <main className="h-screen w-1/2 mx-auto flex items-center justify-start mt-32 flex-col ">
+      <main className="max-h-screen w-1/2 mx-auto flex items-center justify-start mt-32 flex-col ">
         <Header
           heading="Login to your account"
           Img={img()}
