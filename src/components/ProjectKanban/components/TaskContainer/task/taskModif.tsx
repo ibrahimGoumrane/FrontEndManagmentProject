@@ -16,14 +16,13 @@ interface taskModifProps {
 
 const TaskModifModel = ({ setEditMode }: taskModifProps) => {
   const { user } = useUser();
-  const { comments } = useTask();
-
-  const { updateTask, task } = useTask();
+  const { comments, updateTask, task } = useTask();
   const { taskStatus } = useProject();
 
   const [taskState, setTasks] = useState(task);
   const [userData, setUserData] = useState<User | null>(null);
   const [description, setDescription] = useState("");
+  const [updateDescription, setupdateDescription] = useState<boolean>(false);
   const saveDescriptionButton = useRef<HTMLDivElement | null>(null);
 
   const DescriptionHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -43,8 +42,10 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
       }
     }
   }, [description]);
+  
   const updateTaskData = () => {
     updateTask({ description: description });
+    setupdateDescription(false);
     if (saveDescriptionButton.current) {
       saveDescriptionButton.current.style.display = "none";
       setDescription("");
@@ -58,19 +59,19 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
   }, [taskState, taskStatus]);
   useEffect(() => {
     async function fetchData() {
-      setTasks(taskState);
-      if (taskState?.AssigneeId !== null) {
-        if (taskState?.AssigneeId !== undefined) {
-          const userInfo = await getUserData(taskState.AssigneeId);
+      setTasks(task);
+      if (task?.AssigneeId !== null) {
+        if (task?.AssigneeId !== undefined) {
+          const userInfo = await getUserData(task.AssigneeId);
           setUserData(userInfo);
         }
       }
-      if (taskState?.description) {
-        setDescription(taskState?.description);
+      if (task?.description) {
+        setDescription(task?.description);
       }
     }
     fetchData();
-  }, [taskState]);
+  }, [task]);
   const [showTaskModif, setShowTaskModif] = useState(true);
   const ToggleShowModif = () => setShowTaskModif(!showTaskModif);
   const onSubmitSuccessfull = (task: TaskModification) => {
@@ -100,14 +101,28 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
             </h1>
 
             <div className="flex items-start justify-start flex-col  w-full">
-              <span className="text-2xl italic font-serif font-light text-white  mb-1">
+              <span className="text-2xl italic font-serif font-light text-white  mb-1 inline-block">
                 Description
               </span>
-              <div className="w-full rounded-md  relative">
+              <div
+                className={`text-black  font-mono text-md relative  flex items-start p-2 justify-start w-full bg-white rounded-md after:border after:border-white after:rounded-md after:hidden min-h-20 after:absolute after:content-['Edit'] after:top-0 after:left-0 after:w-full after:h-full after:hover:flex after:text-purple-200 after:items-center after:justify-center after:bg-black/40  after:transition-all after:duration-300
+                  ${updateDescription ? "hidden" : ""}`}
+                onClick={() => setupdateDescription(true)}
+              >
+                <span className="italic lowercase font-bold text-purple-500">
+                  {taskState?.description}
+                </span>
+              </div>
+              <div
+                className={
+                  "w-full rounded-md  relative " +
+                  `${updateDescription ? "" : "hidden"}`
+                }
+              >
                 <textarea
                   name=""
                   id=""
-                  value={description}
+                  value={description ? description : ""}
                   onChange={DescriptionHandler}
                   placeholder="Enter a description to Your project"
                   className="w-full h-32 rounded-md resize-none"
@@ -123,7 +138,7 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
                     variant="contained"
                     color="success"
                     type="submit"
-                    className="w-full text-nowrap h-full"
+                    className="w-full text-nowrap h-full z-30"
                     onClick={updateTaskData}
                   >
                     Save Description
@@ -133,7 +148,7 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
             </div>
           </div>
           <div className="basis-2/3 w-full h-full  flex flex-col">
-            <h1 className="font-mono text-3xl italic  text-white relative task">
+            <h1 className="font-mono text-3xl italic  text-white relative task inline-block">
               Comments
             </h1>
             <div className="h- flex items-start flex-col basis-5/6 justify-start space-y-5 mt-2">

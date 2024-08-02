@@ -9,7 +9,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   const user = localStorage.getItem("userdata");
   if (!user) {
     // If the user is not authenticated, redirect to the login page
-    return <Navigate to="*" />;
+    return <Navigate to="/" />;
   }
 
   // If the user is authenticated, render the element

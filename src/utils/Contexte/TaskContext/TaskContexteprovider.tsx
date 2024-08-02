@@ -43,7 +43,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           ...task,
           ...newTask,
         };
-        console.log(TaskInfo);
         setTask(TaskInfo);
         await saveTask(TaskInfo);
         AddTaskToLocalStorage(projectId, taskId, TaskInfo);
@@ -55,7 +54,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   const updateComments = useCallback(
     async (comments: CommentData[]) => {
       setComments(comments);
-      console.log(comments);
       localStorage.setItem(`comments${taskId}`, JSON.stringify(comments));
       if (comments)
         await Promise.all(comments.map((comment) => saveComment(comment)));

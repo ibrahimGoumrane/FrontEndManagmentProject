@@ -1,24 +1,13 @@
 import { MdDelete, MdOutlinePublishedWithChanges } from "react-icons/md";
 import Spinner from "../../../../LoginSignUp/utils/spinner";
 import { CommentData } from "../../../../../models/Comment";
-import { useCallback } from "react";
+import { formatDateTime } from "../../../../../utils/utility.ts";
 interface commentDeleteInterface {
   comment: CommentData;
   userId: number;
 }
 
 function CommentDU({ comment, userId }: commentDeleteInterface) {
-  const formatDateTime = useCallback((dateString: string) => {
-    const date = new Date(dateString);
-
-    const formattedDate = date.toLocaleDateString(); // You can pass options to format the date
-    const formattedTime = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }); // Format time as HH:MM
-    console.log(formattedTime);
-    return `${formattedDate} at ${formattedTime}`;
-  }, []);
   return (
     <div className="w-full h-full ">
       <div className="flex items-center justify-start  w-full bg-white h-16 rounded-2xl">

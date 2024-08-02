@@ -18,17 +18,18 @@ interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => void;
   onTaskModifError: (error: UnauthorizedError) => void;
   projectId: number | string;
-  onCancelCreation: () => void;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   task: Task | null;
 }
 
 export default function TaskModif({
   onSubmitSuccessfull,
   onTaskModifError,
-  onCancelCreation,
+  setEditMode,
   projectId,
-  task,
+  task: taskState,
 }: TaskModifProps) {
+  const [task, setTask] = useState(taskState);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [fields, setFields] = useState<TaskModificationField[]>([]);
   const [editedSuccessfully, setEditedSuccessfully] = useState(false);
@@ -63,7 +64,8 @@ export default function TaskModif({
 
   async function onSubmit(credentials: TaskModification) {
     try {
-      onSubmitSuccessfull(credentials);
+      console.log(credentials)
+      // onSubmitSuccessfull(credentials);
       setEditedSuccessfully(true);
       setErrorText("");
     } catch (error) {
@@ -76,10 +78,16 @@ export default function TaskModif({
       console.error(error);
     }
   }
+
   function getErrorMessage(
     fieldName: keyof TaskModification
   ): string | undefined {
     return errors[fieldName]?.message;
+  }
+
+  function onCancelCreation() {
+    setTask(taskState);
+    setEditMode(false);
   }
 
   if (fields.length === 0) {

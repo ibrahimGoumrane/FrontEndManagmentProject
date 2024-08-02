@@ -23,6 +23,7 @@ export function createTask(
     id: `task-${tasks.length + 1}`,
     name: "",
     statusId: statusId,
+    startDate: new Date().toISOString(),
   };
   setTasks([...tasks, taskToAdd]);
 }
