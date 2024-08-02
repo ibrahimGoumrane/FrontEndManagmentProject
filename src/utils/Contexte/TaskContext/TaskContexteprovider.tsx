@@ -5,9 +5,9 @@ import {
   getCommentByTaskId,
   updateComment as saveComment,
 } from "../../../network/CommentApi";
-import { updateTask as saveTask } from "../../../network/TasksApi";
 import { TaskContext } from "./taskContexte";
 import { AddTaskToLocalStorage, clearLocalStorage } from "./utils/utilities";
+import { useProject } from "../ProjectContext/projectContexte";
 
 interface TaskProviderProps {
   projectId: Id;
@@ -20,6 +20,8 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   taskId,
   children,
 }) => {
+  const { tasks, updateTasks } = useProject();
+
   const [task, setTask] = useState<Task | null>(() => {
     const tasksDataLS = localStorage.getItem(`tasks${projectId}`);
     const tasksData: Task[] = tasksDataLS ? JSON.parse(tasksDataLS) : [];
@@ -43,7 +45,10 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           ...newTask,
         };
         setTask(TaskInfo);
-        await saveTask(TaskInfo);
+        updateTasks([
+          ...tasks.filter((task) => task.id !== taskId),
+          TaskInfo,
+        ]);
         AddTaskToLocalStorage(projectId, taskId, TaskInfo);
       }
     },

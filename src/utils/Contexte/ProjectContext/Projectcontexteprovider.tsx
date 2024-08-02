@@ -79,7 +79,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
 
   const updateTasks = useCallback(
-    async (newTasks: Task[]) => {
+    async (newTasks: Task[] ) => {
       await deleteTasks(projectId);
       const tasksDb = await Promise.all(
         newTasks.map((t) =>

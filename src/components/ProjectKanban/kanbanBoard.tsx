@@ -149,19 +149,19 @@ const KanbanBoard = ({
               />
             )}
             {activeTask && (
-                <TaskCard
-                  key={activeTask.id}
-                  task={activeTask}
-                  deleteTask={deleteTask}
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  updateTask={updateTask}
-                  createMode={false}
-                  setCreateMode={() => {}}
-                  editMode={false}
-                  setEditMode={() => {}}
-                  setUpdateMade={setUpdateMade}
-                />
+              <TaskCard
+                key={activeTask.id}
+                task={activeTask}
+                deleteTask={deleteTask}
+                tasks={tasks}
+                setTasks={setTasks}
+                updateTask={updateTask}
+                createMode={false}
+                setCreateMode={() => {}}
+                editMode={false}
+                setEditMode={() => {}}
+                setUpdateMade={setUpdateMade}
+              />
             )}
           </DragOverlay>
         </DndContext>

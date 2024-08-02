@@ -1,18 +1,16 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UnauthorizedError } from "../../../errors/http_errors";
-import { validationSchemaTaskModification } from "../Form/ValidationSchema";
+import { Task, TaskModification } from "../../../models/Tasks";
+import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
+import Input from "../../LoginSignUp/utils/InputProject";
+import SelectUnique from "../../LoginSignUp/utils/SelectUnique";
+import CircularIndeterminate from "../../LoginSignUp/utils/spinner";
 import {
   getTaskModificationFields,
   TaskModificationField,
 } from "../Form/formFields";
-import { TaskModification, Task } from "../../../models/Tasks";
-import SelectUnique from "../../LoginSignUp/utils/SelectUnique";
-import { Button, Stack } from "@mui/material";
-import Input from "../../LoginSignUp/utils/InputProject";
-import CircularIndeterminate from "../../LoginSignUp/utils/spinner";
-import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
 
 interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => void;
@@ -32,10 +30,6 @@ export default function TaskModif({
   const [fields, setFields] = useState<TaskModificationField[]>([]);
   const [editedSuccessfully, setEditedSuccessfully] = useState(false);
   const { members } = useProject();
-
-  const formOptions = {
-    resolver: yupResolver(validationSchemaTaskModification),
-  };
 
   useEffect(() => {
     async function fetchFields() {
@@ -61,12 +55,34 @@ export default function TaskModif({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TaskModification>(formOptions);
+  } = useForm<TaskModification>();
 
   async function onSubmit(credentials: TaskModification) {
     try {
       console.log(credentials);
-      // onSubmitSuccessfull(credentials);
+      //credentials Test
+
+      const savedData: TaskModification = {};
+      console.log(credentials.AssigneeId == 0);
+      if (!credentials.StoryPoint) {
+        savedData.StoryPoint = undefined;
+      } else {
+        savedData.StoryPoint = +credentials.StoryPoint;
+      }
+      if (credentials.AssigneeId == 0 || !credentials.AssigneeId) {
+        savedData.AssigneeId = undefined;
+      } else {
+        savedData.AssigneeId = +credentials.AssigneeId;
+      }
+      if (credentials.creatorId == 0 || !credentials.creatorId) {
+        savedData.creatorId = undefined;
+      } else {
+        savedData.creatorId = +credentials.creatorId ?? 0;
+      }
+      savedData.name = credentials.name;
+      savedData.statusId = credentials.statusId && +credentials.statusId;
+      savedData.endDate = credentials.endDate ? new Date(credentials.endDate) : undefined;
+      onSubmitSuccessfull(savedData);
       setEditedSuccessfully(true);
       setErrorText("");
     } catch (error) {
@@ -117,7 +133,6 @@ export default function TaskModif({
                 labelText={field.labelText}
                 labelFor={field.labelFor}
                 name={field.name}
-            
                 register={register}
                 options={field.options ? field.options : []}
                 error={getErrorMessage(field.name as keyof TaskModification)}

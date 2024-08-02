@@ -25,19 +25,11 @@ const validationSchemaProjectModification = Yup.object().shape({
 });
 
 // Validation schema for task modification
-const validationSchemaTaskModification = Yup.object().shape({
-  name: Yup.string(),
-  AssigneeId: Yup.number(),
-  statusId: Yup.number(),
-  StoryPoint: Yup.number(),
-  endDate: Yup.date(),
-  description : Yup.string(),
-});
+
 
 export {
   validationSchemaTeamCreation,
   validationSchemaProjectCreation,
   validationSchemaTaskCreation,
   validationSchemaProjectModification,
-  validationSchemaTaskModification,
 };
