@@ -19,9 +19,9 @@ export const UserContext = createContext<
           assigned: Task[];
           created: Task[];
         },
-        saveToDb: boolean
+        saveToDb?: boolean
       ) => Promise<void>;
-      updateProjects: (projects: Project[], saveToDb: boolean) => Promise<void>;
+      updateProjects: (projects: Project[], saveToDb?: boolean) => Promise<void>;
       resetData: () => void;
       clearUserTasks: () => void;
     }

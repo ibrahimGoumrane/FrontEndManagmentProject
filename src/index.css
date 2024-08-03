@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .kanbanBoard {
-  @apply bg-purple-600 text-black box-border;
+  @apply text-black box-border;
 }
 .kanbanBoard::-webkit-scrollbar {
   width: 4px;

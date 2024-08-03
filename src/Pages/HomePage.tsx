@@ -9,31 +9,36 @@ const HomePage = () => {
       name: "Start Now",
       active: false,
       href: "/home",
-      type:"simple"
+      type: "simple",
     },
     {
       name: "About",
       active: false,
       href: "/about",
-       type:"simple"
+      type: "simple",
     },
     {
       name: "Services",
       active: false,
       href: "/services",
-       type:"simple"
+      type: "simple",
     },
     {
       name: "Contact",
       active: false,
       href: "/contact",
-       type:"simple"
+      type: "simple",
     },
   ]);
 
   return (
     <>
-      <Header itemLinks={Navigation} setItemLinks={setNavigation} />
+      <Header
+        itemLinks={Navigation}
+        setFixed={true}
+        setItemLinks={setNavigation}
+        TogglePojectCreation={() => {}}
+      />
       <HomePageNotLoggedIn />
       <Footer />
     </>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Header from "../MainNav/Header";
-import SecondNav from "../SecondNav/SecondNav";
 import ProjectCreationModal from "../ProjectTaskTeamForms/Project/ProjectCreation";
 import { Project } from "../../models/Projects";
 import { useCallback } from "react";
@@ -52,14 +51,11 @@ const MainNav = () => {
     );
   }
   return (
-    <>
-      <Header
-        itemLinks={HeaderNavigation}
-        setItemLinks={setHeaderNavigation}
-        TogglePojectCreation={TogglePojectCreation}
-      />
-      <SecondNav TogglePojectCreation={TogglePojectCreation} />
-    </>
+    <Header
+      itemLinks={HeaderNavigation}
+      setItemLinks={setHeaderNavigation}
+      TogglePojectCreation={TogglePojectCreation}
+    />
   );
 };
 

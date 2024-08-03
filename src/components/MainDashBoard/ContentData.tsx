@@ -7,7 +7,7 @@ const MainData = () => {
   const { projects, activeTasks } = useUser();
 
   return (
-    <main className="w-[83vw] fixed translate-x-[10vw] translate-y-[10vh] -z-30">
+    <main className="w-full h-full -z-10 ">
       <div>
         <div className="w-full h-auto flex items-center justify-start ml-16">
           <h1 className="font-mono font-bold  text-2xl text-black py-5 capitalize">

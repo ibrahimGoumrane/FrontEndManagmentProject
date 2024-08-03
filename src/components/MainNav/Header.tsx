@@ -11,12 +11,14 @@ export interface NavBarProps {
   itemLinks: dataProps[];
   setItemLinks: (links: dataProps[]) => void;
   TogglePojectCreation: () => void;
+  setFixed?: boolean;
 }
 
 const Header = ({
   itemLinks,
   setItemLinks,
   TogglePojectCreation,
+  setFixed = false,
 }: NavBarProps) => {
   const { user } = useUser();
   const windowWidth = useRef(window.innerWidth);
@@ -45,7 +47,7 @@ const Header = ({
   }, [isMobile, isNavOpened]);
 
   return (
-    <header className="fixed w-full  max-h-[15vh] z-20 pt-5">
+    <header className={"w-full z-20 pt-5 " + `${setFixed ? "fixed" : ""}`}>
       <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
         <div className="flex flex-wrap items-center justify-evenly px-10  mx-auto w-full">
           <Logo />
@@ -74,11 +76,19 @@ const Header = ({
           {isMobile ? (
             isNavOpened ? (
               <div className="flex flex-col items-center w-full mt-4">
-                <Navbar NavLinks={itemLinks} setItemLinks={setItemLinks} TogglePojectCreation={TogglePojectCreation} />
+                <Navbar
+                  NavLinks={itemLinks}
+                  setItemLinks={setItemLinks}
+                  TogglePojectCreation={TogglePojectCreation}
+                />
               </div>
             ) : null
           ) : (
-            <Navbar NavLinks={itemLinks} setItemLinks={setItemLinks} TogglePojectCreation={TogglePojectCreation} />
+            <Navbar
+              NavLinks={itemLinks}
+              setItemLinks={setItemLinks}
+              TogglePojectCreation={TogglePojectCreation}
+            />
           )}
         </div>
       </nav>

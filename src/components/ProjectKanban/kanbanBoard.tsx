@@ -92,8 +92,8 @@ const KanbanBoard = ({
   );
 
   return (
-    <main className="absolute left-0 top-12 min-h-full flex items-start flex-col gap-5 justify-between mt-10  kanbanBoard">
-      <div className="w-[80vw] h-max flex items-center justify-between overflow-x-auto ml-10 pb-2 overflow-y-hidden kanbanBoard">
+    <main className=" flex items-start flex-col gap-5 justify-between  kanbanBoard ">
+      <div className="max-w-[100%] flex items-start justify-start overflow-x-auto  overflow-y-hidden kanbanBoard pb-2">
         <DndContext
           sensors={sensors}
           onDragStart={(event) =>
@@ -104,28 +104,26 @@ const KanbanBoard = ({
           }
           onDragOver={(event) => onDragOver(event, setTasks)}
         >
-          <div className="m-auto flex gap-4">
-            <div className="flex gap-4">
-              <SortableContext items={statusId}>
-                {status.map((stat) => (
-                  <ColumnContainer
-                    key={stat.id}
-                    state={stat}
-                    deleteStatus={deleteStatus}
-                    updateStatus={updateStatus}
-                    createTask={createTask}
-                    status={status}
-                    setStatus={setStatus}
-                    tasks={tasks}
-                    ownTasks={tasks.filter((task) => task.statusId === stat.id)}
-                    setTasks={setTasks}
-                    deleteTask={deleteTask}
-                    updateTask={updateTask}
-                    setUpdateMade={setUpdateMade}
-                  />
-                ))}
-              </SortableContext>
-            </div>
+          <div className="flex gap-4">
+            <SortableContext items={statusId}>
+              {status.map((stat) => (
+                <ColumnContainer
+                  key={stat.id}
+                  state={stat}
+                  deleteStatus={deleteStatus}
+                  updateStatus={updateStatus}
+                  createTask={createTask}
+                  status={status}
+                  setStatus={setStatus}
+                  tasks={tasks}
+                  ownTasks={tasks.filter((task) => task.statusId === stat.id)}
+                  setTasks={setTasks}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  setUpdateMade={setUpdateMade}
+                />
+              ))}
+            </SortableContext>
           </div>
           <DragOverlay>
             {activeStatus && (
@@ -165,7 +163,7 @@ const KanbanBoard = ({
           </DragOverlay>
         </DndContext>
       </div>
-      <div className="w-full flex items-center justify-between">
+      <div className="flex items-center justify-between  w-full">
         <button
           onClick={() => {
             createNewStatus(status, setStatus, projectId);
@@ -176,11 +174,11 @@ const KanbanBoard = ({
           Create Status <PlusIcon />
         </button>
         {updateMade && (
-          <div className="w-max">
-            <Stack direction="row" spacing={1}>
+          <div>
+            <Stack direction="row" spacing={5}>
               <FbButton
                 onClick={indueChanges}
-                className="py-2 text-red-400 px-3 hover:bg-red-300 hover:text-white text-nowrap"
+                className="py-2 text-red-100 px-3 bg-red-500 hover:bg-red-200 hover:text-red-500 text-nowrap"
               >
                 Cancel
               </FbButton>
