@@ -16,9 +16,13 @@ export const getActiveUserTasks = async (): Promise<{
       "Content-Type": "application/json",
     },
   });
+  const filtredCreatedTasks = CreatedTask.filter((Task) => {
+    return AssignedTask.findIndex((t) => t.id === Task.id) === -1;
+  });
+
   return {
     assigned: AssignedTask,
-    created: CreatedTask,
+    created: filtredCreatedTasks,
   };
 };
 export const getProjectTasks = async (
