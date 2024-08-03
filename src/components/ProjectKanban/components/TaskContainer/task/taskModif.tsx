@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { TaskModification } from "../../../../../models/Tasks";
 import { User } from "../../../../../models/Users";
@@ -7,8 +6,8 @@ import { useProject } from "../../../../../utils/Contexte/ProjectContext/project
 import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte";
 import { useUser } from "../../../../../utils/Contexte/UserContext/userContexte";
 import CommentCreation from "./commentCreation";
-import MainTaskData from "./mainTaskData";
 import CommentDU from "./commentDU";
+import MainTaskData from "./mainTaskData";
 
 interface taskModifProps {
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,7 +15,7 @@ interface taskModifProps {
 
 const TaskModifModel = ({ setEditMode }: taskModifProps) => {
   const { user } = useUser();
-  const { comments, updateTask, task } = useTask();
+  const { comments, updateTask, task, updateComments } = useTask();
   const { taskStatus } = useProject();
 
   const [taskState, setTasks] = useState(task);
@@ -106,45 +105,35 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
                 Description
               </span>
               <div
-                className={`text-black  font-mono text-md relative  flex items-start p-2 justify-start w-full bg-white rounded-md after:border after:border-white after:rounded-md after:hidden min-h-20 after:absolute after:content-['Edit'] after:top-0 after:left-0 after:w-full after:h-full after:hover:flex after:text-purple-200 after:items-center after:justify-center after:bg-black/40  after:transition-all after:duration-300
+                className={`italic lowercase font-bold text-purple-500  text-wrap pl-2    font-mono text-md relative flex-grow-0   flex items-start  justify-start w-full bg-white rounded-md  h-32
                   ${updateDescription ? "hidden" : ""}`}
                 onClick={() => setupdateDescription(true)}
               >
-                <span className="italic lowercase font-bold text-purple-500">
-                  {taskState?.description}
-                </span>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: taskState?.description
+                      ? taskState?.description
+                      : "Entre a description",
+                  }}
+                  className=" max-h-32 overflow-x-hidden overflow-y-auto task"
+                ></span>
               </div>
               <div
-                className={
-                  "w-full rounded-md  relative " +
-                  `${updateDescription ? "" : "hidden"}`
-                }
+                className={` lowercase font-semibold  text-wrap font-sans text-xs relative flex-grow-0  flex items-start  justify-start w-full bg-white rounded-md  h-40
+                  ${updateDescription ? "" : "hidden"}`}
+                onBlur={updateTaskData}
               >
                 <textarea
                   name=""
                   id=""
-                  value={description ? description : ""}
+                  value={description}
                   onChange={DescriptionHandler}
-                  placeholder="Enter a description to Your project"
-                  className="w-full h-32 rounded-md resize-none"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && e.shiftKey) return;
+                    if (e.key === "Enter" && e.shiftKey) updateTaskData();
                   }}
+                  placeholder="Enter a description to Your project"
+                  className="w-full h-full rounded-md resize-none task border-none"
                 ></textarea>{" "}
-                <div
-                  className="absolute right-0 -bottom-10 hidden"
-                  ref={saveDescriptionButton}
-                >
-                  <Button
-                    variant="contained"
-                    color="success"
-                    type="submit"
-                    className="w-full text-nowrap h-full z-30"
-                    onClick={updateTaskData}
-                  >
-                    Save Description
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
@@ -169,15 +158,32 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
                             key={index}
                             comment={comment}
                             userId={+user?.id ?? 0}
+                            onDeletedSuccessfuly={(commentId) => {
+                              const newComments = comments.filter(
+                                (com) => com.id !== commentId
+                              );
+                              updateComments(newComments);
+                            }}
+                            onUpdatedSuccessfully={(comment) => {
+                              const newComments = [
+                                ...comments.filter(
+                                  (com) => com.id !== comment.id
+                                ),
+                                comment,
+                              ];
+                              updateComments(newComments);
+                            }}
                           />
                         )
                     )}
                 </div>
-                {comments?.length && comments?.length > 0 && (
-                  <button className="text-xs hover:bg-purple-100 duration-300 px-3 py-2 border-xl bg-white rounded-xl mt-2  text-purple-500 lowercase font-serif hover:cursor-pointer self-end">
-                    View All
-                  </button>
-                )}
+                <button
+                  className={`text-xs hover:bg-purple-100 duration-300 px-3 py-2 border-xl bg-white rounded-xl mt-2 text-purple-500 lowercase font-serif hover:cursor-pointer self-end ${
+                    comments?.length ? "" : "hidden"
+                  }`}
+                >
+                  View All
+                </button>
               </div>
             </div>
           </div>

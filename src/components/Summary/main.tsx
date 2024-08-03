@@ -21,14 +21,7 @@ const Summary = ({
   members,
   taskStatus,
 }: summaryProps) => {
-useEffect(()=>{
-    // console.log(project)
-    // console.log(tasks)
-    // console.log(projectStatus)
-    // console.log(projectState)
-    // console.log(members)
-    // console.log(taskStatus)
-})
+  useEffect(() => {});
   return (
     <div>
       <h1>Summary</h1>

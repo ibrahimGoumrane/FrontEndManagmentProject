@@ -8,6 +8,7 @@ import { getProjectData } from "../../network/ProjectApi";
 import { Project } from "../../models/Projects";
 import { User } from "../../models/Users";
 import { getUserData } from "../../network/UserApi";
+import { formatDateTime } from "../../utils/utility";
 
 interface TaskCardProps {
   task: Task;
@@ -59,13 +60,15 @@ export default function TaskCard({ task }: TaskCardProps) {
           </div>
           <div className="text-xs text-left flex items-start justify-center flex-col ">
             <p>{taskData?.name}</p>
-            <p className="flex items-center justify-center gap-3">
+            <p className="flex items-start justify-start gap-1 flex-col">
               <span>
                 {taskData?.endDate
-                  ? taskData?.endDate.toDateString()
+                  ? formatDateTime(taskData?.endDate)
                   : "No due Data foud"}
               </span>
-              <span>{taskProject?.name}</span>
+              <span className="uppercase text-purple-900">
+                {taskProject?.name}
+              </span>
             </p>
           </div>
         </div>

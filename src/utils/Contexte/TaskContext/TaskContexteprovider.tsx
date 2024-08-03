@@ -2,12 +2,14 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { CommentData } from "../../../models/Comment";
 import { Id, Task, TaskModification } from "../../../models/Tasks";
 import {
+  deleteComment,
   getCommentByTaskId,
   updateComment as saveComment,
 } from "../../../network/CommentApi";
 import { TaskContext } from "./taskContexte";
 import { AddTaskToLocalStorage, clearLocalStorage } from "./utils/utilities";
 import { useProject } from "../ProjectContext/projectContexte";
+import { updateTask as saveTask } from "../../../network/TasksApi.ts";
 
 interface TaskProviderProps {
   projectId: Id;
@@ -44,23 +46,28 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           ...task,
           ...newTask,
         };
-        setTask(TaskInfo);
-        updateTasks([
-          ...tasks.filter((task) => task.id !== taskId),
-          TaskInfo,
-        ]);
-        AddTaskToLocalStorage(projectId, taskId, TaskInfo);
+        const DbTask = await saveTask(TaskInfo);
+
+        await updateTasks(
+          [...tasks.filter((task) => task.id !== taskId), DbTask],
+          false
+        );
+        setTask(DbTask);
+        AddTaskToLocalStorage(projectId, taskId, DbTask);
       }
     },
-    [task, projectId, taskId]
+    [task, updateTasks, tasks, projectId, taskId]
   );
 
   const updateComments = useCallback(
-    async (comments: CommentData[]) => {
-      setComments(comments);
-      localStorage.setItem(`comments${taskId}`, JSON.stringify(comments));
-      if (comments)
-        await Promise.all(comments.map((comment) => saveComment(comment)));
+    async (commentsData: CommentData[]) => {
+      await deleteComment(taskId);
+      const commentsDb = await Promise.all(
+        commentsData.map((comment) => saveComment(comment))
+      );
+      setComments(commentsDb);
+
+      localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsDb));
     },
     [taskId]
   );

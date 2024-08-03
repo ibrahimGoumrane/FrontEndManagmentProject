@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { useTask } from "../../../utils/Contexte/TaskContext/taskContexte";
 import { toDateTimeLocal } from "../../../utils/utility";
@@ -8,6 +7,7 @@ interface InputProps {
   labelText: string;
   labelFor: string;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
   error?: string | undefined;
   stylesLabel?: string;
@@ -31,24 +31,17 @@ export default function Input({
   stylesLabel,
   error,
   type = "text", // Default to text input
-  value: GotValue = "",
-  ...props
+  value: initialValue = "",
 }: InputProps) {
+  
   const { task } = useTask();
-  const [item, setItem] = useState<string | number>(() => {
-    if (type === "number" && GotValue === "") {
-      return 0;
-    } else {
-      return GotValue;
-    }
-  });
-  const value = useRef(GotValue);
-  const [Labelvalue, setLabelvalue] = useState<string | number>(GotValue);
+  const [item, setItem] = useState<string | number>(initialValue);
+  const [Labelvalue, setLabelvalue] = useState<string | number>(initialValue);
   const [updateValue, setUpdateValue] = useState<boolean>(false);
 
   useEffect(() => {
-    value.current = item;
-  }, [item]);
+    setItem(initialValue);
+  }, [initialValue]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -65,12 +58,9 @@ export default function Input({
     setItem(newValue);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      setLabelvalue(value.current);
-      setUpdateValue(false);
-    }
+  const handleOnBlur = () => {
+    setLabelvalue(item);
+    setUpdateValue(false);
   };
 
   return (
@@ -97,12 +87,12 @@ export default function Input({
       </div>
       <input
         id={labelFor}
-        {...props}
-        {...register(name)}
-        type={type} // Apply the type prop to the input
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        value={item}
+        {...register(name, {
+          onBlur: handleOnBlur,
+          onChange: handleChange,
+          value: item,
+        })} 
+        type={type}
         className={`${stylesInput ? stylesInput : fixedInputClass} ${
           error ? "border-red-400" : ""
         } ${updateValue || !Labelvalue ? "" : "hidden"}`}

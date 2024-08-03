@@ -7,8 +7,8 @@ export const TaskContext = createContext<
   | {
       task: Task | null;
       comments: CommentData[] | null;
-      updateTask: (newTask: TaskModification | null) => void;
-      updateComments: (comments: CommentData[]) => void;
+      updateTask: (newTask: TaskModification | null) => Promise<void> ;
+      updateComments: (comments: CommentData[]) => Promise<void> ;
       resetData: () => void;
     }
   | undefined

@@ -28,7 +28,7 @@ export default function TaskModif({
   const [task, setTask] = useState(taskState);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [fields, setFields] = useState<TaskModificationField[]>([]);
-  const [editedSuccessfully, setEditedSuccessfully] = useState(false);
+
   const { members } = useProject();
 
   useEffect(() => {
@@ -59,11 +59,7 @@ export default function TaskModif({
 
   async function onSubmit(credentials: TaskModification) {
     try {
-      console.log(credentials);
-      //credentials Test
-
       const savedData: TaskModification = {};
-      console.log(credentials.AssigneeId == 0);
       if (!credentials.StoryPoint) {
         savedData.StoryPoint = undefined;
       } else {
@@ -81,9 +77,10 @@ export default function TaskModif({
       }
       savedData.name = credentials.name;
       savedData.statusId = credentials.statusId && +credentials.statusId;
-      savedData.endDate = credentials.endDate ? new Date(credentials.endDate) : undefined;
+      savedData.endDate = credentials.endDate
+      
       onSubmitSuccessfull(savedData);
-      setEditedSuccessfully(true);
+      setEditMode(false);
       setErrorText("");
     } catch (error) {
       if (error instanceof UnauthorizedError) {
@@ -122,9 +119,6 @@ export default function TaskModif({
     >
       <div className="flex flex-col w-full h-full ">
         {errorText && <div className="text-red-500">{errorText}</div>}
-        {editedSuccessfully && (
-          <div className="text-green-500">Task Updated Successfully</div>
-        )}
         <div className="grid space-y-5 mb-2">
           {fields.map((field, index) =>
             field.type === "select" ? (
@@ -170,7 +164,7 @@ export default function TaskModif({
             disabled={isSubmitting}
             className="w-full text-nowrap "
           >
-            {isSubmitting ? "Updating Task..." : "Update Task"}
+            {isSubmitting ? "Updating Task..." : "Update And Exit"}
           </Button>
         </Stack>
       </div>

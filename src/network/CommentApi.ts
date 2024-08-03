@@ -37,3 +37,12 @@ export const updateComment = async (
   });
   return response;
 };
+export const deleteComment = async (id: Id): Promise<CommentData> => {
+  const response = await fetchData(`/api/comments/task/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};

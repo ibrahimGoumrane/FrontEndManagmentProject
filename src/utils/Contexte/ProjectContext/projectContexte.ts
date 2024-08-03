@@ -13,11 +13,11 @@ export const ProjectContext = createContext<
       projectState: ProjectStatus | null;
       members: User[];
       taskStatus: TaskStatus[];
-      updateProject: (newProject: Project | null) => void;
-      updateTasks: (Tasks: Task[]) => void;
-      updateMembers: (users: User[]) => void;
-      updateProjectState: (state: ProjectStatus) => void;
-      updateTaskStatus: (taskStatus: TaskStatus[]) => void;
+      updateProject: (newProject: Project | null) => Promise<void>;
+      updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
+      updateMembers: (users: User[]) => Promise<void>;
+      updateProjectState: (state: ProjectStatus) => Promise<void>;
+      updateTaskStatus: (taskStatus: TaskStatus[]) => Promise<void>;
       resetData: () => void;
     }
   | undefined

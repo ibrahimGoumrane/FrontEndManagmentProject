@@ -11,11 +11,14 @@ export const UserContext = createContext<
       teams: Team[] | null;
       activeTasks: { assigned: Task[]; created: Task[] } | null;
       projects: Project[] | null;
-      updateUser: (newUser: User | null) => void;
-      updateSkills: (skills: string[]) => void;
-      updateTeams: (teams: Team[]) => void;
-      updateActiveTasks: (tasks: { assigned: Task[]; created: Task[] }) => void;
-      updateProjects: (projects: Project[]) => void;
+      updateUser: (newUser: User | null) => Promise<void>;
+      updateSkills: (skills: string[]) => Promise<void>;
+      updateTeams: (teams: Team[]) => Promise<void>;
+      updateActiveTasks: (tasks: {
+        assigned: Task[];
+        created: Task[];
+      }) => Promise<void>;
+      updateProjects: (projects: Project[]) => Promise<void>;
       resetData: () => void;
       clearUserTasks: () => void;
     }

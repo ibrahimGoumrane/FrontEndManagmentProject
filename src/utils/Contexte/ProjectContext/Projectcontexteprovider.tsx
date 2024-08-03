@@ -79,7 +79,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
 
   const updateTasks = useCallback(
-    async (newTasks: Task[] ) => {
+    async (newTasks: Task[], saveToDb: boolean = true) => {
+      if (!saveToDb) {
+        setTask(newTasks);
+        localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
+        return;
+      }
       await deleteTasks(projectId);
       const tasksDb = await Promise.all(
         newTasks.map((t) =>
@@ -131,9 +136,9 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const updateTaskStatus = useCallback(
     async (newTaskStatus: TaskStatus[]) => {
-        const taskS = await saveTaskStatus(projectId, newTaskStatus);
-        setTaskStatus(taskS);
-        localStorage.setItem(`taskStatus${projectId}`, JSON.stringify(taskS));
+      const taskS = await saveTaskStatus(projectId, newTaskStatus);
+      setTaskStatus(taskS);
+      localStorage.setItem(`taskStatus${projectId}`, JSON.stringify(taskS));
     },
     [projectId]
   );

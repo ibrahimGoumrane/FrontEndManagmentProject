@@ -37,7 +37,6 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
   useEffect(() => {
     async function fetchFields() {
       const fields = await getSignupFields();
-      console.log(fields);
       setFields(fields);
     }
 

@@ -56,7 +56,6 @@ const KanbanBoard = ({
       }))
     );
   }, [taskStatus, projectTasks]);
-
   // Function used to save changes to the database
   const saveProjectChanges = useCallback(async () => {
     setUpdateMade(false);

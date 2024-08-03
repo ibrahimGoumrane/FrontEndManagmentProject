@@ -11,8 +11,6 @@ const MembersComponent = ({
   members,
 }: MembersComponentProps) => {
   useCallback(() => {
-    console.log(updateMembers);
-    console.log(members);
   }, [members, updateMembers]);
 
   return (

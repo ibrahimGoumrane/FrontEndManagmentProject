@@ -68,9 +68,10 @@ export default function SelectUniqueModal({
         className={` ${fixedInputClass}  ${error ? "text-red-400" : ""} ${
           updateValue ? "" : "hidden"
         }`}
-        value={item}
-        {...register(name)}
-        onChange={handleChange}
+        {...register(name, {
+          onChange: handleChange,
+          value: item,
+        })}
       >
         {options.map((option, index) => (
           <option key={index} value={option.value}>

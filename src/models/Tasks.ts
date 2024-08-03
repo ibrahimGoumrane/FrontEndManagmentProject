@@ -5,13 +5,13 @@ export interface Task {
   name?: string;
   statusId?: Id;
   startDate?: string | null;
-  endDate?: Date | null;
+  endDate?: string | null;
   label?: string | null;
   StoryPoint?: number | null;
   AssigneeId?: number | null;
   projectId?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
   parentTaskId?: number | null;
   description?: string | null;
   creatorId?: Id;
@@ -21,7 +21,7 @@ export interface TaskModification {
   AssigneeId?: number | undefined;
   statusId?: number | undefined;
   StoryPoint?: number | undefined;
-  endDate?: Date | undefined;
+  endDate?: string | undefined;
   description?: string | undefined;
   creatorId?: Id;
 }

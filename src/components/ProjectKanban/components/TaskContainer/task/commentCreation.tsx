@@ -81,7 +81,7 @@ const CommentCreation = ({ idTask, idUser }: CommentCreationProps) => {
             value={commentValue}
             onChange={CommentHandler}
             placeholder="Enter a comment about your Project"
-            className="w-full  rounded-md resize-none"
+            className="w-full rounded-md resize-none task"
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.shiftKey) return;
             }}

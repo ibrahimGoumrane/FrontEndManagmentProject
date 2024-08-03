@@ -19,11 +19,35 @@ export function createTask(
   tasks: Task[],
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>
 ) {
+  const taskDescription = `Task Overview:<br>
+  [Provide a brief overview of the task. Explain what needs to be done and why it is important.]<br><br>
+
+  Acceptance Criteria:<br>
+  [List the criteria that must be met for this task to be considered complete. Be as specific as possible.]<br><br>
+
+  [Criterion 1]<br>
+  [Criterion 2]<br>
+  [Criterion 3]<br><br>
+
+  Steps to Complete the Task:<br>
+  [Outline the steps required to complete the task. Break it down into smaller, manageable actions.]<br><br>
+
+  [Step 1]<br>
+  [Step 2]<br>
+  [Step 3]<br><br>
+
+  Dependencies:<br>
+  [List any dependencies or prerequisites for this task. Mention if this task is dependent on the completion of other tasks or requires specific resources.]<br><br>
+
+  [Dependency 1]<br>
+  [Dependency 2]`;
+
   const taskToAdd: Task = {
     id: `task-${tasks.length + 1}`,
     name: "",
     statusId: statusId,
     startDate: new Date().toISOString(),
+    description: taskDescription,
   };
   setTasks([...tasks, taskToAdd]);
 }

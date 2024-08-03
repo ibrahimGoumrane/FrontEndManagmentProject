@@ -8,8 +8,7 @@ interface updateProjectProps {
 
 const UpdateProject = ({ onUpdatedSuccess, onDismiss }: updateProjectProps) => {
   useEffect(() => {
-    console.log(onUpdatedSuccess);
-    console.log(onDismiss);
+
   }, []);
   return (
     <div>
