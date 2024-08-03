@@ -87,12 +87,29 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   const updateActiveTasks = useCallback(
-    async (newTasks: { assigned: Task[]; created: Task[] }) => {
+    async (
+      newTasks: { assigned: Task[]; created: Task[] },
+      saveToDb: boolean = true
+    ) => {
       try {
-        setActiveTasks(newTasks);
-        await Promise.all(newTasks.assigned.map((task) => saveTasks(task)));
-        await Promise.all(newTasks.created.map((task) => saveTasks(task)));
-        localStorage.setItem("userTasks", JSON.stringify(newTasks));
+        if (!saveToDb) {
+          setActiveTasks(newTasks);
+          localStorage.setItem("userTasks", JSON.stringify(newTasks));
+          return;
+        }
+        const assignedTask = await Promise.all(
+          newTasks.assigned.map((task) => saveTasks(task))
+        );
+        const savedTask = await Promise.all(
+          newTasks.created.map((task) => saveTasks(task))
+        );
+        localStorage.setItem(
+          "userTasks",
+          JSON.stringify({
+            assigned: assignedTask,
+            created: savedTask,
+          })
+        );
       } catch (error) {
         console.error("Failed to update tasks:", error);
       }
@@ -100,15 +117,23 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     []
   );
 
-  const updateProjects = useCallback(async (newProjects: Project[]) => {
-    try {
-      setProjects(newProjects);
-      await Promise.all(newProjects.map((project) => saveProjects(project)));
-      localStorage.setItem("userProjects", JSON.stringify(newProjects));
-    } catch (error) {
-      console.error("Failed to update projects:", error);
-    }
-  }, []);
+  const updateProjects = useCallback(
+    async (newProjects: Project[], saveToDb: boolean = true) => {
+      try {
+        setProjects(newProjects);
+        if (!saveToDb) {
+          setProjects(newProjects);
+          localStorage.setItem("userProjects", JSON.stringify(newProjects));
+          return;
+        }
+        await Promise.all(newProjects.map((project) => saveProjects(project)));
+        localStorage.setItem("userProjects", JSON.stringify(newProjects));
+      } catch (error) {
+        console.error("Failed to update projects:", error);
+      }
+    },
+    []
+  );
 
   const clearUserTasks = useCallback(async () => {
     try {

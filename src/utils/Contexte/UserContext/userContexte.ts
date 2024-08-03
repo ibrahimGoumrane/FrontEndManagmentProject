@@ -14,11 +14,14 @@ export const UserContext = createContext<
       updateUser: (newUser: User | null) => Promise<void>;
       updateSkills: (skills: string[]) => Promise<void>;
       updateTeams: (teams: Team[]) => Promise<void>;
-      updateActiveTasks: (tasks: {
-        assigned: Task[];
-        created: Task[];
-      }) => Promise<void>;
-      updateProjects: (projects: Project[]) => Promise<void>;
+      updateActiveTasks: (
+        tasks: {
+          assigned: Task[];
+          created: Task[];
+        },
+        saveToDb: boolean
+      ) => Promise<void>;
+      updateProjects: (projects: Project[], saveToDb: boolean) => Promise<void>;
       resetData: () => void;
       clearUserTasks: () => void;
     }

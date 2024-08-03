@@ -88,9 +88,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             <div>Due Date :</div>
             <div>
               {" "}
-              {taskData?.endDate
-                ? taskData?.endDate.toDateString()
-                : "No due Data foud"}
+              {taskData?.endDate ? taskData?.endDate : "No due Data foud"}
             </div>
           </div>
           <div className="flex items-center justify-center ">

@@ -22,6 +22,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   taskId,
   children,
 }) => {
+
   const { tasks, updateTasks } = useProject();
 
   const [task, setTask] = useState<Task | null>(() => {
@@ -52,6 +53,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           [...tasks.filter((task) => task.id !== taskId), DbTask],
           false
         );
+   
         setTask(DbTask);
         AddTaskToLocalStorage(projectId, taskId, DbTask);
       }

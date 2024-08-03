@@ -20,10 +20,12 @@ import {
 import {
   deleteTasks,
   getProjectTasks,
+  getActiveUserTasks,
   updateTask as saveTask,
 } from "../../../network/TasksApi";
 import { ProjectContext } from "./projectContexte";
 import { clearLocalStorage } from "./utils/utilities";
+import { useUser } from "../UserContext/userContexte";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -34,6 +36,8 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   projectId,
   children,
 }) => {
+  const { projects, updateProjects, updateActiveTasks } = useUser();
+
   const [project, setProject] = useState<Project | null>(() => {
     const projectData = localStorage.getItem(`project${projectId}`);
     return projectData ? JSON.parse(projectData) : null;
@@ -70,6 +74,10 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         const Project = await saveProjectData(newProject);
         localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
         setProject(Project);
+        updateProjects(
+          projects?.map((p) => (p.id === projectId ? Project : p)) || [Project],
+          false
+        );
       } else {
         localStorage.removeItem(`project${projectId}`);
         setProject(null);
@@ -80,22 +88,28 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const updateTasks = useCallback(
     async (newTasks: Task[], saveToDb: boolean = true) => {
+      let NTasks: Task[] = [];
       if (!saveToDb) {
-        setTask(newTasks);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
-        return;
+        NTasks = newTasks;
+        setTask(NTasks);
+        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
+      } else {
+        await deleteTasks(projectId);
+        NTasks = await Promise.all(
+          newTasks.map((t) =>
+            saveTask({
+              ...t,
+              projectId: +projectId,
+            })
+          )
+        );
+        setTask(NTasks);
+        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
       }
-      await deleteTasks(projectId);
-      const tasksDb = await Promise.all(
-        newTasks.map((t) =>
-          saveTask({
-            ...t,
-            projectId: +projectId,
-          })
-        )
-      );
-      setTask(tasksDb);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(tasksDb));
+      //handling the syncing of data with the userContext provider
+      const userTasksData = await getActiveUserTasks();
+
+      updateActiveTasks(userTasksData, false);
     },
     [projectId]
   );
