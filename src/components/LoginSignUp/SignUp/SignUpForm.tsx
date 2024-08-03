@@ -31,6 +31,7 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
       isChecked: !policiesCheked.isChecked,
     });
   };
+  
   const formOptions = {
     resolver: yupResolver(validationSchemaSignUp),
   };
