@@ -45,7 +45,7 @@ const MainProjectData = () => {
   return (
     <Flowbite theme={{ theme: customTheme }}>
       <section className="flex items-start justify-start min-h-[90vh]">
-        <div className="flex-grow-0 flex-shrink-0 w-auto">
+        <div className="flex-grow-0 flex-shrink-0  ">
           <SecondNav />
         </div>
         <div className="flex-grow flex-shrink min-w-0">
