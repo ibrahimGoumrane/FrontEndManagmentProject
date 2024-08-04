@@ -27,7 +27,11 @@ const customTheme: CustomFlowbiteTheme = {
   },
 };
 
-const MainProjectData = () => {
+interface MainProjectDataProps {
+  TogglePojectCreation: () => void;
+}
+
+const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
   const {
     project,
     tasks,
@@ -46,7 +50,7 @@ const MainProjectData = () => {
     <Flowbite theme={{ theme: customTheme }}>
       <section className="flex items-start justify-start min-h-[90vh]">
         <div className="flex-grow-0 flex-shrink-0  ">
-          <SecondNav />
+          <SecondNav TogglePojectCreation={TogglePojectCreation} />
         </div>
         <div className="flex-grow flex-shrink min-w-0">
           <MainProjectManip

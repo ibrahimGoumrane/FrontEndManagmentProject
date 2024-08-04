@@ -8,7 +8,11 @@ import NavItem from "./components/navItem";
 
 import { useParams } from "react-router-dom";
 
-function SecondNav() {
+interface SecondNavProps {
+  TogglePojectCreation: () => void;
+}
+
+function SecondNav({ TogglePojectCreation }: SecondNavProps) {
   const { user, projects } = useUser();
 
   const [show, setShow] = useState(false);
@@ -50,7 +54,9 @@ function SecondNav() {
                 <span>Project</span>
                 <span
                   className="font-bold text-lg bg-purple-500 p-2 rounded-full text-white cursor-pointer hover:bg-purple-300"
-                  onClick={() => {}}
+                  onClick={() => {
+                    TogglePojectCreation();
+                  }}
                 >
                   <IoAdd />
                 </span>
@@ -88,7 +94,23 @@ function SecondNav() {
             </div>
           </div>
 
-          <div className="w-full h-20 bg-black "></div>
+          <div className="w-full min-h-[30vh]  bg-slate-900 pt-4  pr-2 ">
+            <span className="text-white  text-md pl-2 font-bold ">
+              Add Members
+            </span>
+            <form action="" className="flex items-center justify-start">
+              <input
+                type="number"
+                placeholder="Entre Member Id  "
+                className="rounded-md flex-1 border-purple-600/50  py-2 px-2 text-white pl-2 text-sm font-bold bg-purple-300 "
+              />
+              <button className="flex-0 ">
+                <span className="block p-2 rounded-lg bg-purple-900 text-white font-bold text-2xl">
+                  <IoAdd />
+                </span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
       <div

@@ -62,7 +62,7 @@ const ProjectDashBoard = () => {
           setItemLinks={setHeaderNavigation}
           TogglePojectCreation={TogglePojectCreation}
         />
-        <ProjectKanBan />
+        <ProjectKanBan TogglePojectCreation={TogglePojectCreation} />
       </main>
     </ProjectProvider>
   );
