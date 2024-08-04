@@ -94,7 +94,7 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
             </div>
           </div>
 
-          <div className="w-full min-h-[30vh]  bg-slate-900 pt-4  pr-2 ">
+          <div className="w-full min-h-[30vh]  bg-purple-600 pt-4  pr-2 border-r-2 border-black">
             <span className="text-white  text-md pl-2 font-bold ">
               Add Members
             </span>
@@ -105,7 +105,7 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
                 className="rounded-md flex-1 border-purple-600/50  py-2 px-2 text-white pl-2 text-sm font-bold bg-purple-300 "
               />
               <button className="flex-0 ">
-                <span className="block p-2 rounded-lg bg-purple-900 text-white font-bold text-2xl">
+                <span className=" p-2.5 rounded-lg bg-white text-purple-500 font-bold text-xl flex items-center justify-center">
                   <IoAdd />
                 </span>
               </button>
