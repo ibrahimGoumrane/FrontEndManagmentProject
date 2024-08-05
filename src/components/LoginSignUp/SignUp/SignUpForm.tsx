@@ -6,11 +6,11 @@ import * as User from "../../../models/Users";
 import { SignUp } from "../../../network/UserApi";
 import { validationSchemaSignUp } from "../Form/VlidationSchema";
 import { getSignupFields, SignupField } from "../Form/formFields";
-import FormAction from "../utils/Button";
-import FormExtra from "../utils/FormExtra";
-import Input from "../utils/Input";
-import SelectModel from "../utils/Select";
-import Policies from "../utils/policies";
+import FormAction from "../../utils/Button";
+import FormExtra from "../../utils/FormExtra";
+import Input from "../../utils/Input";
+import SelectModel from "../../utils/Select";
+import Policies from "../../utils/policies";
 
 interface SignUpModalProps {
   onSignUpSuccessfull: (user: User.User) => void;
@@ -31,7 +31,7 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
       isChecked: !policiesCheked.isChecked,
     });
   };
-  
+
   const formOptions = {
     resolver: yupResolver(validationSchemaSignUp),
   };

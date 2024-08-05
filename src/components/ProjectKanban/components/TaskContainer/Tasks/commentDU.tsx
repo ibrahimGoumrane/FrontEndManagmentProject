@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MdDelete, MdOutlinePublishedWithChanges } from "react-icons/md";
-import Spinner from "../../../../LoginSignUp/utils/spinner";
-import { CommentData } from "../../../../../models/Comment";
+import Spinner from "../../../../utils/spinner.tsx";
+import { CommentData } from "../../../../../models/Comment.ts";
 import { formatDateTime } from "../../../../../utils/utility.ts";
 interface commentDeleteInterface {
   comment: CommentData;

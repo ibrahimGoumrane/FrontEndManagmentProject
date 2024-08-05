@@ -5,12 +5,12 @@ import { FaCat } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
 import { HiAdjustments, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
-import { Project } from "../../models/Projects";
+import { Project, ProjectModif } from "../../models/Projects";
 import type { ProjectStatus, TaskStatus } from "../../models/Status";
 import type { Task } from "../../models/Tasks";
 import type { User } from "../../models/Users";
 import MembersComponent from "../MembersComponent/main";
-import UpdateProject from "../ProjectTaskTeamForms/Project/ProjectModif";
+import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
 import KanbanBoard from "./kanbanBoard";
 
@@ -21,7 +21,7 @@ interface ComponentProps {
   projectState: ProjectStatus;
   members: User[];
   taskStatus: TaskStatus[];
-  updateProject: (newProject: Project | null) => Promise<void>;
+  updateProject: (newProject: ProjectModif | null) => Promise<void>;
   updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
   updateMembers: (users: User[]) => Promise<void>;
   updateProjectState: (state: ProjectStatus) => Promise<void>;
@@ -42,13 +42,15 @@ const MainProjectManip = ({
   updateTaskStatus,
 }: ComponentProps) => {
   const [updateProjectData, setUpdateProjectData] = useState<boolean>(false);
-  function updateProjectInfo(newProject: Project | null) {
+  function updateProjectInfo(newProject: ProjectModif | null) {
     updateProject(newProject);
     updateProjectState({
       id: newProject?.statusId || -1,
       name: "",
     });
-    setUpdateProjectData(false);
+    setTimeout(() => {
+      setUpdateProjectData(false);
+    }, 1200);
   }
 
   return (
@@ -124,9 +126,9 @@ const MainProjectManip = ({
         </section>
       )}
       {updateProjectData && (
-        <UpdateProject
-          onUpdatedSuccess={updateProjectInfo}
-          onDismiss={() => setUpdateProjectData(false)}
+        <ProjectModifModal
+          onUpdatedSuccessfully={updateProjectInfo}
+          onCancelModif={() => setUpdateProjectData(false)}
         />
       )}
     </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TaskContainerProps } from "../../propsInterfaces/interfaces.ts";
 import TrashIcon from "../PlusIcon/Trash";
 import "./taskContainer.css";
-import TaskModifModel from "./task/taskModif";
+import TaskModifModel from "./Tasks/taskModif.tsx";
 import { TaskProvider } from "../../../../utils/Contexte/TaskContext/TaskContexteprovider.tsx";
 import { useProject } from "../../../../utils/Contexte/ProjectContext/projectContexte.ts";
 

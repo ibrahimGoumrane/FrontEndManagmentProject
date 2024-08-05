@@ -1,5 +1,5 @@
 import { Project } from "../../models/Projects";
-import ProjectCard from "./projectCard";
+import ProjectCard from "./components/projectCard";
 interface ProjectContainerProps {
   projects: Project[] | null;
 }

@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { Project } from "../../models/Projects";
+import { Project } from "../../../models/Projects";
 import { useNavigate } from "react-router-dom";
 import { purple } from "@mui/material/colors";
 

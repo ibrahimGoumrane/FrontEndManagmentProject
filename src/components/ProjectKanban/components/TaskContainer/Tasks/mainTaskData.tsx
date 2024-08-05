@@ -1,7 +1,6 @@
 import { IoIosArrowDown } from "react-icons/io";
 import { Task, TaskModification } from "../../../../../models/Tasks";
-import TaskModif from "../../../../ProjectTaskTeamForms/Tasks/TaskModif";
-
+import TaskModifForm from "./TaskModifForm";
 interface MainTaskData {
   taskState: Task;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,7 +40,7 @@ const MainTaskData = ({
             : "invisible flex items-center justify-center "
         }
       >
-        <TaskModif
+        <TaskModifForm
           task={taskState}
           onSubmitSuccessfull={onSubmitSuccessfull}
           onTaskModifError={() => {}}

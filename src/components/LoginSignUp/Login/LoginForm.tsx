@@ -6,10 +6,10 @@ import * as User from "../../../models/Users";
 import { Login } from "../../../network/UserApi";
 import { validationSchemaLogin } from "../Form/VlidationSchema";
 import { loginFields } from "../Form/formFields";
-import FormAction from "../utils/Button";
-import FormExtra from "../utils/FormExtra";
-import Input from "../utils/Input";
-import Policies from "../utils/policies";
+import FormAction from "../../utils/Button";
+import FormExtra from "../../utils/FormExtra";
+import Input from "../../utils/Input";
+import Policies from "../../utils/policies";
 
 interface LoginModalProps {
   onLoginSuccessfull: (user: User.User) => void;

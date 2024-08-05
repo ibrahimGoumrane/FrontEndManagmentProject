@@ -50,14 +50,14 @@ const MainDashBoard = () => {
     );
   }
   return (
-    <body className="w-screen h-screen overflow-hidden ">
+    <div className="w-screen h-screen overflow-hidden ">
       <Header
         itemLinks={HeaderNavigation}
         setItemLinks={setHeaderNavigation}
         TogglePojectCreation={TogglePojectCreation}
       />
       <MainData />
-    </body>
+    </div>
   );
 };
 

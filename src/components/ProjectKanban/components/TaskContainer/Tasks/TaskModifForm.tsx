@@ -1,16 +1,16 @@
 import { Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UnauthorizedError } from "../../../errors/http_errors";
-import { Task, TaskModification } from "../../../models/Tasks";
-import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
-import Input from "../../LoginSignUp/utils/InputProject";
-import SelectUnique from "../../LoginSignUp/utils/SelectUnique";
-import CircularIndeterminate from "../../LoginSignUp/utils/spinner";
+import { UnauthorizedError } from "../../../../../errors/http_errors";
+import { Task, TaskModification } from "../../../../../models/Tasks";
+import { useProject } from "../../../../../utils/Contexte/ProjectContext/projectContexte";
+import Input from "../components/InputTask";
+import SelectUnique from "../../../../utils/SelectUnique";
+import CircularIndeterminate from "../../../../utils/spinner";
 import {
   getTaskModificationFields,
   TaskModificationField,
-} from "../Form/formFields";
+} from "../../../../ProjectTaskTeamForms/Form/formFields";
 
 interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => void;
@@ -77,8 +77,8 @@ export default function TaskModif({
       }
       savedData.name = credentials.name;
       savedData.statusId = credentials.statusId && +credentials.statusId;
-      savedData.endDate = credentials.endDate
-      
+      savedData.endDate = credentials.endDate;
+
       onSubmitSuccessfull(savedData);
       setEditMode(false);
       setErrorText("");
@@ -116,6 +116,11 @@ export default function TaskModif({
     <form
       className="w-full h-full flex items-center justify-between text-left text-black "
       onSubmit={handleSubmit(onSubmit)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+        }
+      }}
     >
       <div className="flex flex-col w-full h-full ">
         {errorText && <div className="text-red-500">{errorText}</div>}

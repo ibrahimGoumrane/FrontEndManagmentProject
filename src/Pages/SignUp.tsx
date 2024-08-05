@@ -1,4 +1,4 @@
-import Header from "../components/LoginSignUp/utils/NotSignIn";
+import Header from "../components/utils/NotSignIn";
 import SignUpForm from "../components/LoginSignUp/SignUp/SignUpForm";
 import { useNavigate } from "react-router-dom";
 import { User } from "../models/Users";

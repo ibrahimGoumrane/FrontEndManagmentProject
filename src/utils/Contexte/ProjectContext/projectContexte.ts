@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Project } from "../../../models/Projects";
+import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Task } from "../../../models/Tasks";
 import { User } from "../../../models/Users";
@@ -13,7 +13,7 @@ export const ProjectContext = createContext<
       projectState: ProjectStatus | null;
       members: User[];
       taskStatus: TaskStatus[];
-      updateProject: (newProject: Project | null) => Promise<void>;
+      updateProject: (newProject: ProjectModif | null) => Promise<void>;
       updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
       updateMembers: (users: User[]) => Promise<void>;
       updateProjectState: (state: ProjectStatus) => Promise<void>;

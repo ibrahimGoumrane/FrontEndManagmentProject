@@ -1,7 +1,5 @@
-// UserContext.tsx
-
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { Project } from "../../../models/Projects";
+import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
 import { User } from "../../../models/Users";
@@ -68,10 +66,14 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // State Manipulations
 
   const updateProject = useCallback(
-    async (newProject: Project | null) => {
-      setProject(newProject);
+    async (newProject: ProjectModif | null) => {
       if (newProject) {
-        const Project = await saveProjectData(newProject);
+        const savedProjectData: Project = {
+          ...project,
+          ...newProject,
+          endDate: newProject.endDate?.toISOString(),
+        };
+        const Project = await saveProjectData(savedProjectData);
         localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
         setProject(Project);
         updateProjects(

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { useTask } from "../../../utils/Contexte/TaskContext/taskContexte";
-import { toDateTimeLocal } from "../../../utils/utility";
+import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte";
+import { toDateTimeLocal } from "../../../../../utils/utility";
 
 interface InputProps {
   labelText: string;
@@ -33,7 +33,6 @@ export default function Input({
   type = "text", // Default to text input
   value: initialValue = "",
 }: InputProps) {
-  
   const { task } = useTask();
   const [item, setItem] = useState<string | number>(initialValue);
   const [Labelvalue, setLabelvalue] = useState<string | number>(initialValue);
@@ -91,7 +90,7 @@ export default function Input({
           onBlur: handleOnBlur,
           onChange: handleChange,
           value: item,
-        })} 
+        })}
         type={type}
         className={`${stylesInput ? stylesInput : fixedInputClass} ${
           error ? "border-red-400" : ""

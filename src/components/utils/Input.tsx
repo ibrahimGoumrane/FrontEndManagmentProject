@@ -10,6 +10,7 @@ interface InputProps {
   stylesLabel?: string;
   stylesInput?: string;
   value?: string | number;
+  type?: string;
   [x: string]: unknown;
 }
 

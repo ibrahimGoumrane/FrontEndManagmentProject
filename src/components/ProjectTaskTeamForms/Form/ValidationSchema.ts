@@ -18,14 +18,13 @@ const validationSchemaTaskCreation = Yup.object().shape({
 
 // Validation schema for project modification
 const validationSchemaProjectModification = Yup.object().shape({
-  name: Yup.string(),
-  description: Yup.string(),
-  endDate: Yup.date(),
-  statusId: Yup.number(),
+  name: Yup.string().required(),
+  description: Yup.string().optional(),
+  endDate: Yup.date().optional(),
+  statusId: Yup.number().required(),
 });
 
 // Validation schema for task modification
-
 
 export {
   validationSchemaTeamCreation,

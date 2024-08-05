@@ -6,10 +6,16 @@ export interface Project {
   createdAt?: Date;
   updatedAt?: Date;
   description?: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
 }
 export interface ProjectCreation {
   name: string;
   description: string;
+}
+export interface ProjectModif {
+  description?: string | undefined;
+  endDate?: Date | undefined;
+  name: string;
+  statusId: number;
 }

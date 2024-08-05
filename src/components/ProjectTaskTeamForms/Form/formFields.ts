@@ -1,5 +1,9 @@
-import { Project, ProjectCreation } from "../../../models/Projects";
-import { Id, Task, TaskCreationCredentials } from "../../../models/Tasks";
+import { ProjectCreation, ProjectModif } from "../../../models/Projects";
+import {
+  Id,
+  TaskModification,
+  TaskCreationCredentials,
+} from "../../../models/Tasks";
 import { TeamCreation } from "../../../models/Teams";
 import { User } from "../../../models/Users";
 import { getProjectStatus, getTaskStatus } from "../../../network/StatusApi";
@@ -18,8 +22,8 @@ interface Field<T> {
 type TeamCreationField = Field<TeamCreation>;
 type ProjectCreationField = Field<ProjectCreation>;
 type TaskCreationField = Field<TaskCreationCredentials>;
-type ProjectModificationField = Field<Project>;
-export type TaskModificationField = Field<Task>;
+export type ProjectModificationField = Field<ProjectModif>;
+export type TaskModificationField = Field<TaskModification>;
 
 const teamCreationFields: TeamCreationField[] = [
   {
@@ -90,7 +94,7 @@ async function getProjectModificationFields(): Promise<
       labelFor: "description",
       id: "description",
       name: "description",
-      type: "text",
+      type: "textarea",
       isRequired: false,
       placeholder: "Enter description",
     },

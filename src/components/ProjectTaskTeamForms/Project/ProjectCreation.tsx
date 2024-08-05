@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { UnauthorizedError } from "../../../errors/http_errors";
 import { Project, ProjectCreation } from "../../../models/Projects";
 import { createProject } from "../../../network/ProjectApi";
-import Input from "../../LoginSignUp/utils/Input";
-import TextArea from "../../LoginSignUp/utils/textarea";
+import Input from "../../utils/Input";
+import TextArea from "../../utils/textarea";
 import { projectCreationFields } from "../Form/formFields";
 import { validationSchemaProjectCreation } from "../Form/ValidationSchema";
 
