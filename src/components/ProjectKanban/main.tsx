@@ -13,6 +13,7 @@ import MembersComponent from "../MembersComponent/main";
 import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
 import KanbanBoard from "./kanbanBoard";
+import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
 
 interface ComponentProps {
   project: Project;
@@ -120,7 +121,9 @@ const MainProjectManip = ({
                   updateMembers={updateMembers}
                 />
               </Tabs.Item>
-              <Tabs.Item title="Tasks" icon={HiAdjustments}></Tabs.Item>
+              <Tabs.Item title="Tasks" icon={HiAdjustments}>
+                <TaskContainer tasksData={tasks} />
+              </Tabs.Item>
             </Tabs>
           </div>
         </section>

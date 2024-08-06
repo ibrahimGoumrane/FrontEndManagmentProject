@@ -169,7 +169,7 @@ export default function TaskModif({
             disabled={isSubmitting}
             className="w-full text-nowrap "
           >
-            {isSubmitting ? "Updating Task..." : "Update And Exit"}
+            {isSubmitting ? "Updating Task..." : "Update"}
           </Button>
         </Stack>
       </div>
