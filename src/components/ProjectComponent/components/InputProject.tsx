@@ -64,7 +64,7 @@ export default function Input({
   };
 
   return (
-    <div className="w-full h-16">
+    <div className="w-full h-10">
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${

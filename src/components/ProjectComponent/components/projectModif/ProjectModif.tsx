@@ -3,18 +3,21 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { UnauthorizedError } from "../../../../errors/http_errors";
 import { ProjectModif } from "../../../../models/Projects";
 import { PopUpType } from "../../../../models/utils.ts";
+import { deleteProject } from "../../../../network/ProjectApi";
 import { useProject } from "../../../../utils/Contexte/ProjectContext/projectContexte";
-import CircularIndeterminate from "../../../utils/spinner";
 import {
   getProjectModificationFields,
   ProjectModificationField,
 } from "../../../ProjectTaskTeamForms/Form/formFields";
 import { validationSchemaProjectModification } from "../../../ProjectTaskTeamForms/Form/ValidationSchema";
-import Input from "../InputProject";
 import PopUp from "../../../utils/popUp";
+import CircularIndeterminate from "../../../utils/spinner";
+import Input from "../InputProject";
+import ModalUnstyled from "../modal.tsx";
 
 interface ProjectModifProps {
   onUpdatedSuccessfully: (newProject: ProjectModif | null) => void;
@@ -25,12 +28,12 @@ export default function ProjectModifComponent({
   onUpdatedSuccessfully,
   onCancelModif,
 }: ProjectModifProps) {
-  const { project } = useProject();
-
+  const { project, updateProject } = useProject();
+  const navigate = useNavigate();
   const [fields, setFields] = useState<ProjectModificationField[]>([]);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
+  const [showConfirmDelete, setConfirmDelete] = useState(false);
   const formOptions = {
     resolver: yupResolver(validationSchemaProjectModification),
   };
@@ -48,6 +51,16 @@ export default function ProjectModifComponent({
     }
     getFields();
   }, []);
+
+  const onDeleteProject = () => {
+    if (project?.id) {
+      deleteProject(project?.id);
+      updateProject(null);
+      navigate("/home");
+    } else {
+      navigate("*");
+    }
+  };
 
   async function onSubmit(credentials: ProjectModif) {
     try {
@@ -116,13 +129,13 @@ export default function ProjectModifComponent({
           />
         ))}
       </form>
-      <div>
-        <Stack direction="row" spacing={2}>
+      <div className="flex items-center justify-between flex-col w-full gap-3">
+        <Stack direction="row" spacing={2} width={"100%"}>
           <Button
             variant="contained"
             color="error"
             onClick={onCancelModif}
-            className="w-full h-12"
+            className="w-full h-12 flex-1"
           >
             <span className="text-nowrap font-bold text-sm">Cancel</span>
           </Button>
@@ -131,7 +144,7 @@ export default function ProjectModifComponent({
             color="success"
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 text-nowrap"
+            className="w-full h-12 text-nowrap flex-1"
             form="projectModif"
           >
             <span className="text-nowrap font-bold text-sm">
@@ -139,6 +152,27 @@ export default function ProjectModifComponent({
             </span>
           </Button>
         </Stack>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setConfirmDelete(true);
+          }}
+          className="w-full h-12"
+        >
+          {" "}
+          <span className="text-nowrap font-extrabold text-sm text-red ">Delete Project</span>
+        </Button>
+        {showConfirmDelete && (
+          <ModalUnstyled
+            mainData="you are sure you wanna delete"
+            secondData="Deleting the project will remove all data related to it"
+            onApproval={onDeleteProject}
+            onDisapproval={() => {
+              setConfirmDelete(false);
+            }}
+            type={PopUpType.Failed}
+          />
+        )}
       </div>
     </div>
   );

@@ -76,16 +76,27 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         const Project = await saveProjectData(savedProjectData);
         localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
         setProject(Project);
+        projects?.map((p) => {
+          console.log(p, p?.id, projectId, p?.id === +projectId);
+        });
         updateProjects(
-          projects?.map((p) => (p.id === projectId ? Project : p)) || [Project],
+          projects?.map((p) => (p.id === +projectId ? Project : p)) || [
+            Project,
+          ],
           false
         );
       } else {
         localStorage.removeItem(`project${projectId}`);
+        updateProjects(
+          projects?.slice()?.filter((pro) => {
+            return pro?.id !== project?.id;
+          }) ?? [],
+          false
+        );
         setProject(null);
       }
     },
-    [projectId]
+    [project, projectId, projects, updateProjects]
   );
 
   const updateTasks = useCallback(
@@ -113,7 +124,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
       updateActiveTasks(userTasksData, false);
     },
-    [projectId]
+    [projectId, updateActiveTasks]
   );
 
   const updateMembers = useCallback(
@@ -161,12 +172,19 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   const resetData = useCallback(() => {
     setProject(null);
+    const newProjects = projects?.filter((project) => {
+      if (+projectId === project.id) {
+        return false;
+      }
+      return true;
+    });
+    updateProjects(newProjects || []);
     setTask([]);
     setProjectState(null);
     setMembers([]);
     setTaskStatus([]);
     clearLocalStorage(projectId);
-  }, [projectId]);
+  }, [projectId, projects, updateProjects]);
 
   // Fetching data from DB -> FrontEnd
   useEffect(() => {
@@ -184,7 +202,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     }
     fetchProject();
-  }, [projectId]);
+  }, [projectId, resetData]);
 
   // Fetching Tasks
   useEffect(() => {

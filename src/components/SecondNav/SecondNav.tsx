@@ -14,7 +14,6 @@ interface SecondNavProps {
 
 function SecondNav({ TogglePojectCreation }: SecondNavProps) {
   const { user, projects } = useUser();
-
   const [show, setShow] = useState(false);
   const [showNav, setshowNav] = useState(true);
   const toggleVisibility = () => {
@@ -82,7 +81,7 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
                   `${show ? "flex" : "hidden"}`
                 }
               >
-                {projects?.map((project) => (
+                {projects?.slice(0, 3).map((project) => (
                   <NavItem
                     key={project.id}
                     active={projectId == project.id ? true : false}
