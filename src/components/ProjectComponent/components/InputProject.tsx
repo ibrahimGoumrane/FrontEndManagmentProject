@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
-import { toDateTimeLocal } from "../../../utils/utility";
+import { formatDateTime, toDateTimeLocal } from "../../../utils/utility";
 
 interface InputProps {
   labelText: string;
@@ -34,9 +34,19 @@ export default function Input({
   value: initialValue = "",
 }: InputProps) {
   const { project } = useProject();
-
-  const [item, setItem] = useState<string | number>(initialValue);
-  const [Labelvalue, setLabelvalue] = useState<string | number>(initialValue);
+  console.log(type, initialValue);
+  const [item, setItem] = useState<string | number>(() => {
+    if (type === "datetime-local") {
+      return toDateTimeLocal(String(initialValue));
+    }
+    return initialValue;
+  });
+  const [Labelvalue, setLabelvalue] = useState<string | number>(() => {
+    if (type === "datetime-local") {
+      return formatDateTime(String(initialValue));
+    }
+    return initialValue;
+  });
   const [updateValue, setUpdateValue] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,7 +65,7 @@ export default function Input({
         }
       }
     }
-    setItem(newValue);
+    setItem(String(newValue));
   };
 
   const handleOnBlur = () => {

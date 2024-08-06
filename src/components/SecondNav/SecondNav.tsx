@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { IoIosArrowDropright, IoMdArrowDropdown } from "react-icons/io";
 import "./SecondNav.css";
 
@@ -7,6 +7,7 @@ import { useUser } from "../../utils/Contexte/UserContext/userContexte";
 import NavItem from "./components/navItem";
 
 import { useParams } from "react-router-dom";
+import { ProjectStatus } from "../../models/Status";
 
 interface SecondNavProps {
   TogglePojectCreation: () => void;
@@ -15,10 +16,14 @@ interface SecondNavProps {
 function SecondNav({ TogglePojectCreation }: SecondNavProps) {
   const { user, projects } = useUser();
   const [show, setShow] = useState(false);
+  const projectStatus = useRef<ProjectStatus[]>(
+    JSON.parse(localStorage.getItem("projectStatus") ?? "[]")
+  );
   const [showNav, setshowNav] = useState(true);
   const toggleVisibility = () => {
     setShow(!show);
   };
+
   const { id: projectId } = useParams<{ id: string }>();
   return (
     <div
@@ -87,6 +92,11 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
                     active={projectId == project.id ? true : false}
                     title={project.name ? project.name : ""}
                     to={`/home/project/${project.id}`}
+                    status={
+                      projectStatus.current.find(
+                        (state) => state.id === project.statusId
+                      )?.name
+                    }
                   />
                 ))}
               </div>

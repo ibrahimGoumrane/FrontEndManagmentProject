@@ -76,9 +76,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         const Project = await saveProjectData(savedProjectData);
         localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
         setProject(Project);
-        projects?.map((p) => {
-          console.log(p, p?.id, projectId, p?.id === +projectId);
-        });
         updateProjects(
           projects?.map((p) => (p.id === +projectId ? Project : p)) || [
             Project,

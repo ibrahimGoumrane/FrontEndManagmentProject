@@ -18,6 +18,7 @@ import PopUp from "../../../utils/popUp";
 import CircularIndeterminate from "../../../utils/spinner";
 import Input from "../InputProject";
 import ModalUnstyled from "../modal.tsx";
+import SelectUnique from "../../../utils/SelectUnique.tsx";
 
 interface ProjectModifProps {
   onUpdatedSuccessfully: (newProject: ProjectModif | null) => void;
@@ -112,22 +113,38 @@ export default function ProjectModifComponent({
             {errorText}
           </div>
         )}
-        {fields.map((field, index) => (
-          <Input
-            key={index}
-            labelText={field.labelText}
-            labelFor={field.labelFor}
-            register={register}
-            placeholder={field.placeholder}
-            name={field.name}
-            error={getErrorMessage(field.name)}
-            type={field.type}
-            stylesLabel={
-              "tracking-widest pb-2 block text-slate-900 text-md font-bold"
-            }
-            value={project?.[field.name]?.toString() ?? ""}
-          />
-        ))}
+        {fields.map((field, index) =>
+          field.type === "select" ? (
+            <SelectUnique
+              key={index}
+              labelText={field.labelText}
+              labelFor={field.labelFor}
+              name={field.name}
+              register={register}
+              options={field.options ? field.options : []}
+              error={getErrorMessage(field.name)}
+              value={project?.[field.name]?.toString() ?? ""}
+              stylesLabel={
+                "tracking-widest pb-2 block text-slate-900 text-md font-bold"
+              }
+            />
+          ) : (
+            <Input
+              key={index}
+              labelText={field.labelText}
+              labelFor={field.labelFor}
+              register={register}
+              placeholder={field.placeholder}
+              name={field.name}
+              error={getErrorMessage(field.name)}
+              type={field.type}
+              stylesLabel={
+                "tracking-widest pb-2 block text-slate-900 text-md font-bold"
+              }
+              value={project?.[field.name]?.toString() ?? ""}
+            />
+          )
+        )}
       </form>
       <div className="flex items-center justify-between flex-col w-full gap-3">
         <Stack direction="row" spacing={2} width={"100%"}>
@@ -160,7 +177,9 @@ export default function ProjectModifComponent({
           className="w-full h-12"
         >
           {" "}
-          <span className="text-nowrap font-extrabold text-sm text-red ">Delete Project</span>
+          <span className="text-nowrap font-extrabold text-sm text-red ">
+            Delete Project
+          </span>
         </Button>
         {showConfirmDelete && (
           <ModalUnstyled
