@@ -159,7 +159,7 @@ function TaskContainer({ tasksData }: taskProps) {
   }, [tasksData]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: 350, height: 350 }}>
       <StyledDataGrid
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
@@ -170,6 +170,7 @@ function TaskContainer({ tasksData }: taskProps) {
         rows={rows}
         columns={columns}
         className="task"
+        autoHeight
       />
     </div>
   );
