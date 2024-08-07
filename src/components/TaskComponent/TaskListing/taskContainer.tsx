@@ -10,26 +10,17 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
-import { Id, Task } from "../../../models/Tasks";
+import { Task, getTask } from "../../../models/Tasks";
 import { getTaskData } from "../../../network/TasksApi";
+import Tooltip from "@mui/material/Tooltip";
+import "./taskContainer.css";
+import { formatDateTime } from "../../../utils/utility";
+import { Fade } from "@mui/material";
 interface taskProps {
   tasksData: Task[];
 }
 
-interface GridRowProp {
-  id: Id;
-  name?: string;
-  startDate?: string | null;
-  endDate?: string | null;
-  StoryPoint?: number | null;
-  AssigneName?: number | null;
-  projectName?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  description?: string | null;
-  creatorName?: string;
-  statusName?: string;
-}
+interface GridRowProp extends getTask {}
 
 const StyledDataGrid = styled(DataGrid)(() => ({
   border: "5px solid black",
@@ -43,10 +34,12 @@ const StyledDataGrid = styled(DataGrid)(() => ({
     borderRight: `1px solid white`,
     fontWeight: "600",
     textTransform: "capitalize",
-    fontSize: "md",
+    fontSize: "12px",
+    maxWidth: "200px",
   },
   "& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell": {
-    borderBottom: `1px solid white`,
+    borderBottom: `1px solid black`,
+    fontStyle: "italic",
   },
   "& .MuiDataGrid-columnsContainer .MuiDataGrid-cell:focus-within": {
     outline: "none",
@@ -95,22 +88,34 @@ function CustomPagination() {
 }
 
 const PAGE_SIZE = 5;
-const getRowClassName = () => {
-  // Apply the "task-row" class to each row
-  return "task";
-};
+
 const columns: GridColDef[] = [
+  { field: "id", headerName: "Id", width: 100 },
   { field: "name", headerName: "Task Name", width: 200 },
   { field: "startDate", headerName: "Start Date", width: 200 },
-  { field: "endDate", headerName: "End Date", width: 200 },
-  { field: "StoryPoint", headerName: "Story Point", width: 200 },
+  { field: "creatorName", headerName: "Creator", width: 200 },
+  {
+    field: "description",
+    headerName: "Description",
+    width: 500,
+    cellClassName: "test-class",
+    renderCell: (params) => (
+      <Tooltip
+        title={params.value as string}
+        placement="bottom-end"
+        TransitionComponent={Fade}
+      >
+        <div className="cell-content">{params.value}</div>
+      </Tooltip>
+    ),
+  },
+  { field: "StoryPoint", headerName: "Story Point", width: 100 },
+  { field: "statusName", headerName: "Status", width: 200 },
   { field: "AssigneName", headerName: "Assignee", width: 200 },
+  { field: "endDate", headerName: "End Date", width: 200 },
   { field: "projectName", headerName: "Project", width: 200 },
   { field: "createdAt", headerName: "Created At", width: 200 },
   { field: "updatedAt", headerName: "Updated At", width: 200 },
-  { field: "description", headerName: "Description", width: 200 },
-  { field: "creatorName", headerName: "Creator", width: 200 },
-  { field: "statusName", headerName: "Status", width: 200 },
 ];
 
 function TaskContainer({ tasksData }: taskProps) {
@@ -126,7 +131,28 @@ function TaskContainer({ tasksData }: taskProps) {
         const newRows = await Promise.all(
           tasksData.map((task) => getTaskData(task.id))
         );
-        setRows(newRows);
+        const rows = newRows?.map((row) => {
+          row.startDate = row.startDate
+            ? formatDateTime(row.startDate)
+            : "No start Date Found";
+          row.endDate = row.endDate
+            ? formatDateTime(row.endDate)
+            : "No end Date Found";
+          row.createdAt = row.createdAt
+            ? formatDateTime(row.createdAt)
+            : "No created Date Found";
+          row.updatedAt = row.updatedAt
+            ? formatDateTime(row.updatedAt)
+            : "No updated Date Found";
+          row.StoryPoint = row.StoryPoint ? row.StoryPoint : -1;
+          row.AssigneName = row.AssigneName
+            ? row.AssigneName
+            : "No assigne yet";
+          row.description = row.description?.split("<br>").join("\n");
+          return row;
+        });
+
+        setRows(rows);
       }
     }
     fetchTaskInfo();
@@ -144,7 +170,6 @@ function TaskContainer({ tasksData }: taskProps) {
         rows={rows}
         columns={columns}
         className="task"
-        getRowClassName={getRowClassName}
       />
     </div>
   );

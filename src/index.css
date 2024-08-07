@@ -5,37 +5,16 @@
 .kanbanBoard {
   @apply text-black box-border;
 }
-.kanbanBoard::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 4px;
 }
-.kanbanBoard::-webkit-scrollbar:horizontal {
-  height: 10px;
-}
-.kanbanBoard::-webkit-scrollbar-thumb {
-  @apply bg-purple-300 rounded-xl;
-}
-.task::-webkit-scrollbar {
-  width: 4px;
-}
-.task::-webkit-scrollbar:horizontal {
+::-webkit-scrollbar:horizontal {
   height: 8px;
 }
-.task::-webkit-scrollbar-thumb {
-  @apply bg-purple-500 rounded-xl;
-  cursor: pointer;
-}
-/* Scrollbar styles */
-.project-container::-webkit-scrollbar {
-  width: 8px;
-}
-.project-container::-webkit-scrollbar:horizontal {
-  height: 8px;
-}
-.project-container::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   @apply bg-purple-500 rounded-xl;
 }
-
-.project-container::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #7d13e0; /* Darker purple color on hover */
 }
 

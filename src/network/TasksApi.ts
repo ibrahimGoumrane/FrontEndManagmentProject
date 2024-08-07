@@ -1,4 +1,4 @@
-import { Task } from "../models/Tasks";
+import { Task, getTask } from "../models/Tasks";
 import { fetchData } from "./utilies";
 export const getActiveUserTasks = async (): Promise<{
   assigned: Task[];
@@ -36,7 +36,7 @@ export const getProjectTasks = async (
   });
   return response;
 };
-export const getTaskData = async (id: number | string): Promise<Task> => {
+export const getTaskData = async (id: number | string): Promise<getTask> => {
   const response = await fetchData(`/api/tasks/${id}`, {
     method: "GET",
     headers: {
