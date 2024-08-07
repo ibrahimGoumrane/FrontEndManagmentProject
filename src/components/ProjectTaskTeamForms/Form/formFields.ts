@@ -4,7 +4,6 @@ import {
   TaskModification,
   TaskCreationCredentials,
 } from "../../../models/Tasks";
-import { TeamCreation } from "../../../models/Teams";
 import { User } from "../../../models/Users";
 import { getProjectStatus, getTaskStatus } from "../../../network/StatusApi";
 
@@ -19,23 +18,11 @@ interface Field<T> {
   options?: { label: string; value: Id }[];
 }
 
-type TeamCreationField = Field<TeamCreation>;
 type ProjectCreationField = Field<ProjectCreation>;
 type TaskCreationField = Field<TaskCreationCredentials>;
 export type ProjectModificationField = Field<ProjectModif>;
 export type TaskModificationField = Field<TaskModification>;
 
-const teamCreationFields: TeamCreationField[] = [
-  {
-    labelText: "Team Name",
-    labelFor: "teamName",
-    id: "teamName",
-    name: "name",
-    type: "text",
-    isRequired: true,
-    placeholder: "Enter team name",
-  },
-];
 
 const projectCreationFields: ProjectCreationField[] = [
   {
@@ -207,5 +194,4 @@ export {
   getTaskModificationFields,
   projectCreationFields,
   taskCreationFields,
-  teamCreationFields,
 };
