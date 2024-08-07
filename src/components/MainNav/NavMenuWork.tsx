@@ -2,7 +2,7 @@
 import { Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { Dropdown } from "flowbite-react";
-import { useEffect, useMemo, useState } from "react";
+import {  useMemo } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Task } from "../../models/Tasks";
@@ -17,22 +17,18 @@ interface WorkProps {
 
 function MenuWork({ tasks, name }: WorkProps) {
   const navigate = useNavigate();
-  const [activeTasks, setActiveTasks] = useState(tasks);
   const shownTasks = useMemo(() => {
     const ShownTasks = [];
-    if (activeTasks?.assigned && activeTasks?.assigned?.length >= 3) {
-      ShownTasks.push(...activeTasks?.assigned.slice(0, 3));
-    } else if (activeTasks?.created && activeTasks?.created?.length >= 3) {
-      ShownTasks.push(...activeTasks?.created.slice(0, 3));
+    if (tasks?.assigned && tasks?.assigned?.length >= 3) {
+      ShownTasks.push(...tasks?.assigned.slice(0, 3));
+    } else if (tasks?.created && tasks?.created?.length >= 3) {
+      ShownTasks.push(...tasks?.created.slice(0, 3));
     } else {
-      if (activeTasks?.assigned) {
-        ShownTasks.push(...activeTasks?.assigned);
+      if (tasks?.assigned) {
+        ShownTasks.push(...tasks?.assigned);
       }
     }
     return ShownTasks;
-  }, [activeTasks]);
-  useEffect(() => {
-    setActiveTasks(tasks);
   }, [tasks]);
 
   return (
