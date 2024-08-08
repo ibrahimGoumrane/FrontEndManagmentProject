@@ -159,7 +159,7 @@ function TaskContainer({ tasksData }: taskProps) {
   }, [tasksData]);
 
   return (
-    <div style={{ minWidth: "350px", width: "100%", height: 350 }}>
+    <div style={{ minWidth: "350px", width: "100%", height: 600 }}>
       <StyledDataGrid
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
