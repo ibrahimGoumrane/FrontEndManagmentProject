@@ -13,7 +13,7 @@ export const UserContext = createContext<
       projects: Project[] | null;
       updateUser: (newUser: User | null) => Promise<void>;
       updateSkills: (skills: string[]) => Promise<void>;
-      updateTeams: (teams: Team[]) => Promise<void>;
+      updateTeams: (teams: Team[]) => void;
       updateActiveTasks: (
         tasks: {
           assigned: Task[];
@@ -21,7 +21,10 @@ export const UserContext = createContext<
         },
         saveToDb?: boolean
       ) => Promise<void>;
-      updateProjects: (projects: Project[], saveToDb?: boolean) => Promise<void>;
+      updateProjects: (
+        projects: Project[],
+        saveToDb?: boolean
+      ) => Promise<void>;
       resetData: () => void;
       clearUserTasks: () => void;
     }

@@ -12,8 +12,8 @@ export async function searchTeam(name: string): Promise<Team[]> {
   return response;
 }
 
-export async function getTeamById(id: number): Promise<Team> {
-  const response = await fetchData(`/api/teams/${id}`, {
+export async function getTeamByUserId(Userid: number): Promise<Team[]> {
+  const response = await fetchData(`/api/teams/members/${Userid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -13,7 +13,7 @@ import {
   getActiveUserTasks,
   updateTask as saveTasks,
 } from "../../../network/TasksApi";
-import { getTeamById, saveTeams } from "../../../network/TeamApi";
+import { getTeamByUserId } from "../../../network/TeamApi";
 import {
   getLoggedInUser,
   updateUser as saveUser,
@@ -76,10 +76,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const updateTeams = useCallback(async (newTeams: Team[]) => {
+  const updateTeams = useCallback((newTeams: Team[]) => {
     try {
       setTeams(newTeams);
-      await saveTeams(newTeams);
       localStorage.setItem("userTeams", JSON.stringify(newTeams));
     } catch (error) {
       console.error("Failed to update teams:", error);
@@ -185,7 +184,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const [userSkillsData, userTeamsData, userTasksData, userProjectsData] =
           await Promise.all([
             getSkillsName(user.id),
-            getTeamById(+user.id),
+            getTeamByUserId(+user.id),
             getActiveUserTasks(),
             getUserProjects(),
           ]);
