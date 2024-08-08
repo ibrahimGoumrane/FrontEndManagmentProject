@@ -1,8 +1,6 @@
 import { Dropdown } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { Avatar } from "@mui/material";
+import { useState } from "react";
 import { Team } from "../../models/Teams";
-import { deepPurple } from "@mui/material/colors";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TeamDialog from "../Team/components/teamDialog";
 
@@ -16,21 +14,11 @@ export function TeamMenuItem({ teams, name }: teamsProps) {
   function handleOpen() {
     setCreateTeam(true);
   }
-  function handleClose() {
-    setCreateTeam(false);
-  }
-  useEffect(() => {
-    window.addEventListener("keydown", (event) => {
-      if (event.ctrlKey && event.key === "T" && event.shiftKey) {
-        setCreateTeam(true);
-      }
-    });
-  }, [setCreateTeam]);
 
   return (
     <div>
       {createTeam === true ? (
-        <TeamDialog open={createTeam} handleClose={handleClose} />
+        <TeamDialog open={createTeam} setCreateTeam={setCreateTeam} />
       ) : (
         ""
       )}
@@ -48,30 +36,19 @@ export function TeamMenuItem({ teams, name }: teamsProps) {
         {teams?.length !== 0 ? (
           teams?.slice(0, 3).map((team, index) => (
             <Dropdown.Item key={index} id={`${team.id}`}>
-              <div className="w-full h-12 flex items-center justify-start ">
-                <Avatar
-                  alt="Remy Sharp"
-                  sx={{
-                    bgcolor: deepPurple[500],
-                    width: "20px",
-                    height: "20px",
-                  }}
-                  component="div"
-                />
-              </div>
-              <div className="flex items-center justify-center flex-col  ">
-                <p className="text-md font-thin font-mono text-black">
-                  {team.name}
-                </p>
-              </div>
+              T1 :
+              <p className=" ml-2 text-sm font-thin font-mono text-black">
+                {team.name}
+              </p>
             </Dropdown.Item>
           ))
         ) : (
           <Dropdown.Header>No teams yet</Dropdown.Header>
         )}
         <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
-        <Dropdown.Item>View Details</Dropdown.Item>
         <Dropdown.Item onClick={handleOpen}>Create a Team</Dropdown.Item>
+        <Dropdown.Item>Join a Team</Dropdown.Item>
+        <Dropdown.Item>Your Teams</Dropdown.Item>
       </Dropdown>
     </div>
   );

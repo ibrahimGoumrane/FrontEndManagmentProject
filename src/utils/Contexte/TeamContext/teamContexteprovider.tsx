@@ -31,9 +31,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       if (newTeam) {
         const SavedTeam = await saveTeam(+teamId, newTeam);
         setTeam(SavedTeam);
-        const newTeams =
-          teams?.map((team) => (team.id == SavedTeam.id ? SavedTeam : team)) ||
-          [];
+        const newTeams = teams?.map((team) =>
+          team.id == SavedTeam.id ? SavedTeam : team
+        ) || [SavedTeam];
         updateTeams(newTeams);
       }
     },

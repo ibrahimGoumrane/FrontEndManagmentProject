@@ -11,7 +11,16 @@ export async function searchTeam(name: string): Promise<Team[]> {
   });
   return response;
 }
-
+getTeamById;
+export async function getTeamById(id: number): Promise<Team> {
+  const response = await fetchData(`/api/teams/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
 export async function getTeamByUserId(Userid: number): Promise<Team[]> {
   const response = await fetchData(`/api/teams/members/${Userid}`, {
     method: "GET",
@@ -36,6 +45,16 @@ export async function getTeamMembers(id: number): Promise<User[]> {
     headers: {
       "Content-Type": "application/json",
     },
+  });
+  return response;
+}
+export async function createTeam(name: string): Promise<Team> {
+  const response = await fetchData(`/api/teams/createTeam`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name }),
   });
   return response;
 }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,24 +7,35 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Backdrop from "@mui/material/Backdrop";
+import { createTeam } from "../../../network/TeamApi";
+import PopUp from "../../utils/popUp";
+import { PopUpType } from "../../../models/utils";
+import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
 interface FormProps {
   open: boolean;
-  handleClose: () => void;
+  setCreateTeam: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function FormDialog({ open, handleClose }: FormProps) {
+export default function FormDialog({ open, setCreateTeam }: FormProps) {
+  const [show, setShow] = useState(false);
+  const { teams, updateTeams } = useUser();
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={() => setCreateTeam(false)}
       PaperProps={{
         component: "form",
         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const formJson = Object.fromEntries(formData.entries());
-          const name = formJson.name;
-          console.log(name);
-          handleClose();
+          async function saveTeam() {
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const name = formJson.name;
+            const newTeam = await createTeam(name.toString());
+            const newTeams = teams ? [...teams, newTeam] : [newTeam];
+            updateTeams(newTeams);
+            setShow(true);
+          }
+          saveTeam();
         },
       }}
       sx={{
@@ -60,10 +71,7 @@ export default function FormDialog({ open, handleClose }: FormProps) {
       }}
       components={{
         Backdrop: (props) => (
-          <Backdrop
-            {...props}
-            sx={{ backgroundColor: "rgba(139, 92, 246, 0.3)" }}
-          />
+          <Backdrop {...props} sx={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }} />
         ),
       }}
     >
@@ -86,7 +94,7 @@ export default function FormDialog({ open, handleClose }: FormProps) {
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={handleClose}
+          onClick={() => setCreateTeam(false)}
           sx={{
             "&": {
               flexGrow: 1,
@@ -118,6 +126,15 @@ export default function FormDialog({ open, handleClose }: FormProps) {
           Create
         </Button>
       </DialogActions>
+      {show ? (
+        <PopUp
+          type={PopUpType.Success}
+          message={"team Created Successfully"}
+          setSuccess={setCreateTeam}
+        />
+      ) : (
+        ""
+      )}
     </Dialog>
   );
 }
