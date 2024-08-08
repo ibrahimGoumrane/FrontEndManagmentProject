@@ -1,14 +1,15 @@
 import { createContext, useContext } from "react";
-import { Team, TeamMembers } from "../../../models/Teams";
+import { Team } from "../../../models/Teams";
+import { User } from "../../../models/Users";
 
 // Create a context
 export const TeamContext = createContext<
   | {
       team: Team | null;
-      teamMembers: TeamMembers | null;
-      createTeam: (newTeam: Team) => Promise<void>;
+      teamMembers: User[] | [];
       updateTeam: (newTeam: Team) => Promise<void>;
-      updateTeamMembers: (newTeamMembers: TeamMembers) => Promise<void>;
+      addMember: (newMemberId: number) => Promise<void>;
+      removeMember: (newMemberId: number) => Promise<void>;
       deleteTeam: () => Promise<void>;
       resetData: () => void;
     }

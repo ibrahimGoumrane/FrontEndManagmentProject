@@ -1,4 +1,5 @@
-import { Id, Team, TeamMembers } from "../models/Teams";
+import { Team } from "../models/Teams";
+import { User } from "../models/Users";
 import { fetchData } from "./utilies";
 
 export async function searchTeam(name: string): Promise<Team[]> {
@@ -29,7 +30,7 @@ export async function getUserTeams(id: number): Promise<Team[]> {
   });
   return response;
 }
-export async function getTeamMembers(id: Id): Promise<TeamMembers[]> {
+export async function getTeamMembers(id: number): Promise<User[]> {
   const response = await fetchData(`/api/teams/members/${id}`, {
     method: "GET",
     headers: {
@@ -38,8 +39,33 @@ export async function getTeamMembers(id: Id): Promise<TeamMembers[]> {
   });
   return response;
 }
-
-export async function saveTeam(id: Id, teams: Team): Promise<Team> {
+export async function addTeamMember(
+  TeamId: number,
+  id: number
+): Promise<User[]> {
+  const response = await fetchData(`/api/teams/${TeamId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+  return response;
+}
+export async function removeTeamMember(
+  TeamId: number,
+  id: number
+): Promise<User[]> {
+  const response = await fetchData(`/api/teams/members/${TeamId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+  return response;
+}
+export async function saveTeam(id: number, teams: Team): Promise<Team> {
   const response = await fetchData(`/api/teams/${id}`, {
     method: "PUT",
     headers: {
@@ -50,7 +76,7 @@ export async function saveTeam(id: Id, teams: Team): Promise<Team> {
   return response;
 }
 
-export async function deleteTeam(id: Id) {
+export async function deleteTeam(id: number) {
   const response = await fetchData(`/api/teams/${id}`, {
     method: "DELETE",
     headers: {
