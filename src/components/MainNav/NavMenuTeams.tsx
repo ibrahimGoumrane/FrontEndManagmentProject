@@ -1,16 +1,15 @@
 import { Dropdown } from "flowbite-react";
 import { useState } from "react";
-import { Team } from "../../models/Teams";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import TeamDialog from "../Team/components/teamDialog";
-
+import TeamListing from "../Team/teamListings";
 interface teamsProps {
-  teams: Team[] | null;
   name: string;
 }
 
-export function TeamMenuItem({ teams, name }: teamsProps) {
+export function TeamMenuItem({ name }: teamsProps) {
   const [createTeam, setCreateTeam] = useState(false);
+  const [listTeams, setListTeams] = useState(false);
   function handleOpen() {
     setCreateTeam(true);
   }
@@ -32,23 +31,29 @@ export function TeamMenuItem({ teams, name }: teamsProps) {
         <Dropdown.Header className="border-b-2 border-purple-400 ">
           Your Teams
         </Dropdown.Header>
-        <Dropdown.Divider />
-        {teams?.length !== 0 ? (
-          teams?.slice(0, 3).map((team, index) => (
-            <Dropdown.Item key={index} id={`${team.id}`}>
-              T1 :
-              <p className=" ml-2 text-sm font-thin font-mono text-black">
-                {team.name}
-              </p>
-            </Dropdown.Item>
-          ))
-        ) : (
-          <Dropdown.Header>No teams yet</Dropdown.Header>
-        )}
+
         <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
         <Dropdown.Item onClick={handleOpen}>Create a Team</Dropdown.Item>
         <Dropdown.Item>Join a Team</Dropdown.Item>
-        <Dropdown.Item>Your Teams</Dropdown.Item>
+        <Dropdown.Item
+          className="relative hover:bg-transparent "
+          onMouseLeave={() => {
+            setListTeams(false);
+          }}
+        >
+          <div
+            className="flex items-center justify-between w-full "
+            onMouseEnter={() => {
+              setListTeams(true);
+            }}
+          >
+            List Teams
+            <span className="text-md block translate-y-0.5 font-mono">
+              <MdKeyboardArrowRight />
+            </span>
+          </div>
+          {listTeams ? <TeamListing /> : ""}
+        </Dropdown.Item>
       </Dropdown>
     </div>
   );

@@ -9,7 +9,7 @@ export interface NavItemProps {
 }
 
 const NavItemComplex = ({ name , TogglePojectCreation}: NavItemProps) => {
-  const { activeTasks, teams } = useUser();
+  const { activeTasks } = useUser();
 
   return (
     <>
@@ -17,7 +17,7 @@ const NavItemComplex = ({ name , TogglePojectCreation}: NavItemProps) => {
       {name === "projects" && (
         <NavMenuProject name={name} TogglePojectCreation={TogglePojectCreation} />
       )}
-      {name === "teams" && <NavMenuTeams teams={teams} name={name} />}
+      {name === "teams" && <NavMenuTeams name={name} />}
     </>
   );
 };
