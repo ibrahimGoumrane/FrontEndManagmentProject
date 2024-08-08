@@ -36,7 +36,6 @@ const StyledDataGrid = styled(DataGrid)(() => ({
     fontWeight: "600",
     textTransform: "capitalize",
     fontSize: "12px",
-    maxWidth: "200px",
   },
   "& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell": {
     borderBottom: `1px solid black`,
@@ -91,14 +90,14 @@ function CustomPagination() {
 const PAGE_SIZE = 5;
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "Id", width: 100 },
-  { field: "name", headerName: "Task Name", width: 200 },
-  { field: "startDate", headerName: "Start Date", width: 200 },
-  { field: "creatorName", headerName: "Creator", width: 200 },
+  { field: "id", headerName: "Id", width: 150, resizable: true },
+  { field: "name", headerName: "Task Name", width: 150, resizable: true },
+  { field: "startDate", headerName: "Start Date", width: 150, resizable: true },
+  { field: "creatorName", headerName: "Creator", width: 150, resizable: true },
   {
     field: "description",
     headerName: "Description",
-    width: 500,
+    width: 300,
     cellClassName: "test-class",
     renderCell: (params) => (
       <Tooltip
@@ -109,18 +108,24 @@ const columns: GridColDef[] = [
         <div className="cell-content">{params.value}</div>
       </Tooltip>
     ),
+    resizable: true,
   },
-  { field: "StoryPoint", headerName: "Story Point", width: 100 },
-  { field: "statusName", headerName: "Status", width: 200 },
-  { field: "AssigneName", headerName: "Assignee", width: 200 },
-  { field: "endDate", headerName: "End Date", width: 200 },
-  { field: "projectName", headerName: "Project", width: 200 },
-  { field: "createdAt", headerName: "Created At", width: 200 },
-  { field: "updatedAt", headerName: "Updated At", width: 200 },
+  {
+    field: "StoryPoint",
+    headerName: "Story Point",
+    width: 150,
+    resizable: true,
+  },
+  { field: "statusName", headerName: "Status", width: 150, resizable: true },
+  { field: "AssigneName", headerName: "Assignee", width: 150, resizable: true },
+  { field: "endDate", headerName: "End Date", width: 150, resizable: true },
+  { field: "createdAt", headerName: "Created At", width: 150, resizable: true },
+  { field: "updatedAt", headerName: "Updated At", width: 150, resizable: true },
 ];
 
 function TaskContainer({ tasksData, isVisible }: taskProps) {
   const [rows, setRows] = useState<GridRowProp[]>([]);
+  const [loading, setLoading] = useState(true);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
     page: 0,
@@ -155,6 +160,7 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
 
         setRows(rows);
       }
+      setLoading(false);
     }
     fetchTaskInfo();
   }, [tasksData]);
@@ -174,6 +180,14 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
           columns={columns}
           className="task"
           autoHeight
+          loading={loading}
+          slotProps={{
+            loadingOverlay: {
+              variant: "skeleton",
+              noRowsVariant: "skeleton",
+            },
+          }}
+          initialState={{}}
         />
       )}
     </div>
