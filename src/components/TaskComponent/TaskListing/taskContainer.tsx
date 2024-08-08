@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { Fade } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
 import {
   DataGrid,
   GridColDef,
@@ -10,14 +11,14 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
 import { Task, getTask } from "../../../models/Tasks";
 import { getTaskData } from "../../../network/TasksApi";
-import Tooltip from "@mui/material/Tooltip";
-import "./taskContainer.css";
 import { formatDateTime } from "../../../utils/utility";
-import { Fade } from "@mui/material";
+import "./taskContainer.css";
 interface taskProps {
   tasksData: Task[];
+  isVisible: boolean;
 }
 
 interface GridRowProp extends getTask {}
@@ -118,7 +119,7 @@ const columns: GridColDef[] = [
   { field: "updatedAt", headerName: "Updated At", width: 200 },
 ];
 
-function TaskContainer({ tasksData }: taskProps) {
+function TaskContainer({ tasksData, isVisible }: taskProps) {
   const [rows, setRows] = useState<GridRowProp[]>([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
@@ -159,19 +160,22 @@ function TaskContainer({ tasksData }: taskProps) {
   }, [tasksData]);
 
   return (
-    <div style={{ minWidth: "350px", width: "100%", height: 600 }}>
-      <StyledDataGrid
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[PAGE_SIZE]}
-        slots={{
-          pagination: CustomPagination,
-        }}
-        rows={rows}
-        columns={columns}
-        className="task"
-        autoHeight
-      />
+    <div className="task-container">
+      {isVisible && (
+        <StyledDataGrid
+          getRowId={(rows) => rows.id}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[PAGE_SIZE]}
+          slots={{
+            pagination: CustomPagination,
+          }}
+          rows={rows}
+          columns={columns}
+          className="task"
+          autoHeight
+        />
+      )}
     </div>
   );
 }

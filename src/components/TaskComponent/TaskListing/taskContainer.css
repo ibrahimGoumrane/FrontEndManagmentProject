@@ -4,3 +4,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.task-container {
+  width: 100%; /* Ensure the container takes full width */
+  min-width: 350px; /* Ensure a minimum width */
+  height: 600px; /* Maintain height */
+}

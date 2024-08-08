@@ -1,6 +1,5 @@
-// KanbanBoard.jsx
-import { Button as FbButton, Tabs } from "flowbite-react";
-import { useState } from "react";
+import { Button as FbButton, Tabs, TabsRef } from "flowbite-react";
+import { useState, useRef, useEffect } from "react";
 import { FaCat } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
 import { HiAdjustments, HiUserCircle } from "react-icons/hi";
@@ -42,6 +41,16 @@ const MainProjectManip = ({
   updateProjectState,
   updateTaskStatus,
 }: ComponentProps) => {
+  const tabsRef = useRef<TabsRef>(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [showTasks, setShowTasks] = useState(false);
+  useEffect(() => {
+    if (activeTab === 3) {
+      setShowTasks(true);
+    } else {
+      setShowTasks(false);
+    }
+  }, [activeTab]);
   const [updateProjectData, setUpdateProjectData] = useState<boolean>(false);
   function updateProjectInfo(newProject: ProjectModif | null) {
     updateProject(newProject);
@@ -91,7 +100,12 @@ const MainProjectManip = ({
           </div>
 
           <div className="flex items-center justify-between px-5 ">
-            <Tabs aria-label="Default tabs" variant="default">
+            <Tabs
+              aria-label="Default tabs"
+              variant="default"
+              ref={tabsRef}
+              onActiveTabChange={(tab) => setActiveTab(tab)}
+            >
               <Tabs.Item
                 title="Summary"
                 icon={HiUserCircle}
@@ -121,8 +135,12 @@ const MainProjectManip = ({
                   updateMembers={updateMembers}
                 />
               </Tabs.Item>
-              <Tabs.Item title="Tasks" icon={HiAdjustments}>
-                <TaskContainer tasksData={tasks} />
+              <Tabs.Item
+                title="Tasks"
+                icon={HiAdjustments}
+                onClick={() => tabsRef.current?.setActiveTab(0)}
+              >
+                <TaskContainer tasksData={tasks} isVisible={showTasks} />
               </Tabs.Item>
             </Tabs>
           </div>
