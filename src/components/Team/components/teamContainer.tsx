@@ -34,8 +34,8 @@ function TeamContainer({
     fetchData();
   }, [teams]);
   return (
-    <div className="flex-col max-h-[60vh] pt-2">
-      <ul className="flex-1 flex flex-col space-y-10">
+    <div className="flex-col max-h-[60vh] py-5">
+      <ul className="flex-1 flex flex-col space-y-8">
         {showSpinner ? (
           <div className="text-center w-full flex items-center justify-center flex-1">
             <Spinner />
