@@ -6,7 +6,7 @@ export default function CircularIndeterminate() {
     <Box sx={{ display: "flex" }}>
       <CircularProgress
         sx={{
-          color: "purple",
+          color: "#a78bfa",
         }}
       />
     </Box>

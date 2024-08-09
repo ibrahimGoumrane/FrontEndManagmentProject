@@ -1,3 +1,5 @@
+import { User } from "./Users";
+
 export interface Id {
   id: string | number;
 }
@@ -11,3 +13,10 @@ export interface TeamCreation {
   ownerId: Id;
 }
 
+export interface TeamData {
+  id: string;
+  name: string;
+  ownerName: string;
+  ownerEmail: string;
+  members: User[];
+}

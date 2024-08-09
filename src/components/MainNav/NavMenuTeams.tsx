@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 import TeamDialog from "../Team/components/teamDialog";
 import TeamListing from "../Team/teamListings";
+import { Link } from "react-router-dom";
 interface teamsProps {
   name: string;
 }
@@ -34,7 +35,9 @@ export function TeamMenuItem({ name }: teamsProps) {
 
         <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
         <Dropdown.Item onClick={handleOpen}>Create a Team</Dropdown.Item>
-        <Dropdown.Item>Join a Team</Dropdown.Item>
+        <Dropdown.Item>
+          <Link to={'/home/teams/search'}>Join a Team</Link>
+        </Dropdown.Item>
         <Dropdown.Item
           className="relative hover:bg-transparent "
           onMouseLeave={() => {

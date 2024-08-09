@@ -11,6 +11,8 @@ import SignupPage from "./Pages/SignUp";
 import { useUser } from "./utils/Contexte/UserContext/userContexte";
 import ProtectedRoute from "./utils/protected/AuthEle";
 import ProjectDashBoard from "./Pages/Project";
+import TeamSearch from "./Pages/teamSearch";
+import TeamDashboard from "./Pages/teamDashboard";
 
 const theme = createTheme({
   palette: {
@@ -45,18 +47,16 @@ function App() {
             path="/signup"
             element={<SignupPage Successfull={updateUser} />}
           />
-          <Route
-            path="/profile"
-            element={<ProtectedRoute element={<Profile />} />}
-          />
-          <Route
-            path="/Home"
-            element={<ProtectedRoute element={<MainDashBoard />} />}
-          />
-          <Route
-            path="/Home/project/:id"
-            element={<ProtectedRoute element={<ProjectDashBoard />} />}
-          />
+          <Route path="/Profile/" element={<ProtectedRoute />}>
+            <Route path="" element={<Profile />} />
+          </Route>
+          <Route path="/Home/" element={<ProtectedRoute />}>
+            <Route path="" element={<MainDashBoard />} />
+            <Route path="project/:id" element={<ProjectDashBoard />} />
+            <Route path="teams/search" element={<TeamSearch />} />
+            <Route path="teams/:id" element={<TeamDashboard />} />
+          </Route>
+
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-import { Team } from "../models/Teams";
+import { Team, TeamData } from "../models/Teams";
 import { User } from "../models/Users";
 import { fetchData } from "./utilies";
 
@@ -14,6 +14,15 @@ export async function searchTeam(name: string): Promise<Team[]> {
 getTeamById;
 export async function getTeamById(id: number): Promise<Team> {
   const response = await fetchData(`/api/teams/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
+export async function getTeamDataById(id: number): Promise<TeamData> {
+  const response = await fetchData(`/api/teams/data/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
