@@ -1,59 +1,34 @@
-import { useEffect, useState } from "react";
-import { Team, TeamData } from "../../../models/Teams";
-import { getTeamDataById } from "../../../network/TeamApi";
+import { TeamData } from "../../../models/Teams";
 import Spinner from "../../utils/spinner";
 import TeamItem from "./teamItem";
 interface teamProps {
-  teams: Team[];
-  setShowSpinner: React.Dispatch<React.SetStateAction<boolean>>;
+  teams: TeamData[];
   showSpinner: boolean;
   query: string;
+  showError: boolean;
 }
 
 function TeamContainer({
   teams,
   showSpinner,
-  setShowSpinner,
+  showError,
   query,
 }: teamProps) {
-  const [ShownTeams, setShownTeams] = useState<TeamData[]>([]);
-  const [showError, setShowError] = useState<boolean>(false);
-  useEffect(() => {
-    async function fetchData() {
-      const teamData = await Promise.all(
-        teams.map((team) => getTeamDataById(+team.id))
-      );
-      console.log(teamData);
-      setShownTeams(teamData);
-      setShowSpinner(false);
-      console.log(teamData);
-      if (teamData.length === 0) {
-        setShowError(true);
-      }
-    }
-    fetchData();
-  }, [teams]);
   return (
     <div className="flex-col max-h-[60vh] py-5">
       <ul className="flex-1 flex flex-col space-y-8">
-        {showSpinner ? (
+        {showSpinner && (
           <div className="text-center w-full flex items-center justify-center flex-1">
             <Spinner />
           </div>
-        ) : query !== "" ? (
-          ShownTeams.length !== 0 ? (
-            ShownTeams.map((team, index) => (
-              <TeamItem key={index} team={team} />
-            ))
-          ) : showError ? (
-            <li className="text-red-500 text-sm font-semibold text-center">
-              No teams found with this name
-            </li>
-          ) : (
-            <li></li>
-          )
-        ) : (
-          <li></li>
+        )}
+        {query !== "" &&
+          teams.length !== 0 &&
+          teams.map((team, index) => <TeamItem key={index} team={team} />)}
+        {showError && (
+          <li className="text-red-500 text-sm font-semibold text-center">
+            No teams found with this name
+          </li>
         )}
       </ul>
     </div>

@@ -50,7 +50,7 @@ function App() {
           <Route path="/Profile/" element={<ProtectedRoute />}>
             <Route path="" element={<Profile />} />
           </Route>
-          <Route path="/Home/" element={<ProtectedRoute />}>
+          <Route path="/home/" element={<ProtectedRoute />}>
             <Route path="" element={<MainDashBoard />} />
             <Route path="project/:id" element={<ProjectDashBoard />} />
             <Route path="teams/search" element={<TeamSearch />} />
