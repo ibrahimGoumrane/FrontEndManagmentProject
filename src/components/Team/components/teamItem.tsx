@@ -1,12 +1,19 @@
 import { Dropdown } from "flowbite-react";
 import { BiRightArrowAlt } from "react-icons/bi";
 import { TeamData } from "../../../models/Teams";
+import { requestToJoin } from "../../../network/TeamApi";
 
 interface ItemProps {
   team: TeamData;
 }
 
 const TeamItem = ({ team }: ItemProps) => {
+  const requestToJoinTheTeam = () => {
+    async function requesting() {
+      await requestToJoin(team);
+    }
+    requesting();
+  };
   return (
     <li
       key={team.id}
@@ -14,9 +21,12 @@ const TeamItem = ({ team }: ItemProps) => {
     >
       <span>{team.name}</span>
       <div>
-        <div className="text-xs text-bold px-2 py-2 text-nowrap bg-white text-slate-900 rounded-md cursor-pointer hover:bg-slate-100">
+        <button
+          className="text-xs text-bold px-2 py-2 text-nowrap bg-white text-slate-900 rounded-md cursor-pointer hover:bg-slate-100"
+          onClick={requestToJoinTheTeam}
+        >
           Request To Join
-        </div>
+        </button>
       </div>
       <div className="flex flex-col items-start justify-start pr-2">
         <div className="text-sm font-extralight ">

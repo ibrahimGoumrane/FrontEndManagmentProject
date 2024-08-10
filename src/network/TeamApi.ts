@@ -57,6 +57,16 @@ export async function getTeamMembers(id: number): Promise<User[]> {
   });
   return response;
 }
+export async function requestToJoin(teamData: TeamData): Promise<Team> {
+  const response = await fetchData(`/api/teams/requestJoin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(teamData),
+  });
+  return response;
+}
 export async function createTeam(name: string): Promise<Team> {
   const response = await fetchData(`/api/teams/createTeam`, {
     method: "POST",

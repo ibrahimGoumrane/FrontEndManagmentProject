@@ -42,7 +42,9 @@ function TeamContainer({
           </div>
         ) : query !== "" ? (
           ShownTeams.length !== 0 ? (
-            ShownTeams.map((team) => <TeamItem team={team} />)
+            ShownTeams.map((team, index) => (
+              <TeamItem key={index} team={team} />
+            ))
           ) : showError ? (
             <li className="text-red-500 text-sm font-semibold text-center">
               No teams found with this name

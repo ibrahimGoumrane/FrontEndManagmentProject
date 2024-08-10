@@ -18,12 +18,9 @@ function TeamListing() {
             Team Finder
           </h1>
           <p className="text-md text-left font-semibold w-2/3">
-            Welcome to our Team Finder! Quickly locate and explore your teams
-            with just a simple click. Whether you're searching by name or
-            navigating through our intuitive interface, finding your teams has
-            never been easier. Start typing the team name, and let us do the
-            rest—instant results at your fingertips. Simplify your search and
-            stay connected with your team, all in one place.
+            Start typing the team name, and let us do the rest—instant results
+            at your fingertips. Simplify your search and stay connected with
+            your team, all in one place.
           </p>
         </div>
         <TeamSearch />
