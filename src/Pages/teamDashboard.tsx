@@ -26,6 +26,7 @@ function TeamListing() {
       setActiveTeamData(teamsData.find((t) => +t.id === +teamId));
     }
   }, [LocalTeamInfo, teamId, teamsData]);
+  
 
   useEffect(() => {
     async function fetchTeamData() {
