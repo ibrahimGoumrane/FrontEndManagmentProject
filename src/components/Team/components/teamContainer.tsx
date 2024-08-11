@@ -6,6 +6,7 @@ interface teamProps {
   showSpinner: boolean;
   query: string;
   showError: boolean;
+  handleJoinRequest: () => void;
 }
 
 function TeamContainer({
@@ -13,6 +14,7 @@ function TeamContainer({
   showSpinner,
   showError,
   query,
+  handleJoinRequest,
 }: teamProps) {
   return (
     <div className="flex-col max-h-[60vh] py-5">
@@ -22,9 +24,15 @@ function TeamContainer({
             <Spinner />
           </div>
         )}
-        {query !== "" &&
+        {!showSpinner && query !== "" &&
           teams.length !== 0 &&
-          teams.map((team, index) => <TeamItem key={index} team={team} />)}
+          teams.map((team, index) => (
+            <TeamItem
+              key={index}
+              team={team}
+              handleJoinRequest={handleJoinRequest}
+            />
+          ))}
         {showError && (
           <li className="text-red-500 text-sm font-semibold text-center">
             No teams found with this name

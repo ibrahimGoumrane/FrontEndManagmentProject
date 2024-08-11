@@ -1,4 +1,10 @@
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { Project } from "../../../models/Projects";
 import { Task } from "../../../models/Tasks";
 import { Team } from "../../../models/Teams";
@@ -19,6 +25,8 @@ import {
   updateUser as saveUser,
 } from "../../../network/UserApi";
 import { UserContext } from "./userContexte";
+import { io, Socket } from "socket.io-client";
+import { serverAddress } from "../../../Settings/Settings";
 
 interface UserProviderProps {
   children: ReactNode;
@@ -29,6 +37,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const savedUser = localStorage.getItem("userdata");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const socket = useRef<Socket>();
 
   const [skills, setSkills] = useState<string[]>(() => {
     const savedSkills = localStorage.getItem("userskills");
@@ -177,6 +186,20 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // Initialize socket connection
+    socket.current = io(serverAddress, {
+      withCredentials: true, // Important to match credentials in CORS policy
+    });
+
+    return () => {
+      // Cleanup on component unmount
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     async function fetchUserData() {
       if (!user) return;
 
@@ -214,6 +237,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         teams,
         activeTasks,
         projects,
+        socket,
         updateUser,
         updateSkills,
         updateTeams,

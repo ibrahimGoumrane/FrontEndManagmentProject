@@ -3,10 +3,12 @@ import { User } from "../../../models/Users";
 import { Team } from "../../../models/Teams";
 import { Project } from "../../../models/Projects";
 import { Task } from "../../../models/Tasks";
+import { Socket } from "socket.io-client";
 // Create a context
 export const UserContext = createContext<
   | {
       user: User | null;
+      socket: React.MutableRefObject<Socket | undefined>;
       skills: string[] | null;
       teams: Team[] | null;
       activeTasks: { assigned: Task[]; created: Task[] } | null;

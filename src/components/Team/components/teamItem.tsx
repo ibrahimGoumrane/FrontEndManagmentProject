@@ -5,12 +5,14 @@ import { requestToJoin } from "../../../network/TeamApi";
 
 interface ItemProps {
   team: TeamData;
+  handleJoinRequest: () => void;
 }
 
-const TeamItem = ({ team }: ItemProps) => {
+const TeamItem = ({ team, handleJoinRequest }: ItemProps) => {
   const requestToJoinTheTeam = () => {
     async function requesting() {
       await requestToJoin(team);
+      handleJoinRequest();
     }
     requesting();
   };

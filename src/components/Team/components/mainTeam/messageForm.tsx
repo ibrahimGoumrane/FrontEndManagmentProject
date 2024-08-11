@@ -5,9 +5,10 @@ import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
 import { TChat } from "../../../../models/chat";
 
 export default function MessageForm() {
-  const [message, setMessage] = useState("");
+  const { user, socket } = useUser();
   const { id: teamId } = useParams<{ id: string }>();
-  const { user } = useUser();
+  const [message, setMessage] = useState("");
+
   const handleSend = async () => {
     if (message.trim()) {
       try {
@@ -18,8 +19,10 @@ export default function MessageForm() {
           userName: user?.name,
           message,
         };
-        const response = await saveTeamMessage(teamMessage);
-        console.log("Message sent successfully:", response);
+        if (socket.current) {
+          socket.current.emit("send-team-message", teamMessage, teamId);
+        }
+        await saveTeamMessage(teamMessage);
         setMessage(""); // Clear the input after sending
       } catch (error) {
         console.error("Error sending message:", error);

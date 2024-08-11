@@ -31,9 +31,15 @@ export default function FormDialog({ open, setCreateTeam }: FormProps) {
             const formJson = Object.fromEntries(formData.entries());
             const name = formJson.name;
             const newTeam = await createTeam(name.toString());
-            const newTeams = teams ? [...teams, newTeam] : [newTeam];
-            updateTeams(newTeams);
-            setShow(true);
+            if (newTeam) {
+              //updateUserTeams
+              const newTeams = teams ? [...teams, newTeam] : [newTeam];
+              updateTeams(newTeams);
+
+              setShow(true);
+            } else {
+              console.error("Error creating team");
+            }
           }
           saveTeam();
         },

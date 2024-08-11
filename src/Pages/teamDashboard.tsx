@@ -26,7 +26,8 @@ function TeamListing() {
       setActiveTeamData(teamsData.find((t) => +t.id === +teamId));
     }
   }, [LocalTeamInfo, teamId, teamsData]);
-  
+
+  // Scroll to the end of the container when LocalTeamInfo changes
 
   useEffect(() => {
     async function fetchTeamData() {
@@ -60,7 +61,9 @@ function TeamListing() {
                 <span className="font-bold">Active Teams</span>
                 <span className="flex items-center justify-center bg-indigo-300 h-4 w-4 rounded-full"></span>
               </div>
-              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+              <div
+                className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto"
+              >
                 {LocalTeamInfo.map((t) => (
                   <TeamLogo
                     id={t.id}
@@ -74,9 +77,7 @@ function TeamListing() {
             </div>
           </div>
           <div className="flex flex-col flex-auto h-full p-6">
-            {activeTeam && activeTeamData && (
-              <MainChatPage  />
-            )}
+            {activeTeam && activeTeamData && <MainChatPage/>}
           </div>
         </div>
       </div>
