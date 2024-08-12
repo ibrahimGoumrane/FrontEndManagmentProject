@@ -3,6 +3,7 @@ import ProjectContainer from "../ProjectComponent/projectComponent";
 import TaskContainer from "../TaskComponent/taskComponent";
 import "../../styles/Global.css";
 import { useUser } from "../../utils/Contexte/UserContext/userContexte";
+import { Link } from "react-router-dom";
 const MainData = () => {
   const { projects, activeTasks } = useUser();
 
@@ -20,13 +21,15 @@ const MainData = () => {
             <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
               Recent Projects
             </h2>
-            <Button
-              variant="text"
-              className="text-md text-purple-500 lowercase font-serif hover:cursor-pointer"
-              disabled={projects?.length === 0 ? true : false}
-            >
-              View All projects
-            </Button>
+            <Link to={'/home/projects/'}>
+              <Button
+                variant="text"
+                className="text-md text-purple-500 lowercase font-serif hover:cursor-pointer"
+                disabled={projects?.length === 0 ? true : false}
+              >
+                View All projects
+              </Button>
+            </Link>
           </div>
           <div className="w-full h-max">
             <ProjectContainer projects={projects} />

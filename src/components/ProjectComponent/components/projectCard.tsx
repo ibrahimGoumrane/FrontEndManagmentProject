@@ -17,7 +17,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     setProjectData(project);
   }, [project]);
   function GoToProject(id: number | string = "") {
-    navigate(`/home/project/${id}`);
+    navigate(`/home/projects/${id}`);
   }
 
   return (

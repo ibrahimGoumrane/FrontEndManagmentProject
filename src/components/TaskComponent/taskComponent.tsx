@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Task } from "../../models/Tasks";
 import TaskCardAssigned from "./TaskCardAssigned";
@@ -11,11 +10,7 @@ interface TaskContainerProps {
   } | null;
 }
 
-export default function TaskContainer(
-  {
-    activeTasks,
-  }: TaskContainerProps
-) {
+export default function TaskContainer({ activeTasks }: TaskContainerProps) {
   const [assignedTasks, setAssignedTasks] = useState<Task[]>();
   const [createdTasks, setCreatedTasks] = useState<Task[]>();
   useEffect(() => {
@@ -29,18 +24,11 @@ export default function TaskContainer(
           <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
             assigned
           </h2>
-          <div className="  py-3 flex items-center justify-between px-5">
-            <Button
-              className="text-sm text-purple-500  font-sans hover:cursor-pointer lowercase"
-              disabled={assignedTasks?.length === 0}
-            >
-              View All
-            </Button>
-          </div>
+          <div className="  py-3 flex items-center justify-between px-5"></div>
         </div>
         <div className=" overflow-x-auto max-h-[30vh] project-container">
           {assignedTasks?.length !== 0 &&
-            assignedTasks?.slice(0, 6).map((task, index) => (
+            assignedTasks?.map((task, index) => (
               <div
                 key={index}
                 className="hover:shadow-xl hover:shadow-gray-300 shadow-none duration-300 "
@@ -60,18 +48,11 @@ export default function TaskContainer(
           <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
             Created
           </h2>
-          <div className="  py-3 flex items-center justify-between px-5">
-            <Button
-              className="text-sm text-purple-500  font-sans hover:cursor-pointer lowercase"
-              disabled={assignedTasks?.length === 0}
-            >
-              View All
-            </Button>
-          </div>
+          <div className="  py-3 flex items-center justify-between px-5"></div>
         </div>
         <div className=" overflow-x-auto max-h-[30vh] project-container">
           {createdTasks?.length !== 0 &&
-            createdTasks?.slice(0, 6).map((task, index) => (
+            createdTasks?.map((task, index) => (
               <div
                 key={index}
                 className="w-[90%] mx-auto hover:shadow-xl hover:shadow-gray-300 shadow-none duration-300 "

@@ -9,6 +9,17 @@ export interface Project {
   startDate?: string;
   endDate?: string;
 }
+export interface getProject {
+  id: number;
+  name: string;
+  startDate: string;
+  ManagerName: string;
+  description: string;
+  statusName: string;
+  endDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
 export interface ProjectCreation {
   name: string;
   description: string;

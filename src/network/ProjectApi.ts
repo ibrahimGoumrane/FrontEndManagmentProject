@@ -1,4 +1,4 @@
-import { Project, ProjectCreation } from "../models/Projects";
+import { Project, ProjectCreation, getProject } from "../models/Projects";
 import { ProjectStatus } from "../models/Status";
 import { Id } from "../models/Tasks";
 import { User } from "../models/Users";
@@ -12,7 +12,7 @@ export const getUserProjects = async (): Promise<Project[]> => {
   });
   return response;
 };
-export const getProjectData = async (projectId: Id): Promise<Project> => {
+export const getProjectData = async (projectId: Id): Promise<getProject> => {
   const response = await fetchData(`/api/projects/${projectId}`, {
     method: "GET",
     headers: {

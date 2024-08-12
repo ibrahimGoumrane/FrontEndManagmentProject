@@ -13,6 +13,7 @@ import ProtectedRoute from "./utils/protected/AuthEle";
 import ProjectDashBoard from "./Pages/Project";
 import TeamSearch from "./Pages/teamSearch";
 import TeamDashboard from "./Pages/teamDashboard";
+import ProjectListing from "./Pages/projectListing";
 
 const theme = createTheme({
   palette: {
@@ -52,7 +53,8 @@ function App() {
           </Route>
           <Route path="/home/" element={<ProtectedRoute />}>
             <Route path="" element={<MainDashBoard />} />
-            <Route path="project/:id" element={<ProjectDashBoard />} />
+            <Route path="projects/" element={<ProjectListing />} />
+            <Route path="projects/:id" element={<ProjectDashBoard />} />
             <Route path="teams/search" element={<TeamSearch />} />
             <Route path="teams/:id" element={<TeamDashboard />} />
           </Route>
