@@ -4,7 +4,6 @@ import TeamSearch from "../components/Team/components/teamSearch";
 function TeamListing() {
   return (
     <main className="w-[100vw] h-[100vh] bg-slate-900 flex flex-col">
-
       <nav className="flex justify-between items-center">
         <div className=" inline-flex items-center justify-start gap-x-5 text-white m-5  text-xl font-bold">
           <span>

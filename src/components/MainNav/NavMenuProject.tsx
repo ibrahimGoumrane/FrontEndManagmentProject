@@ -34,8 +34,8 @@ function NavMenu({ name, TogglePojectCreation }: DropDownNavProps) {
       <Dropdown.Divider />
       {projects?.length !== 0 ? (
         projects?.slice(0, 3).map((project, index) => (
-          <Link to={"/home/projects/" + project.id}>
-            <Dropdown.Item key={index} id={`${project.id}`}>
+          <Link to={"/home/projects/" + project.id} key={index}>
+            <Dropdown.Item id={`${project.id}`}>
               P{index + 1} : {project.name}
             </Dropdown.Item>
           </Link>

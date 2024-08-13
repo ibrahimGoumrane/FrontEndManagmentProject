@@ -20,14 +20,15 @@ import { getProject } from "../../../models/Projects";
 import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
 import { getProjectData } from "../../../network/ProjectApi";
 import { formatDateTime } from "../../../utils/utility";
+import ProjectSearch from "./projectSearch/main";
 
 interface GridRowProp extends getProject {}
 
 const StyledDataGrid = styled(DataGrid)(() => ({
   border: "5px solid #7c3aed",
   background: "white",
-  minHeight: "70vh",
-  maxHeight: "70vh",
+  minHeight: "56vh",
+  maxHeight: "56vh",
   borderRadius: "20px",
   color: "white",
   maxWidth: "86.5vw",
@@ -102,10 +103,10 @@ function CustomPagination() {
 const PAGE_SIZE = 5;
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "Id", width: 150, resizable: true },
-  { field: "name", headerName: "Name", width: 150, resizable: true },
-  { field: "startDate", headerName: "Start Date", width: 150, resizable: true },
-  { field: "ManagerName", headerName: "Manager ", width: 150, resizable: true },
+  { field: "id", headerName: "Id", width: 150 },
+  { field: "name", headerName: "Name", width: 150 },
+  { field: "startDate", headerName: "Start Date", width: 150 },
+  { field: "ManagerName", headerName: "Manager ", width: 150 },
   {
     field: "description",
     headerName: "Description",
@@ -119,12 +120,11 @@ const columns: GridColDef[] = [
         <div className="cell-content">{params.value}</div>
       </Tooltip>
     ),
-    resizable: true,
   },
-  { field: "statusName", headerName: "Status", width: 150, resizable: true },
-  { field: "endDate", headerName: "End Date", width: 150, resizable: true },
-  { field: "createdAt", headerName: "Created At", width: 150, resizable: true },
-  { field: "updatedAt", headerName: "Updated At", width: 150, resizable: true },
+  { field: "statusName", headerName: "Status", width: 150 },
+  { field: "endDate", headerName: "End Date", width: 150 },
+  { field: "createdAt", headerName: "Created At", width: 150 },
+  { field: "updatedAt", headerName: "Updated At", width: 150 },
 ];
 
 interface CustomToolbarProps {
@@ -184,50 +184,60 @@ function ProjectListing() {
   }, [projects]);
 
   return (
-    <div className=" bg-slate-900 text-white pt-10 px-10">
-      <div className="flex items-start justify-start flex-col  italic font-mono mb-3">
-        <h2 className="text-2xl  font-bold   ">Manage Your Projects</h2>
-        <p className="text-gray-200 mt-2  w-2/3 ">
-          On this page, you can view all your existing projects. Use the search
-          and filter options to quickly find specific projects, and click on any
-          project to view information, or track progress.
-        </p>
-      </div>
-      <div className=" flex items-end justify-end self-end ">
-        <StyledDataGrid
-          getRowId={(rows) => rows.id}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[PAGE_SIZE]}
-          slots={{
-            pagination: CustomPagination,
-            toolbar: CustomToolbar as GridSlots["toolbar"],
-          }}
-          rows={rows}
-          columns={columns}
-          className="task"
-          autoHeight
-          loading={loading}
-          slotProps={{
-            loadingOverlay: {
-              variant: "skeleton",
-              noRowsVariant: "skeleton",
-            },
-            panel: {
-              anchorEl: filterButtonEl,
-            },
-            toolbar: {
-              setFilterButtonEl,
-            },
-          }}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [{ field: "Name", operator: "starts with", value: "a" }],
-              },
-            },
-          }}
-        />
+    <div className="bg-slate-900 text-white pt-10 px-10 h-screen">
+      <div className="grid grid-cols-3 gap-10 h-full">
+        {/* Left Section */}
+        <div className="col-span-2 flex flex-col overflow-auto">
+          <div className="italic font-mono mb-3">
+            <h2 className="text-2xl font-bold">Manage Your Projects</h2>
+            <p className="text-gray-200 mt-2 w-2/3">
+              On this page, you can view all your existing projects. Use the
+              search and filter options to quickly find specific projects, and
+              click on any project to view information, or track progress.
+            </p>
+          </div>
+          <div className="flex-grow">
+            <StyledDataGrid
+              getRowId={(rows) => rows.id}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              pageSizeOptions={[PAGE_SIZE]}
+              slots={{
+                pagination: CustomPagination,
+                toolbar: CustomToolbar as GridSlots["toolbar"],
+              }}
+              rows={rows}
+              columns={columns}
+              className="task"
+              autoHeight={false}
+              loading={loading}
+              slotProps={{
+                loadingOverlay: {
+                  variant: "skeleton",
+                  noRowsVariant: "skeleton",
+                },
+                panel: {
+                  anchorEl: filterButtonEl,
+                },
+                toolbar: {
+                  setFilterButtonEl,
+                },
+              }}
+              initialState={{
+                filter: {
+                  filterModel: {
+                    items: [
+                      { field: "Name", operator: "starts with", value: "a" },
+                    ],
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Right Section */}
+          <ProjectSearch />
       </div>
     </div>
   );

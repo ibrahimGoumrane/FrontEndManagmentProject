@@ -3,6 +3,17 @@ import { ProjectStatus } from "../models/Status";
 import { Id } from "../models/Tasks";
 import { User } from "../models/Users";
 import { fetchData } from "./utilies";
+
+
+export async function searchProjects(name: string): Promise<Project[]> {
+  const response = await fetchData(`/api/projects/?search=${name}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
 export const getUserProjects = async (): Promise<Project[]> => {
   const response = await fetchData(`/api/projects/user/`, {
     method: "GET",
@@ -24,7 +35,7 @@ export const getProjectData = async (projectId: Id): Promise<getProject> => {
 export const createProject = async (
   data: ProjectCreation
 ): Promise<Project> => {
-  const response = await fetchData(`/api/projects/`, {
+  const response = await fetchData(`/api/projects`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

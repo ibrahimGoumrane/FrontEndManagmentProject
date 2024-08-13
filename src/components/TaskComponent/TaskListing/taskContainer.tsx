@@ -90,10 +90,10 @@ function CustomPagination() {
 const PAGE_SIZE = 5;
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "Id", width: 150, resizable: true },
-  { field: "name", headerName: "Task Name", width: 150, resizable: true },
-  { field: "startDate", headerName: "Start Date", width: 150, resizable: true },
-  { field: "creatorName", headerName: "Creator", width: 150, resizable: true },
+  { field: "id", headerName: "Id", width: 150 },
+  { field: "name", headerName: "Task Name", width: 150 },
+  { field: "startDate", headerName: "Start Date", width: 150 },
+  { field: "creatorName", headerName: "Creator", width: 150 },
   {
     field: "description",
     headerName: "Description",
@@ -108,19 +108,17 @@ const columns: GridColDef[] = [
         <div className="cell-content">{params.value}</div>
       </Tooltip>
     ),
-    resizable: true,
   },
   {
     field: "StoryPoint",
     headerName: "Story Point",
     width: 150,
-    resizable: true,
   },
-  { field: "statusName", headerName: "Status", width: 150, resizable: true },
-  { field: "AssigneName", headerName: "Assignee", width: 150, resizable: true },
-  { field: "endDate", headerName: "End Date", width: 150, resizable: true },
-  { field: "createdAt", headerName: "Created At", width: 150, resizable: true },
-  { field: "updatedAt", headerName: "Updated At", width: 150, resizable: true },
+  { field: "statusName", headerName: "Status", width: 150 },
+  { field: "AssigneName", headerName: "Assignee", width: 150 },
+  { field: "endDate", headerName: "End Date", width: 150 },
+  { field: "createdAt", headerName: "Created At", width: 150 },
+  { field: "updatedAt", headerName: "Updated At", width: 150 },
 ];
 
 function TaskContainer({ tasksData, isVisible }: taskProps) {
