@@ -3,6 +3,7 @@ import { Dropdown } from "flowbite-react";
 import { useEffect } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useUser } from "../../utils/Contexte/UserContext/userContexte";
+import { Link } from "react-router-dom";
 
 interface DropDownNavProps {
   name: string;
@@ -33,9 +34,11 @@ function NavMenu({ name, TogglePojectCreation }: DropDownNavProps) {
       <Dropdown.Divider />
       {projects?.length !== 0 ? (
         projects?.slice(0, 3).map((project, index) => (
-          <Dropdown.Item key={index} id={`${project.id}`}>
-            P{index + 1} : {project.name}
-          </Dropdown.Item>
+          <Link to={"/home/projects/" + project.id}>
+            <Dropdown.Item key={index} id={`${project.id}`}>
+              P{index + 1} : {project.name}
+            </Dropdown.Item>
+          </Link>
         ))
       ) : (
         <Dropdown.Header className=" border-purple-400 font-sans text-xs text-purple-900  ">
