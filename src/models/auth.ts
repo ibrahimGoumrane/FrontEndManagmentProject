@@ -6,7 +6,7 @@ export interface autorisationModel extends Member {
   auth: authorisation[];
 }
 export interface authorisation {
-  id: string;
+  id?: string;
   moduleId: string;
   moduleType: ModuleType;
   action: Action;
@@ -19,4 +19,12 @@ export interface updateDeleteAuth {
   id: string;
   userId: string;
   moduleId: string;
+}
+export interface AddAuthorisation {
+  moduleType: number;
+  action: number;
+}
+export interface AuthoString {
+  moduleType: string;
+  action: string;
 }

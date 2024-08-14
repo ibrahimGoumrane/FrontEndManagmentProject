@@ -35,7 +35,7 @@ export default function SelectUniqueModal({
   const [Labelvalue, setLabelvalue] = useState<string>("");
   useEffect(() => {
     const selectedValue = options.find(
-      (option) => option.value === item
+      (option) => +option.value === +item
     )?.label;
     setLabelvalue(selectedValue || "");
   }, [item, options]);
@@ -45,7 +45,6 @@ export default function SelectUniqueModal({
     setItem(+event.target.value);
     setUpdateValue(false);
   };
-
   return (
     <div>
       <label

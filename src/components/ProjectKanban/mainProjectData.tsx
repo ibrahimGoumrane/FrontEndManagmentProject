@@ -26,9 +26,15 @@ const customTheme: CustomFlowbiteTheme = {
     },
   },
   carousel: {
+    root: {
+      leftControl:
+        "absolute left-0 top-0 flex h-full items-center justify-center px-2 focus:outline-none",
+      rightControl:
+        "absolute right-0 top-0 flex h-full items-center justify-center px-2 focus:outline-none",
+    },
     control: {
-      base: "flex items-center justify-center w-10 h-10 bg-white rounded-full text-slate-900 shadow-xl",
-      icon: "h-5 w-5 text-purple-500 dark:text-gray-800 sm:h-6 sm:w-6",
+      base: "flex items-center justify-center w-10 h-10 rounded-full   -translate-y-5 text-slate-900  shadow-xl",
+      icon: "h-5 w-5 text-purple-500 dark:text-gray-800 sm:h-6 sm:w-6  ",
     },
   },
 };

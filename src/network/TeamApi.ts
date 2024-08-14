@@ -77,11 +77,13 @@ export async function createTeam(name: string): Promise<Team> {
   });
   return response;
 }
+
+//Require auth
 export async function addTeamMember(
   TeamId: number,
   id: number
 ): Promise<User[]> {
-  const response = await fetchData(`/api/teams/${TeamId}`, {
+  const response = await fetchData(`/api/teams/${TeamId}?moduleId=${TeamId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -90,32 +92,37 @@ export async function addTeamMember(
   });
   return response;
 }
+
 export async function removeTeamMember(
   TeamId: number,
   id: number
 ): Promise<User[]> {
-  const response = await fetchData(`/api/teams/members/${TeamId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
-  });
+  const response = await fetchData(
+    `/api/teams/members/${TeamId}?moduleId=${TeamId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    }
+  );
   return response;
 }
-export async function saveTeam(id: number, teams: Team): Promise<Team> {
-  const response = await fetchData(`/api/teams/${id}`, {
+
+export async function saveTeam(id: number, team: Team): Promise<Team> {
+  const response = await fetchData(`/api/teams/${id}?moduleId=${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ teams }),
+    body: JSON.stringify({ team }),
   });
   return response;
 }
 
 export async function deleteTeam(id: number) {
-  const response = await fetchData(`/api/teams/${id}`, {
+  const response = await fetchData(`/api/teams/${id}?moduleId=${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 import { autorisationModel } from "../models/auth";
-import { Project, ProjectCreation, getProject } from "../models/Projects";
+import { getProject, Project, ProjectCreation } from "../models/Projects";
 import { ProjectStatus } from "../models/Status";
 import { Id } from "../models/Tasks";
 import { fetchData } from "./utilies";
@@ -31,8 +31,17 @@ export const getUserProjects = async (): Promise<Project[]> => {
   });
   return response;
 };
-export const getProjectData = async (projectId: Id): Promise<getProject> => {
+export const getProjectData = async (projectId: Id): Promise<Project> => {
   const response = await fetchData(`/api/projects/${projectId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
+export const getProjectInfo = async (projectId: Id): Promise<getProject> => {
+  const response = await fetchData(`/api/projects/info/${projectId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -77,13 +86,16 @@ export const getProjectMembers = async (
 
 //need For authorisations
 export const updateProject = async (data: Project): Promise<Project> => {
-  const response = await fetchData(`/api/projects/${data.id}?moduleId=${data.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetchData(
+    `/api/projects/${data.id}?moduleId=${data.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
   return response;
 };
 

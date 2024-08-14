@@ -91,7 +91,7 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
                     key={project.id}
                     active={projectId == project.id ? true : false}
                     title={project.name ? project.name : ""}
-                    to={`/home/project/${project.id}`}
+                    to={`/home/projects/${project.id}`}
                     status={
                       projectStatus.current.find(
                         (state) => state.id === project.statusId

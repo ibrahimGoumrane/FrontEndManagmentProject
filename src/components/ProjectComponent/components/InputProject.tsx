@@ -34,7 +34,6 @@ export default function Input({
   value: initialValue = "",
 }: InputProps) {
   const { project } = useProject();
-  console.log(type, initialValue);
   const [item, setItem] = useState<string | number>(() => {
     if (type === "datetime-local") {
       return toDateTimeLocal(String(initialValue));

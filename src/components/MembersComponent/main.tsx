@@ -1,7 +1,9 @@
 import { authorisation, autorisationModel } from "../../models/auth.ts";
 import { Carousel } from "flowbite-react";
 import Item from "./item.tsx";
-import { deleteProjectAuth } from "../../network/authApi.ts";
+import {
+  deleteProjectAuth,
+} from "../../network/authApi.ts";
 import { useState } from "react";
 import PopUp from "../utils/popUp.tsx";
 import { PopUpType } from "../../models/utils.ts";
@@ -15,7 +17,7 @@ const MembersComponent = ({
   updateMembers,
 }: MembersComponentProps) => {
   const [successMessage, setSuccess] = useState<boolean>(false);
-
+  const [errorMessage, setErrorMessage] = useState<string>("");
   function handleDelete(id: string, moduleId: string, memeberId: string) {
     async function deleteAuth() {
       await deleteProjectAuth(id, moduleId);
@@ -27,7 +29,7 @@ const MembersComponent = ({
           return member.id.toString() !== memeberId.toString();
         });
         const newAuth = newMembers.auth.filter(
-          (auth: authorisation) => auth.id.toString() !== id.toString()
+          (auth: authorisation) => auth.id && auth.id.toString() !== id.toString()
         );
         const updatedUser: autorisationModel = {
           ...newMembers,
@@ -39,7 +41,7 @@ const MembersComponent = ({
     }
     deleteAuth();
   }
-  console.log(members);
+
   return (
     <div className="h-[68vh] w-[30vw]  mx-auto">
       {successMessage && (
@@ -49,6 +51,14 @@ const MembersComponent = ({
           setSuccess={setSuccess}
         />
       )}
+      {errorMessage && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={errorMessage}
+          setSuccess={setSuccess}
+        />
+      )}
+
       <Carousel slide={false}>
         {members ? (
           members.map((member, index) => {
@@ -57,7 +67,11 @@ const MembersComponent = ({
                 className="flex h-full items-center justify-center bg-purple-500 cursor-default"
                 key={index}
               >
-                <Item member={member} handleDelete={handleDelete} />
+                <Item
+                  member={member}
+                  handleDelete={handleDelete}
+                  setErrorMessage={setErrorMessage}
+                />
               </div>
             );
           })

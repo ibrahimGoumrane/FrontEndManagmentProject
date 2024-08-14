@@ -18,9 +18,9 @@ import {
 import { useEffect, useState } from "react";
 import { getProject } from "../../../models/Projects";
 import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
-import { getProjectData } from "../../../network/ProjectApi";
-import { formatDateTime } from "../../../utils/utility";
+import { getProjectInfo } from "../../../network/ProjectApi";
 import ProjectSearch from "./projectSearch/main";
+import { formatDateTime } from "../../../utils/utility";
 
 interface GridRowProp extends getProject {}
 
@@ -154,11 +154,12 @@ function ProjectListing() {
   });
 
   useEffect(() => {
-    async function fetchTaskInfo() {
+    async function fetchProjectInfo() {
       if (projects) {
         const newRows = await Promise.all(
-          projects.map((project) => getProjectData(project.id ? project.id : 1))
+          projects.map((project) => getProjectInfo(project.id ? project.id : 1))
         );
+        console.log(newRows);
         const rows = newRows?.map((row) => {
           row.startDate = row.startDate
             ? formatDateTime(row.startDate)
@@ -175,12 +176,11 @@ function ProjectListing() {
           row.description = row.description?.split("<br>").join("\n");
           return row;
         });
-
         setRows(rows);
       }
       setLoading(false);
     }
-    fetchTaskInfo();
+    fetchProjectInfo();
   }, [projects]);
 
   return (
@@ -237,7 +237,7 @@ function ProjectListing() {
         </div>
 
         {/* Right Section */}
-          <ProjectSearch />
+        <ProjectSearch />
       </div>
     </div>
   );
