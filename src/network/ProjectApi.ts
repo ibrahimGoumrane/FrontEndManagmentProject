@@ -4,6 +4,7 @@ import { ProjectStatus } from "../models/Status";
 import { Id } from "../models/Tasks";
 import { fetchData } from "./utilies";
 
+////No need authorisation
 export async function searchProjects(name: string): Promise<Project[]> {
   const response = await fetchData(`/api/projects/?search=${name}`, {
     method: "GET",
@@ -51,19 +52,11 @@ export const createProject = async (
   });
   return response;
 };
-export const updateProject = async (data: Project): Promise<Project> => {
-  const response = await fetchData(`/api/projects/${data.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  return response;
-};
-export const deleteProject = async (id: number | string): Promise<Project> => {
-  const response = await fetchData(`/api/projects/${id}`, {
-    method: "DELETE",
+export const getProjectState = async (
+  id: number | string
+): Promise<ProjectStatus> => {
+  const response = await fetchData(`/api/projects/status/${id}`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
@@ -81,6 +74,29 @@ export const getProjectMembers = async (
   });
   return response;
 };
+
+//need For authorisations
+export const updateProject = async (data: Project): Promise<Project> => {
+  const response = await fetchData(`/api/projects/${data.id}?moduleId=${data.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return response;
+};
+
+export const deleteProject = async (id: number | string): Promise<Project> => {
+  const response = await fetchData(`/api/projects/${id}?moduleId=${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
+
 export const updateProjectMembers = async (
   projectId: number | string,
   members: autorisationModel[]
@@ -91,18 +107,6 @@ export const updateProjectMembers = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(members),
-  });
-  return response;
-};
-
-export const getProjectState = async (
-  id: number | string
-): Promise<ProjectStatus> => {
-  const response = await fetchData(`/api/projects/status/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
   return response;
 };
