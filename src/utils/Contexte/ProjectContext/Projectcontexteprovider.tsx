@@ -2,7 +2,6 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
-import { User } from "../../../models/Users";
 import {
   getProjectData,
   getProjectMembers,
@@ -24,6 +23,8 @@ import {
 import { ProjectContext } from "./projectContexte";
 import { clearLocalStorage } from "./utils/utilities";
 import { useUser } from "../UserContext/userContexte";
+import { getProjectAuth } from "../../../network/authApi";
+import { autorisationModel } from "../../../models/auth";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -54,7 +55,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     const projectState = localStorage.getItem(`projectState${projectId}`);
     return projectState ? JSON.parse(projectState) : null;
   });
-  const [members, setMembers] = useState<User[]>(() => {
+  const [members, setMembers] = useState<autorisationModel[]>(() => {
     const savedMembers = localStorage.getItem(`members${projectId}`);
     return savedMembers ? JSON.parse(savedMembers) : [];
   });
@@ -125,7 +126,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
 
   const updateMembers = useCallback(
-    async (newMembers: User[]) => {
+    async (newMembers: autorisationModel[], saveTodb: boolean = true) => {
+      if (!saveTodb) {
+        setMembers(newMembers);
+        localStorage.setItem(`members${projectId}`, JSON.stringify(newMembers));
+        return;
+      }
       const members = await updateProjectMembers(projectId, newMembers);
       setMembers(members);
       localStorage.setItem(`members${projectId}`, JSON.stringify(members));
@@ -258,7 +264,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     async function fetchMembers() {
       try {
         const membersData = await getProjectMembers(projectId);
-        setMembers(membersData);
+        const fetchMembersAuth = await Promise.all(
+          membersData.map(async (user) => {
+            return await getProjectAuth(user.id, projectId.toString());
+          })
+        );
+        setMembers(fetchMembersAuth);
         localStorage.setItem(
           `members${projectId}`,
           JSON.stringify(membersData)

@@ -7,23 +7,26 @@ import { MdDashboard } from "react-icons/md";
 import { Project, ProjectModif } from "../../models/Projects";
 import type { ProjectStatus, TaskStatus } from "../../models/Status";
 import type { Task } from "../../models/Tasks";
-import type { User } from "../../models/Users";
 import MembersComponent from "../MembersComponent/main";
 import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
 import KanbanBoard from "./kanbanBoard";
 import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
+import { autorisationModel } from "../../models/auth";
 
 interface ComponentProps {
   project: Project;
   tasks: Task[];
   projectStatus: ProjectStatus[];
   projectState: ProjectStatus;
-  members: User[];
+  members: autorisationModel[];
   taskStatus: TaskStatus[];
   updateProject: (newProject: ProjectModif | null) => Promise<void>;
   updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
-  updateMembers: (users: User[]) => Promise<void>;
+  updateMembers: (
+    users: autorisationModel[],
+    saveTodb: boolean
+  ) => Promise<void>;
   updateProjectState: (state: ProjectStatus) => Promise<void>;
   updateTaskStatus: (taskStatus: TaskStatus[]) => Promise<void>;
 }

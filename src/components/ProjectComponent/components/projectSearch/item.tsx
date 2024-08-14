@@ -1,4 +1,5 @@
 import { getProject } from "../../../../models/Projects";
+import { requestJoingProject } from "../../../../network/ProjectApi";
 import { formatDateTime } from "../../../../utils/utility";
 interface ItemProps {
   project: getProject;
@@ -6,9 +7,10 @@ interface ItemProps {
 }
 
 const PorjectItem = ({ project, handleJoinRequest }: ItemProps) => {
-  const requestToJoinTheTeam = () => {
+  const requestToJoinProject = () => {
     async function requesting() {
       handleJoinRequest();
+      await requestJoingProject(project.id.toString());
     }
     requesting();
   };
@@ -21,7 +23,7 @@ const PorjectItem = ({ project, handleJoinRequest }: ItemProps) => {
       <div>
         <button
           className="text-xs text-bold px-2 py-2 text-nowrap bg-white text-slate-900 rounded-md cursor-pointer hover:bg-slate-100"
-          onClick={requestToJoinTheTeam}
+          onClick={requestToJoinProject}
         >
           Request To Join
         </button>

@@ -21,13 +21,12 @@ const MainData = () => {
             <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
               Recent Projects
             </h2>
-            <Link to={'/home/projects/'}>
+            <Link to={"/home/projects/"}>
               <Button
                 variant="text"
                 className="text-md text-purple-500 lowercase font-serif hover:cursor-pointer"
-                disabled={projects?.length === 0 ? true : false}
               >
-                View All projects
+                Join new Projects
               </Button>
             </Link>
           </div>

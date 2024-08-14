@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Task } from "../../../models/Tasks";
-import { User } from "../../../models/Users";
+import { autorisationModel } from "../../../models/auth";
 
 // Create a context
 export const ProjectContext = createContext<
@@ -11,11 +11,14 @@ export const ProjectContext = createContext<
       tasks: Task[];
       projectStatus: ProjectStatus[];
       projectState: ProjectStatus | null;
-      members: User[];
+      members: autorisationModel[];
       taskStatus: TaskStatus[];
       updateProject: (newProject: ProjectModif | null) => Promise<void>;
       updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
-      updateMembers: (users: User[]) => Promise<void>;
+      updateMembers: (
+        users: autorisationModel[],
+        saveTodb: boolean
+      ) => Promise<void>;
       updateProjectState: (state: ProjectStatus) => Promise<void>;
       updateTaskStatus: (taskStatus: TaskStatus[]) => Promise<void>;
       resetData: () => void;

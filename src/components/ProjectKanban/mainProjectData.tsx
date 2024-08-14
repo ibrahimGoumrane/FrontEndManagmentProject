@@ -7,9 +7,9 @@ const customTheme: CustomFlowbiteTheme = {
   tabs: {
     base: "flex-1 flex flex-col gap-2 max-w-[100%] overflow-x-hidden overflow-y-hidden",
     tablist: {
-      base: "flex text-center items-center justify-between gap-32  self-start ",
+      base: "flex text-center items-center justify-between min-w-full gap-32  self-start ",
       tabitem: {
-        base: "flex items-center w-40 gap-2 flex items-center justify-center rounded-t-lg p-4 text-md font-medium first:ml-0 focus:outline-none  disabled:cursor-not-allowed disabled:text-gray-400 disabled:dark:text-gray-500",
+        base: "flex items-center w-52 gap-2 flex items-center justify-center rounded-t-lg p-4 text-md font-bold first:ml-0 focus:outline-none  disabled:cursor-not-allowed disabled:text-gray-400 disabled:dark:text-gray-500",
         variant: {
           default: {
             base: "rounded-t-lg bg-transparent text-white",
@@ -22,7 +22,13 @@ const customTheme: CustomFlowbiteTheme = {
       },
     },
     tabitemcontainer: {
-      base: "flex-1",
+      base: "flex-1 ",
+    },
+  },
+  carousel: {
+    control: {
+      base: "flex items-center justify-center w-10 h-10 bg-white rounded-full text-slate-900 shadow-xl",
+      icon: "h-5 w-5 text-purple-500 dark:text-gray-800 sm:h-6 sm:w-6",
     },
   },
 };

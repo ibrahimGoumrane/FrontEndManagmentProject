@@ -1,9 +1,8 @@
+import { autorisationModel } from "../models/auth";
 import { Project, ProjectCreation, getProject } from "../models/Projects";
 import { ProjectStatus } from "../models/Status";
 import { Id } from "../models/Tasks";
-import { User } from "../models/Users";
 import { fetchData } from "./utilies";
-
 
 export async function searchProjects(name: string): Promise<Project[]> {
   const response = await fetchData(`/api/projects/?search=${name}`, {
@@ -14,6 +13,14 @@ export async function searchProjects(name: string): Promise<Project[]> {
   });
   return response;
 }
+export const requestJoingProject = async (id: string) => {
+  return await fetchData(`/api/projects/requestJoin/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
 export const getUserProjects = async (): Promise<Project[]> => {
   const response = await fetchData(`/api/projects/user/`, {
     method: "GET",
@@ -65,7 +72,7 @@ export const deleteProject = async (id: number | string): Promise<Project> => {
 };
 export const getProjectMembers = async (
   id: number | string
-): Promise<User[]> => {
+): Promise<autorisationModel[]> => {
   const response = await fetchData(`/api/projects/user/${id}`, {
     method: "GET",
     headers: {
@@ -76,9 +83,9 @@ export const getProjectMembers = async (
 };
 export const updateProjectMembers = async (
   projectId: number | string,
-  members: User[]
-): Promise<User[]> => {
-  const response = await fetchData(`/api/projects/user/${projectId}`, {
+  members: autorisationModel[]
+): Promise<autorisationModel[]> => {
+  const response = await fetchData(`/api/projects/user?moduleId=${projectId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -7,6 +7,11 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+export interface Member{
+  id: string;
+  name: string;
+  email: string;
+}
 export interface SignUpCredentials {
   skills?: Array<string>; // Provide a type argument for the Array generic type.
   name: string;

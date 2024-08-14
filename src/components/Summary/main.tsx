@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { Project } from "../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../models/Status";
 import { Task } from "../../models/Tasks";
-import { User } from "../../models/Users";
+import { autorisationModel } from "../../models/auth.ts";
 
 interface summaryProps {
   project: Project | null;
   tasks: Task[];
   projectStatus: ProjectStatus[] | null;
   projectState: ProjectStatus | null;
-  members: User[];
+  members: autorisationModel[];
   taskStatus: TaskStatus[];
 }
 

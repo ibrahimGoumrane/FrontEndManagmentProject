@@ -1,10 +1,12 @@
+import { autorisationModel } from "./auth";
+
 export interface Project {
   id?: number;
   name?: string;
   statusId?: number;
   ManagerId?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
   description?: string;
   startDate?: string;
   endDate?: string;
@@ -29,4 +31,7 @@ export interface ProjectModif {
   endDate?: Date | undefined;
   name: string;
   statusId: number;
+}
+export interface ProjectMembers {
+  authorisation: autorisationModel[];
 }

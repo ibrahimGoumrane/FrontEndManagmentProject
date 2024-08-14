@@ -1,12 +1,15 @@
+import { Member } from "./Users";
+
 export type ModuleType = "TASK" | "PROJECT" | "TASKMANAGER" | "TEAM";
 export type Action = "DELETE" | "UPDATE" | "CREATE";
-export interface autorisationModel {
+export interface autorisationModel extends Member {
+  auth: authorisation[];
+}
+export interface authorisation {
   id: string;
-  userId: string;
   moduleId: string;
   moduleType: ModuleType;
   action: Action;
-  createdAt: Date;
 }
 export interface autorisationModelInputs {
   userId: string;
