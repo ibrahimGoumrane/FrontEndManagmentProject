@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { FileInput } from "flowbite-react";
 import { UseFormRegister } from "react-hook-form";
 
 interface InputProps {
@@ -15,9 +16,8 @@ interface InputProps {
 }
 
 const fixedInputClass =
-  "rounded-md appearance-none  relative block w-full px-3 py-2  rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
-const fixedLabelClass =
-  "block text-gray-700 text-sm font-light font-semibold  text-white";
+  "rounded-md appearance-none   relative block w-full px-3   rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
+const fixedLabelClass = "block text-gray-700 text-sm font-light font-semibold ";
 
 export default function Input({
   labelText,
@@ -28,10 +28,11 @@ export default function Input({
   stylesLabel,
   error,
   value,
+  type,
   ...props
 }: InputProps) {
   return (
-    <div className="mb-5 w-full h-16 ">
+    <div className={"mb-5 w-full  " + `${type === "file" ? "col-span-2" : ""}`}>
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${
@@ -40,15 +41,27 @@ export default function Input({
       >
         {labelText}
       </label>
-      <input
-        id={labelFor}
-        {...props}
-        {...register(name)}
-        value={value}
-        className={`${stylesInput ? stylesInput : fixedInputClass} ${
-          error ? "border-red-400" : ""
-        }`}
-      />
+      {type === "file" ? (
+        <FileInput
+          sizing="lg"
+          id={labelFor}
+          {...props}
+          {...register(name)}
+          value={value}
+        />
+      ) : (
+        <input
+          id={labelFor}
+          {...props}
+          {...register(name)}
+          value={value}
+          type={type}
+          className={`${stylesInput ? stylesInput : fixedInputClass} ${
+            error ? "border-red-400" : ""
+          }`}
+        />
+      )}
+
       {error && <span className="text-red-500 text-sm italic">{error}</span>}
     </div>
   );

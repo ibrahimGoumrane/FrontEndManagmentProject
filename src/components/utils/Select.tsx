@@ -21,7 +21,7 @@ interface SelectModelControl {
   error?: string | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
-  options: { label: string; value: string  }[];
+  options: { label: string; value: string }[];
   [x: string]: unknown;
 }
 
@@ -60,29 +60,44 @@ export default function SelectModal({
       target: { value },
     } = event;
 
-    setSelectedValues(
-      typeof value === "string" ? value.split(",") : value
-    );    
-    const labels = options.filter(option => value.includes(option.value)).map(option => option.label);
+    setSelectedValues(typeof value === "string" ? value.split(",") : value);
+    const labels = options
+      .filter((option) => value.includes(option.value))
+      .map((option) => option.label);
     setSelectedLabels(labels);
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ minWidth: 80, display: "flex", alignItems: "center" }}>
+      {" "}
+      {/* Reduced minWidth to make the select smaller */}
       <ThemeProvider theme={theme}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" htmlFor={labelFor}>
+        <FormControl
+          fullWidth
+          size="small" // Set the size of the FormControl and Select to small
+          sx={{
+            "& .MuiInputLabel-root": {
+              fontSize: "0.875rem", // Make the label text smaller
+            },
+            "& .MuiOutlinedInput-root": {
+              fontSize: "0.875rem", // Make the input text smaller
+              height: "41px", // Adjust the height of the input
+              borderRadius: "6px",
+            },
+          }}
+        >
+          <InputLabel id="demo-select-small-label" htmlFor={labelFor}>
             {labelText}
           </InputLabel>
           <Select
-            labelId="demo-multiple-checkbox-label"
+            labelId="demo-select-small-label"
             id={labelFor}
             multiple
             value={selectedValues}
             label={labelText}
             {...register(name)}
             onChange={handleChange}
-            input={<OutlinedInput label="Tag" />}
+            input={<OutlinedInput label={labelText} />}
             renderValue={() => selectedLabels.join(", ")}
             MenuProps={MenuProps}
           >

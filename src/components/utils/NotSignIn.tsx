@@ -8,7 +8,7 @@ interface headingProps {
 }
 export default function Header({ heading, Img, extra }: headingProps) {
   return (
-    <div className="mb-10">
+    <div className="">
       <div className="flex justify-center">
         <Link to="/">{Img}</Link>
       </div>

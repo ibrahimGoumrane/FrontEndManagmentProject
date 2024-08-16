@@ -48,7 +48,6 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<User.SignUpCredentials>(formOptions);
-
   async function onSubmit(credentials: User.SignUpCredentials) {
     try {
       if (!policiesCheked.isChecked) {
@@ -58,11 +57,32 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
         });
         return;
       }
+
       setPoliciesCheked({
         ...policiesCheked,
         errorMsg: "",
       });
-      const newUser = await SignUp(credentials);
+
+      // Create FormData instance
+      const formData = new FormData();
+
+      // Append files
+      if (credentials.profileImg && credentials.profileImg.length > 0) {
+        formData.append("profileImg", credentials.profileImg[0]);
+      }
+
+      // Append other fields
+      formData.append("name", credentials.name);
+      formData.append("email", credentials.email);
+      formData.append("password", credentials.password);
+      formData.append("confirmPassword", credentials.confirmPassword);
+      formData.append("age", credentials.age.toString());
+      if (credentials.skills) {
+        credentials.skills.forEach((skill) => {
+          formData.append("skills", skill); // Use 'skills[]' to indicate array entries
+        });
+      }
+      const newUser = await SignUp(formData);
       onSignUpSuccessfull(newUser);
       setCreatedSuccessfully(true);
       setErrorText("");
@@ -78,11 +98,11 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
 
   return (
     <form
-      className="mt-3 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] sm:px-32 w-screen"
+      className="mt-3 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="">
-        {errorText && <div className="text-red-500">{errorText}</div>}
+      {errorText && <div className="text-red-500">{errorText}</div>}
+      <div className=" grid grid-cols-2 grid-rows-3  max-h-[80vh] overflow-hidden  gap-10">
         {createdSuccessfully && (
           <div className="text-green-500">User Created Successfully</div>
         )}
@@ -110,25 +130,25 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
             />
           )
         )}
-        <FormExtra
-          Data1="Accept Our Policies"
-          Data2="Already Have an account ?"
-          Data2Link="/login"
-          setIsChecked={togglePolicies}
-        />
-        {policiesCheked.errorMsg && (
-          <span className="text-red-500 text-sm italic">
-            {policiesCheked.errorMsg}
-          </span>
-        )}
-        <FormAction
-          text="Sign Up"
-          type="Button"
-          action="submit"
-          isSubmitting={isSubmitting}
-        />
-        <Policies name="" linkUrl="" />
       </div>
+      <FormExtra
+        Data1="Accept Our Policies"
+        Data2="Already Have an account ?"
+        Data2Link="/login"
+        setIsChecked={togglePolicies}
+      />
+      {policiesCheked.errorMsg && (
+        <span className="text-red-500 text-sm italic">
+          {policiesCheked.errorMsg}
+        </span>
+      )}
+      <FormAction
+        text="Sign Up"
+        type="Button"
+        action="submit"
+        isSubmitting={isSubmitting}
+      />
+      <Policies name="" linkUrl="" />
     </form>
   );
 }

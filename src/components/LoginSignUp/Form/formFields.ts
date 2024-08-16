@@ -109,6 +109,15 @@ async function getSignupFields(): Promise<SignupField[]> {
       placeholder: "Skills",
       options: formattedSkills,
     },
+    {
+      labelText: "Profile Image",
+      labelFor: "profileImg",
+      id: "profileImg",
+      name: "profileImg",
+      type: "file",
+      isRequired: true,
+      placeholder: "entrer a profile picture",
+    },
   ];
 
   return signupFields;

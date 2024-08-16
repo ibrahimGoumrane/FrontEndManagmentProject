@@ -3,11 +3,12 @@ export interface User {
   name: string;
   email: string;
   age: number;
+  profileImg: File;
   skills: Array<string>;
   createdAt: string;
   updatedAt: string;
 }
-export interface Member{
+export interface Member {
   id: string;
   name: string;
   email: string;
@@ -19,6 +20,7 @@ export interface SignUpCredentials {
   password: string;
   confirmPassword: string;
   age: number;
+  profileImg: FileList;
 }
 export interface LogInCredentials {
   name: string;

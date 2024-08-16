@@ -15,6 +15,20 @@ const validationSchemaSignUp = Yup.object().shape({
     .min(18, "Age must be at least 18")
     .required("Age is required"),
   skills: Yup.array(),
+  profileImg: Yup.mixed<FileList>()
+    .required("Profile Image is required")
+    .test(
+      "fileSize",
+      "File size is too large",
+      (value) => !value || (value && value[0].size <= 10 * 1024 * 1024) // Maximum size of 10MB
+    )
+    .test("fileFormat", "Invalid file format", (value) => {
+      if (value) {
+        const supportedFormats = ["image/jpeg", "image/png", "image/jpg"];
+        return supportedFormats.includes(value[0].type);
+      }
+      return true;
+    }),
 });
 
 const validationSchemaLogin = Yup.object().shape({

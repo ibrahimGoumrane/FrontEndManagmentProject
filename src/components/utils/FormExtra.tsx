@@ -14,7 +14,7 @@ export default function FormExtra({
   setIsChecked,
 }: FormExtraProps) {
   return (
-    <div className="flex  xl:justify-between  justify-evenly h-20  xl:flex-row items-center  ">
+    <div className="flex  xl:justify-between  justify-evenly h-10  xl:flex-row items-center  ">
       <div className="flex justify-between xl:justify-center xl:items-center ">
         <input
           id={Data1}

@@ -14,15 +14,10 @@ export const Login = async (
   });
   return response;
 };
-export const SignUp = async (
-  credentials: User.SignUpCredentials
-): Promise<User.User> => {
+export const SignUp = async (credentials: FormData): Promise<User.User> => {
   const response = await fetchData("/api/users/signUp", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
+    body: credentials,
   });
   return response;
 };

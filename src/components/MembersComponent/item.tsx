@@ -85,6 +85,7 @@ export default function Item({
         }
       }
     }
+    
     saveNewAuth();
   }
   return (
