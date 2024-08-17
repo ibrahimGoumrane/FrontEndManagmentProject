@@ -51,6 +51,7 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
     projectState,
     members,
     taskStatus,
+    projectImg,
     updateProject,
     createStatus,
     updateMembers,
@@ -67,6 +68,7 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
           <MainProjectManip
             project={project || {}}
             tasks={tasks}
+            projectImg={projectImg}
             projectStatus={projectStatus}
             projectState={projectState || { id: -1, name: "" }}
             members={members}

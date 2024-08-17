@@ -1,24 +1,24 @@
 import { Button as FbButton, Tabs, TabsRef } from "flowbite-react";
-import { useState, useRef, useEffect } from "react";
-import { FaCat } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 import { FaPerson } from "react-icons/fa6";
 import { HiAdjustments, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
+import { autorisationModel } from "../../models/auth";
 import { Project, ProjectModif } from "../../models/Projects";
 import type { ProjectStatus, TaskStatus } from "../../models/Status";
 import type { Task } from "../../models/Tasks";
 import MembersComponent from "../MembersComponent/main";
 import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
-import KanbanBoard from "./kanbanBoard";
 import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
-import { autorisationModel } from "../../models/auth";
+import KanbanBoard from "./kanbanBoard";
 
 interface ComponentProps {
   project: Project;
   tasks: Task[];
   projectStatus: ProjectStatus[];
   projectState: ProjectStatus;
+  projectImg: string;
   members: autorisationModel[];
   taskStatus: TaskStatus[];
   updateProject: (newProject: ProjectModif | null) => Promise<void>;
@@ -36,6 +36,7 @@ const MainProjectManip = ({
   projectStatus,
   projectState,
   members,
+  projectImg,
   taskStatus,
   updateProject,
   updateMembers,
@@ -71,9 +72,11 @@ const MainProjectManip = ({
           <div className=" flex items-center justify-between relative">
             <div className="w-full flex items-center justify-between px-5 pt-2">
               <div className="flex items-center justify-start  gap-3 p-3">
-                <span className="rounded-full h-10 p-1 flex items-center justify-center w-10 text-xl bg-white text-purple-600">
-                  <FaCat />
-                </span>
+                <img
+                  src={projectImg}
+                  alt="projectIcon"
+                  className="max-w-12 max-h-12 rounded-full"
+                />
                 <span className="text-md italic text-white font-bold flex flex-col-reverse">
                   {project.name}
                   <span>
