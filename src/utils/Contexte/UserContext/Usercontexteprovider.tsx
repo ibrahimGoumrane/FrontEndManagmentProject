@@ -22,6 +22,7 @@ import {
 import { getTeamByUserId } from "../../../network/TeamApi";
 import {
   getLoggedInUser,
+  getUserProfile,
   updateUser as saveUser,
 } from "../../../network/UserApi";
 import { UserContext } from "./userContexte";
@@ -37,8 +38,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const savedUser = localStorage.getItem("userdata");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+
   const socket = useRef<Socket>();
 
+  const [profilePic, setProfilePic] = useState<string>(() => {
+    const savedImg = localStorage.getItem("userImg");
+    return savedImg ? JSON.parse(savedImg) : null;
+  });
   const [skills, setSkills] = useState<string[]>(() => {
     const savedSkills = localStorage.getItem("userskills");
     return savedSkills ? JSON.parse(savedSkills) : [];
@@ -74,7 +80,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       console.error("Failed to update user:", error);
     }
   }, []);
-
   const updateSkills = useCallback(async (newSkills: string[]) => {
     try {
       setSkills(newSkills);
@@ -184,6 +189,23 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
     fetchUser();
   }, []);
+  useEffect(() => {
+    async function fetchProfilePic() {
+      try {
+        console.log(user);
+        if (user) {
+          const loggedUserImg = await getUserProfile(user?.id);
+          setProfilePic(loggedUserImg);
+          localStorage.setItem("userImg", JSON.stringify(loggedUserImg));
+        }
+      } catch (error) {
+        console.error("Failed to fetch logged-in user:", error);
+        resetData();
+        localStorage.clear();
+      }
+    }
+    fetchProfilePic();
+  }, [user]);
 
   useEffect(() => {
     // Initialize socket connection
@@ -233,6 +255,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     <UserContext.Provider
       value={{
         user,
+        profilePic,
         skills,
         teams,
         activeTasks,

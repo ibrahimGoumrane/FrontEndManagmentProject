@@ -5,10 +5,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
-        target: "http://localhost:5010/api",
+      "/uploads": {
+        target: "http://localhost:5010", // The port where your Express server is running
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        secure: false,
+        rewrite: (path) => path.replace(/^\/uploads/, "/uploads"),
       },
     },
   },

@@ -39,6 +39,15 @@ export const getLoggedInUser = async (): Promise<User.User> => {
   });
   return response;
 };
+export const getUserProfile = async (userId: string): Promise<string> => {
+  const response = await fetchData(`/api/users/profile/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
 export const getUserData = async (id: Id): Promise<User.User> => {
   const response = await fetchData(`/api/users/${id}`, {
     method: "GET",
