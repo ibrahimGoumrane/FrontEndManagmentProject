@@ -98,7 +98,15 @@ export const updateProject = async (data: Project): Promise<Project> => {
   );
   return response;
 };
-
+export const getProjectImg = async (id: number | string): Promise<string> => {
+  const response = await fetchData(`/api/projects/img/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
 export const deleteProject = async (id: number | string): Promise<Project> => {
   const response = await fetchData(`/api/projects/${id}?moduleId=${id}`, {
     method: "DELETE",

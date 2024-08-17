@@ -4,6 +4,7 @@ import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
 import {
   getProjectData,
+  getProjectImg,
   getProjectMembers,
   getProjectState,
   updateProject as saveProjectData,
@@ -53,6 +54,10 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>(() => {
     const savedTasks = localStorage.getItem("projectStatus");
     return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+  const [projectImg, setProjectImg] = useState<string>(() => {
+    const savedTasks = localStorage.getItem("projectImg${projectId}");
+    return savedTasks ? JSON.parse(savedTasks) : "";
   });
   const [projectState, setProjectState] = useState<ProjectStatus | null>(() => {
     const projectState = localStorage.getItem(`projectState${projectId}`);
@@ -272,6 +277,23 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }
     fetchProject();
   }, [projectId, resetData]);
+  //Fetching Project Image
+  useEffect(() => {
+    async function fetchProjectImg() {
+      try {
+        const projectData = await getProjectImg(projectId);
+        setProjectImg(projectData);
+        localStorage.setItem(
+          `projectImg${projectId}`,
+          JSON.stringify(projectData)
+        );
+      } catch (error) {
+        console.error("Failed to fetch project Img:", error);
+        resetData();
+      }
+    }
+    fetchProjectImg();
+  }, [projectId, resetData]);
 
   // Fetching Tasks
   useEffect(() => {
@@ -373,6 +395,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         projectState,
         members,
         taskStatus,
+        projectImg,
         createTask,
         deleteTask,
         updateTask,

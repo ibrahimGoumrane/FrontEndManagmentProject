@@ -75,7 +75,7 @@ const MainProjectManip = ({
                   <FaCat />
                 </span>
                 <span className="text-md italic text-white font-bold flex flex-col-reverse">
-                  project Name
+                  {project.name}
                   <span>
                     {new Date().toLocaleDateString("en-US", {
                       weekday: "long",

@@ -7,6 +7,7 @@ export const TeamContext = createContext<
   | {
       team: Team | null;
       teamMembers: User[] | [];
+      teamImg: string;
       updateTeam: (newTeam: Team) => Promise<void>;
       addMember: (newMemberId: number) => Promise<void>;
       removeMember: (newMemberId: number) => Promise<void>;

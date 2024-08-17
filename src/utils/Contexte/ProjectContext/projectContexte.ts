@@ -13,6 +13,7 @@ export const ProjectContext = createContext<
       projectState: ProjectStatus | null;
       members: autorisationModel[];
       taskStatus: TaskStatus[];
+      projectImg: string;
       createTask: (newTask: Task) => void;
       deleteTask: (newTaskId: string) => void;
       updateTask: (taskId: number, newTask: Task, saveTodb?: boolean) => void;
