@@ -5,6 +5,7 @@ import { ColumnContainerProps } from "../../propsInterfaces/interfaces.ts";
 import TrashIcon from "../PlusIcon/Trash";
 import PlusIcon from "../PlusIcon/icons";
 import TaskContainer from "../TaskContainer/taskContainer";
+import { useProject } from "../../../../utils/Contexte/ProjectContext/projectContexte.ts";
 
 const ColumnContainer = ({
   state,
@@ -12,14 +13,17 @@ const ColumnContainer = ({
   updateStatus,
   status,
   createTask,
-  setStatus,
   tasks,
   ownTasks,
-  setTasks,
   deleteTask,
   updateTask,
-  setUpdateMade,
 }: ColumnContainerProps) => {
+  const {
+    createTask: createT,
+    deleteStatus: deleteS,
+    updateStatus: updateS,
+  } = useProject();
+
   //Storable state of our component
   const [name, setProjectName] = useState<string>(state.name);
 
@@ -101,10 +105,8 @@ const ColumnContainer = ({
                 onBlur={() => setEditMode(false)}
                 onKeyDown={(e) => {
                   if (e.key !== "Enter") return;
-                  updateStatus &&
-                    updateStatus(state.id, name, status, setStatus);
+                  updateStatus && updateStatus(state.id, name, status, updateS);
                   setEditMode(false);
-                  setUpdateMade(true);
                 }}
               />
             )}
@@ -114,14 +116,7 @@ const ColumnContainer = ({
               className="stroke-slate-500 hover:stroke-black hover:bg-columnBackgroundColor  rounded p-2"
               onClick={() => {
                 deleteStatus &&
-                  deleteStatus(
-                    state.id,
-                    status,
-                    setStatus,
-                    setTasks,
-                    setErrorMsg
-                  );
-                setUpdateMade(true);
+                  deleteStatus(state.id, status, deleteS, setErrorMsg);
               }}
             >
               <TrashIcon />
@@ -138,13 +133,11 @@ const ColumnContainer = ({
                 task={task}
                 deleteTask={deleteTask}
                 tasks={tasks}
-                setTasks={setTasks}
                 updateTask={updateTask}
                 createMode={createMode}
                 setCreateMode={setCreateMode}
                 editMode={editModeTask}
                 setEditMode={setEditModeTask}
-                setUpdateMade={setUpdateMade}
               />
             ))}
           </SortableContext>
@@ -157,7 +150,7 @@ const ColumnContainer = ({
           }
           onClick={() => {
             setCreateMode(true);
-            createTask(state.id, tasks, setTasks);
+            createTask(state.id, tasks, createT);
           }}
           disabled={createMode}
         >

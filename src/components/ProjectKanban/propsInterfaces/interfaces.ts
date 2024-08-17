@@ -8,60 +8,46 @@ interface ColumnContainerProps {
   deleteStatus?: (
     StatusId: Id,
     status: TaskStatus[],
-    setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>,
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+    deleteS: (newStatusId: string) => void,
     setErrorMsg?: React.Dispatch<React.SetStateAction<string>>
   ) => void;
   updateStatus?: (
     id: Id,
     name: string,
     status: TaskStatus[],
-    setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>
+    updateS: (statusId: number, Status: TaskStatus) => void
   ) => void;
   createTask: (
     statusId: Id,
     tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+    createT: (newTask: Task) => void
   ) => void;
   status: TaskStatus[];
-  setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>;
   tasks: Task[];
   ownTasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  deleteTask: (
-    taskId: Id,
-    tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-  ) => void;
+  deleteTask: (taskId: Id, deleteT: (newTaskId: string) => void) => void;
   updateTask: (
     taskId: Id,
     newTask: TaskModification,
     tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+    updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
   ) => void;
-  setUpdateMade: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TaskContainerProps {
   task: Task;
-  deleteTask: (
-    taskId: Id,
-    tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-  ) => void;
+  deleteTask: (taskId: Id, deleteT: (newTaskId: string) => void) => void;
   tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   updateTask: (
     taskId: Id,
     newTask: TaskModification,
     tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+    updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
   ) => void;
   createMode: boolean;
   setCreateMode: React.Dispatch<React.SetStateAction<boolean>>;
 
   editMode: boolean;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  setUpdateMade: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export type { ColumnContainerProps, TaskContainerProps };

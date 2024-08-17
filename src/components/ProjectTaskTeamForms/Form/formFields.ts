@@ -1,10 +1,10 @@
+import { autorisationModel } from "../../../models/auth";
 import { ProjectCreation, ProjectModif } from "../../../models/Projects";
 import {
   Id,
   TaskModification,
   TaskCreationCredentials,
 } from "../../../models/Tasks";
-import { User } from "../../../models/Users";
 import { getProjectStatus, getTaskStatus } from "../../../network/StatusApi";
 
 interface Field<T> {
@@ -22,7 +22,6 @@ type ProjectCreationField = Field<ProjectCreation>;
 type TaskCreationField = Field<TaskCreationCredentials>;
 export type ProjectModificationField = Field<ProjectModif>;
 export type TaskModificationField = Field<TaskModification>;
-
 
 const projectCreationFields: ProjectCreationField[] = [
   {
@@ -109,15 +108,12 @@ async function getProjectModificationFields(): Promise<
 }
 async function getTaskModificationFields(
   id: number | string,
-  members: User[]
+  members: autorisationModel[]
 ): Promise<TaskModificationField[]> {
-  const ProjectUsers = [
-    ...members,
-    {
-      id: 0,
-      name: "No Assignee",
-    },
-  ];
+  const usedData = members.map((member) => {
+    return { name: member.name, id: member.id };
+  });
+  const ProjectUsers = [{ name: "Select User", id: 0 }, ...usedData];
   const TaskStatus = await getTaskStatus(id);
   const formattedUsers = ProjectUsers.map((user) => ({
     label: user.name,

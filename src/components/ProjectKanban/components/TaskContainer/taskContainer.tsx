@@ -12,18 +12,16 @@ const TaskContainer = ({
   task,
   deleteTask,
   tasks,
-  setTasks,
   updateTask,
   createMode,
   setCreateMode,
   editMode,
   setEditMode,
-  setUpdateMade,
 }: TaskContainerProps) => {
+  const { deleteTask: deleteT, updateTask: updateT, project } = useProject();
   const [mouseIsOver, setMouseIsOver] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [name, setName] = useState(task.name);
-  const { project } = useProject();
   const {
     attributes,
     listeners,
@@ -49,11 +47,6 @@ const TaskContainer = ({
     transition,
   };
 
-  useEffect(() => {
-    if (isDragging) {
-      setUpdateMade(true);
-    }
-  }, [isDragging, setUpdateMade]);
   if (isDragging) {
     return (
       <div
@@ -99,10 +92,9 @@ const TaskContainer = ({
                   name: name,
                 },
                 tasks,
-                setTasks
+                updateT
               );
               setName("");
-              setUpdateMade(true);
               removeCreateMode();
             }
           }}
@@ -131,8 +123,7 @@ const TaskContainer = ({
           className="stroke-black absolute right-8 top-1/2 -translate-y-1/2 p-2 rounded bg-columnBackgroundColor  opacity-60 hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
-            setUpdateMade(true);
-            deleteTask(task.id, tasks, setTasks);
+            deleteTask(task.id, deleteT);
           }}
         >
           <TrashIcon />

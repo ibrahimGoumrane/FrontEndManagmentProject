@@ -9,7 +9,7 @@ const LogoImg = () => {
         <img
           alt="..."
           src={profilePic}
-          className=" rounded-full xl:w-48 w-48  h-auto   shadow-purple-800 shadow-sm relative block -translate-y-20 "
+          className=" rounded-full xl:w-48 w-48  h-auto   shadow-purple-800 shadow-sm relative block -translate-y-10 "
         />
       </div>
     </div>

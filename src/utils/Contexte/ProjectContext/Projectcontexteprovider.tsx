@@ -10,15 +10,18 @@ import {
   updateProjectMembers,
 } from "../../../network/ProjectApi";
 import {
+  createTaskStatus,
+  deleteTaskStatus,
   getProjectStatus,
   getTaskStatus,
-  saveTaskStatus,
+  updateTaskStatus as updateTaskS,
 } from "../../../network/StatusApi";
 import {
   deleteTasks,
+  createTask as createT,
   getProjectTasks,
   getActiveUserTasks,
-  updateTask as saveTask,
+  updateTask as updateT,
 } from "../../../network/TasksApi";
 import { ProjectContext } from "./projectContexte";
 import { clearLocalStorage } from "./utils/utilities";
@@ -97,34 +100,106 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     [project, projectId, projects, updateProjects]
   );
 
-  const updateTasks = useCallback(
-    async (newTasks: Task[], saveToDb: boolean = true) => {
-      let NTasks: Task[] = [];
-      if (!saveToDb) {
-        NTasks = newTasks;
-        setTask(NTasks);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
-      } else {
-        await deleteTasks(projectId);
-        NTasks = await Promise.all(
-          newTasks.map((t) =>
-            saveTask({
-              ...t,
-              projectId: +projectId,
-            })
-          )
-        );
-        setTask(NTasks);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
-      }
-      //handling the syncing of data with the userContext provider
+  useEffect(() => {
+    async function fetchNewUserTasks() {
       const userTasksData = await getActiveUserTasks();
-
       updateActiveTasks(userTasksData, false);
+    }
+    fetchNewUserTasks();
+  }, [tasks]);
+  const createTask = useCallback(
+    async (newTask: Task) => {
+      if (!newTask.name) {
+        throw new Error("Task name is required");
+      }
+      const newT = await createT(
+        newTask.name,
+        projectId,
+        newTask.statusId ?? "1",
+        newTask.description ?? "Description"
+      );
+      const newTasks = [...tasks, newT];
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
     },
-    [projectId, updateActiveTasks]
+    [projectId, tasks]
   );
-
+  const deleteTask = useCallback(
+    async (newTaskId: string) => {
+      await deleteTasks(newTaskId, projectId);
+      const newTasks = tasks.filter((task) => +task.id !== +newTaskId);
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
+    },
+    [projectId, tasks]
+  );
+  const updateTask = useCallback(
+    async (taskId: number, newTask: Task, saveTodb: boolean = true) => {
+      console.log("updateTask", taskId, newTask);
+      let updatedTask = newTask;
+      if (saveTodb) {
+        updatedTask = await updateT(
+          {
+            ...newTask,
+            id: taskId,
+          },
+          projectId.toString()
+        );
+      }
+      const newTasks = tasks.map((task) => {
+        if (+task.id === +taskId) {
+          return updatedTask;
+        }
+        return task;
+      });
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
+    },
+    [projectId, tasks]
+  );
+  const createStatus = useCallback(
+    async (newTaskStatus: TaskStatus) => {
+      const newStatus = await createTaskStatus(newTaskStatus.name, projectId);
+      const newTaskStatuses = [...taskStatus, newStatus];
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
+  const updateStatus = useCallback(
+    async (statusId: number, Status: TaskStatus) => {
+      const updatedStaus = await updateTaskS(projectId, Status);
+      const newTaskStatuses = taskStatus.map((status) => {
+        if (+status.id === +statusId) {
+          return updatedStaus;
+        }
+        return status;
+      });
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
+  const deleteStatus = useCallback(
+    async (newStatusId: string) => {
+      await deleteTaskStatus(newStatusId, projectId);
+      const newTaskStatuses = taskStatus.filter(
+        (status) => +status.id !== +newStatusId
+      );
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
   const updateMembers = useCallback(
     async (newMembers: autorisationModel[], saveTodb: boolean = true) => {
       if (!saveTodb) {
@@ -162,15 +237,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     },
     [projectId, projectStatus]
-  );
-
-  const updateTaskStatus = useCallback(
-    async (newTaskStatus: TaskStatus[]) => {
-      const taskS = await saveTaskStatus(projectId, newTaskStatus);
-      setTaskStatus(taskS);
-      localStorage.setItem(`taskStatus${projectId}`, JSON.stringify(taskS));
-    },
-    [projectId]
   );
 
   const resetData = useCallback(() => {
@@ -307,11 +373,15 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         projectState,
         members,
         taskStatus,
+        createTask,
+        deleteTask,
+        updateTask,
+        createStatus,
+        deleteStatus,
+        updateStatus,
         updateProject,
-        updateTasks,
         updateMembers,
         updateProjectState,
-        updateTaskStatus,
         resetData,
       }}
     >

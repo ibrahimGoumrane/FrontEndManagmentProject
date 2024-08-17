@@ -46,7 +46,6 @@ export const getTaskData = async (id: number | string): Promise<getTask> => {
   return response;
 };
 
-
 export const deleteTasksUser = async (): Promise<Task[]> => {
   const response = await fetchData(`/api/tasks/user/`, {
     method: "DELETE",
@@ -57,25 +56,28 @@ export const deleteTasksUser = async (): Promise<Task[]> => {
   return response;
 };
 
-
 //need auth
 export const createTask = async (
-  title: string,
+  name: string,
   projectId: number | string,
-  statusId: number | string
+  statusId: number | string,
+  description: string
 ): Promise<Task> => {
   const response = await fetchData(`/api/tasks/?moduleId=${projectId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, projectId, statusId }),
+    body: JSON.stringify({ name, projectId, statusId, description }),
   });
   return response;
 };
 
-export const updateTask = async (data: Task): Promise<Task> => {
-  const response = await fetchData(`/api/tasks/?moduleId=${data.projectId}`, {
+export const updateTask = async (
+  data: Task,
+  projectId: string
+): Promise<Task> => {
+  const response = await fetchData(`/api/tasks/?moduleId=${projectId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -85,14 +87,48 @@ export const updateTask = async (data: Task): Promise<Task> => {
   return response;
 };
 export const deleteTasks = async (
+  taskId: number | string,
   projectId: number | string
 ): Promise<Task[]> => {
-  const response = await fetchData(`/api/tasks/${projectId}?moduleId=${projectId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await fetchData(
+    `/api/tasks/${taskId}?moduleId=${projectId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
+export const deleteProjectTask = async (
+  TaskId: number | string,
+  projectId: number | string
+): Promise<Task[]> => {
+  const response = await fetchData(
+    `/api/tasks/project/${TaskId}?moduleId=${projectId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return response;
 };
 
+export const deleteTask = async (
+  TaskId: number | string,
+  projectId: number | string
+): Promise<Task[]> => {
+  const response = await fetchData(
+    `/api/tasks/${TaskId}?moduleId=${projectId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};

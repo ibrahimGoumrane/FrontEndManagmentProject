@@ -22,13 +22,12 @@ interface ComponentProps {
   members: autorisationModel[];
   taskStatus: TaskStatus[];
   updateProject: (newProject: ProjectModif | null) => Promise<void>;
-  updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
   updateMembers: (
     users: autorisationModel[],
     saveTodb: boolean
   ) => Promise<void>;
   updateProjectState: (state: ProjectStatus) => Promise<void>;
-  updateTaskStatus: (taskStatus: TaskStatus[]) => Promise<void>;
+  createStatus: (newTaskStatus: TaskStatus) => void;
 }
 
 const MainProjectManip = ({
@@ -39,10 +38,9 @@ const MainProjectManip = ({
   members,
   taskStatus,
   updateProject,
-  updateTasks,
   updateMembers,
   updateProjectState,
-  updateTaskStatus,
+  createStatus,
 }: ComponentProps) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -128,8 +126,7 @@ const MainProjectManip = ({
                   projectId={project?.id || -1}
                   taskStatus={taskStatus}
                   projectTasks={tasks}
-                  updateTasks={updateTasks}
-                  updateTaskStatus={updateTaskStatus}
+                  createStatus={createStatus}
                 />
               </Tabs.Item>
               <Tabs.Item title="Members" icon={FaPerson}>
