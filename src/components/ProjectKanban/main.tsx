@@ -126,7 +126,6 @@ const MainProjectManip = ({
               </Tabs.Item>
               <Tabs.Item active title="Board" icon={MdDashboard}>
                 <KanbanBoard
-                  projectId={project?.id || -1}
                   taskStatus={taskStatus}
                   projectTasks={tasks}
                   createStatus={createStatus}

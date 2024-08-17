@@ -2,18 +2,6 @@ import { TaskStatus } from "../../../models/Status";
 import { Task, TaskModification } from "../../../models/Tasks";
 import { Id } from "../types/types";
 
-export function createNewStatus(
-  status: TaskStatus[],
-  projectId: Id,
-  createS: (newTaskStatus: TaskStatus) => void
-) {
-  const statusToAdd: TaskStatus = {
-    id: status.length + 1,
-    name: "new Status",
-    projectId,
-  };
-  createS(statusToAdd);
-}
 export function createTask(
   statusId: Id,
   tasks: Task[],

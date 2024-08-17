@@ -78,7 +78,7 @@ const ColumnContainer = ({
         style={style}
         {...attributes}
         {...listeners}
-        className="bg-columnBackgroundColor w-[300px] h-[450px] max-h-[450px] rounded-md flex flex-col items-start "
+        className="bg-columnBackgroundColor w-[400px] h-[600px] max-h-[600px] rounded-md flex flex-col items-start "
       >
         {/* Column title */}
         <div
