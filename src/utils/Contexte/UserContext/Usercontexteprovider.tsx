@@ -14,11 +14,7 @@ import {
   updateProject as saveProjects,
 } from "../../../network/ProjectApi";
 import { getSkillsName, saveSkills } from "../../../network/SkillsApi";
-import {
-  deleteTasksUser,
-  getActiveUserTasks,
-  updateTask as saveTasks,
-} from "../../../network/TasksApi";
+import { getActiveUserTasks } from "../../../network/TasksApi";
 import { getTeamByUserId } from "../../../network/TeamApi";
 import {
   getLoggedInUser,
@@ -110,19 +106,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           localStorage.setItem("userTasks", JSON.stringify(newTasks));
           return;
         }
-        const assignedTask = await Promise.all(
-          newTasks.assigned.map((task) => saveTasks(task))
-        );
-        const savedTask = await Promise.all(
-          newTasks.created.map((task) => saveTasks(task))
-        );
-        localStorage.setItem(
-          "userTasks",
-          JSON.stringify({
-            assigned: assignedTask,
-            created: savedTask,
-          })
-        );
       } catch (error) {
         console.error("Failed to update tasks:", error);
       }
@@ -147,19 +130,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     },
     []
   );
-
-  const clearUserTasks = useCallback(async () => {
-    try {
-      setActiveTasks({
-        assigned: [],
-        created: [],
-      });
-      await deleteTasksUser();
-      localStorage.removeItem("userTasks");
-    } catch (error) {
-      console.error("Failed to clear user tasks:", error);
-    }
-  }, []);
 
   const resetData = () => {
     setUser(null);
@@ -192,7 +162,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     async function fetchProfilePic() {
       try {
-        console.log(user);
         if (user) {
           const loggedUserImg = await getUserProfile(user?.id);
           setProfilePic(loggedUserImg);
@@ -267,7 +236,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         updateActiveTasks,
         updateProjects,
         resetData,
-        clearUserTasks,
       }}
     >
       {children}

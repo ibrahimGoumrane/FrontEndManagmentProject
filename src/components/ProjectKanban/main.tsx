@@ -53,6 +53,7 @@ const MainProjectManip = ({
       setShowTasks(false);
     }
   }, [activeTab]);
+
   const [updateProjectData, setUpdateProjectData] = useState<boolean>(false);
   function updateProjectInfo(newProject: ProjectModif | null) {
     updateProject(newProject);

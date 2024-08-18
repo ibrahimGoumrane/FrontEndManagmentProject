@@ -112,11 +112,13 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }
     fetchNewUserTasks();
   }, [tasks]);
+
   const createTask = useCallback(
     async (newTask: Task) => {
       if (!newTask.name) {
         throw new Error("Task name is required");
       }
+
       const newT = await createT(
         newTask.name,
         projectId,
@@ -140,7 +142,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
   const updateTask = useCallback(
     async (taskId: number, newTask: Task, saveTodb: boolean = true) => {
-      console.log("updateTask", taskId, newTask);
       let updatedTask = newTask;
       if (saveTodb) {
         updatedTask = await updateT(

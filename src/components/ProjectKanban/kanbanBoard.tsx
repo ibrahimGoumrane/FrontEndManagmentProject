@@ -52,7 +52,6 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
   const statusId = useMemo(() => status.map((stat) => stat.id), [status]);
   const [activeStatus, setActiveStatus] = useState<TaskStatus | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  console.log(taskStatus);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -116,8 +115,6 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
                 deleteTask={deleteTask}
                 tasks={tasks}
                 updateTask={updateTask}
-                createMode={false}
-                setCreateMode={() => {}}
                 editMode={false}
                 setEditMode={() => {}}
               />

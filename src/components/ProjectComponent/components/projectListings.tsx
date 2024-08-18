@@ -159,7 +159,6 @@ function ProjectListing() {
         const newRows = await Promise.all(
           projects.map((project) => getProjectInfo(project.id ? project.id : 1))
         );
-        console.log(newRows);
         const rows = newRows?.map((row) => {
           row.startDate = row.startDate
             ? formatDateTime(row.startDate)

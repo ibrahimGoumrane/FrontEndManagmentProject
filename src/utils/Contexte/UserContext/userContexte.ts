@@ -29,7 +29,6 @@ export const UserContext = createContext<
         saveToDb?: boolean
       ) => Promise<void>;
       resetData: () => void;
-      clearUserTasks: () => void;
     }
   | undefined
 >(undefined);

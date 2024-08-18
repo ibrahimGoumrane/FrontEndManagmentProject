@@ -3,6 +3,7 @@ import { Task, TaskModification } from "../../../models/Tasks";
 import { Id } from "../types/types";
 
 export function createTask(
+  value: string,
   statusId: Id,
   tasks: Task[],
   createT: (newTask: Task) => void
@@ -32,7 +33,7 @@ export function createTask(
 
   const taskToAdd: Task = {
     id: tasks.length + 1,
-    name: "new task",
+    name: value,
     statusId: statusId,
     startDate: new Date().toISOString(),
     description: taskDescription,

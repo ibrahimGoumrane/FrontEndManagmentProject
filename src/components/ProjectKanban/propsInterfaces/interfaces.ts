@@ -18,6 +18,7 @@ interface ColumnContainerProps {
     updateS: (statusId: number, Status: TaskStatus) => void
   ) => void;
   createTask: (
+    value: string,
     statusId: Id,
     tasks: Task[],
     createT: (newTask: Task) => void
@@ -44,9 +45,6 @@ interface TaskContainerProps {
     tasks: Task[],
     updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
   ) => void;
-  createMode: boolean;
-  setCreateMode: React.Dispatch<React.SetStateAction<boolean>>;
-
   editMode: boolean;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
