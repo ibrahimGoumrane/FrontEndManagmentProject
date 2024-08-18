@@ -1,3 +1,9 @@
+import {
+  MActivity,
+  MEMBERACTIVITYTYPE,
+  TActivity,
+  TASKACTIVITYTYPE,
+} from "../models/activity";
 import { autorisationModel } from "../models/auth";
 import { getProject, Project, ProjectCreation } from "../models/Projects";
 import { ProjectStatus } from "../models/Status";
@@ -128,5 +134,22 @@ export const updateProjectMembers = async (
     },
     body: JSON.stringify(members),
   });
+  return response;
+};
+
+//stuff related to activities
+export const getActivities = async (
+  projectId: number | string,
+  activityType: TASKACTIVITYTYPE | MEMBERACTIVITYTYPE
+): Promise<TActivity[] | MActivity[]> => {
+  const response = await fetchData(
+    `/api/projects/activity/${projectId}/${activityType}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return response;
 };

@@ -1,34 +1,17 @@
 import { useEffect, useState } from "react";
-import { Project } from "../../models/Projects";
-import { ProjectStatus, TaskStatus } from "../../models/Status";
-import { Task } from "../../models/Tasks";
-import { autorisationModel } from "../../models/auth.ts";
-import { MdEdit } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
+import { MdEdit } from "react-icons/md";
+import { Task } from "../../models/Tasks";
 
 import { BiCheck } from "react-icons/bi";
+import { FaCalendar } from "react-icons/fa";
+import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte.ts";
+import ActivityFeed from "./components/activityFeed.tsx";
 import DataCard from "./components/dataCard.tsx";
 import DataChart from "./components/dataChart.tsx";
-import { FaCalendar } from "react-icons/fa";
-import ActivityFeed from "./components/activityFeed.tsx";
 
-interface summaryProps {
-  project: Project | null;
-  tasks: Task[];
-  projectStatus: ProjectStatus[] | null;
-  projectState: ProjectStatus | null;
-  members: autorisationModel[];
-  taskStatus: TaskStatus[];
-}
-
-const Summary = ({
-  project,
-  tasks,
-  projectStatus,
-  projectState,
-  members,
-  taskStatus,
-}: summaryProps) => {
+const Summary = () => {
+  const { tasks, taskStatus } = useProject();
   const [createdTasks, setCreatedTasks] = useState<Task[]>([]);
   const [updatedTasks, setupdatedTasks] = useState<Task[]>([]);
   const [dueNextWeek, setdueNextWeek] = useState<Task[]>([]);

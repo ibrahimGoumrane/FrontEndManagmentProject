@@ -33,8 +33,6 @@ interface ComponentProps {
 const MainProjectManip = ({
   project,
   tasks,
-  projectStatus,
-  projectState,
   members,
   projectImg,
   taskStatus,
@@ -116,14 +114,7 @@ const MainProjectManip = ({
                 icon={HiUserCircle}
                 className=" active:bg-white"
               >
-                <Summary
-                  project={project}
-                  tasks={tasks}
-                  projectStatus={projectStatus}
-                  projectState={projectState}
-                  members={members}
-                  taskStatus={taskStatus}
-                />
+                <Summary />
               </Tabs.Item>
               <Tabs.Item active title="Board" icon={MdDashboard}>
                 <KanbanBoard

@@ -3,6 +3,7 @@ import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
 import {
+  getActivities,
   getProjectData,
   getProjectImg,
   getProjectMembers,
@@ -29,6 +30,11 @@ import { clearLocalStorage } from "./utils/utilities";
 import { useUser } from "../UserContext/userContexte";
 import { getProjectAuth } from "../../../network/authApi";
 import { autorisationModel } from "../../../models/auth";
+import {
+  ActivityMap,
+  TASKACTIVITYTYPE,
+  MEMBERACTIVITYTYPE,
+} from "../../../models/activity";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -50,7 +56,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     const savedTasks = localStorage.getItem(`tasks${projectId}`);
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
-
+  const [activity, setActivity] = useState<ActivityMap>();
   const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>(() => {
     const savedTasks = localStorage.getItem("projectStatus");
     return savedTasks ? JSON.parse(savedTasks) : [];
@@ -104,14 +110,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     },
     [project, projectId, projects, updateProjects]
   );
-
-  useEffect(() => {
-    async function fetchNewUserTasks() {
-      const userTasksData = await getActiveUserTasks();
-      updateActiveTasks(userTasksData, false);
-    }
-    fetchNewUserTasks();
-  }, [tasks]);
 
   const createTask = useCallback(
     async (newTask: Task) => {
@@ -263,6 +261,13 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   // Fetching data from DB -> FrontEnd
   useEffect(() => {
+    async function fetchNewUserTasks() {
+      const userTasksData = await getActiveUserTasks();
+      updateActiveTasks(userTasksData, false);
+    }
+    fetchNewUserTasks();
+  }, [tasks]);
+  useEffect(() => {
     async function fetchProject() {
       try {
         const projectData: Project = await getProjectData(projectId);
@@ -294,6 +299,42 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     }
     fetchProjectImg();
+  }, [projectId, resetData]);
+
+  //FETCHING PROJECT ACTIVITY
+  useEffect(() => {
+    async function fetchProjectActivity() {
+      try {
+        const [
+          createActivity,
+          deleteActivity,
+          updateActivity,
+          joinActivity,
+          leaveActivity,
+        ] = await Promise.all([
+          getActivities(projectId, TASKACTIVITYTYPE.CREATE),
+          getActivities(projectId, TASKACTIVITYTYPE.DELETE),
+          getActivities(projectId, TASKACTIVITYTYPE.UPDATE),
+          getActivities(projectId, MEMBERACTIVITYTYPE.JOIN),
+          getActivities(projectId, MEMBERACTIVITYTYPE.LEAVE),
+        ]);
+
+        const activityData: ActivityMap = {
+          [TASKACTIVITYTYPE.CREATE]: createActivity,
+          [TASKACTIVITYTYPE.DELETE]: deleteActivity,
+          [TASKACTIVITYTYPE.UPDATE]: updateActivity,
+          [MEMBERACTIVITYTYPE.JOIN]: joinActivity,
+          [MEMBERACTIVITYTYPE.LEAVE]: leaveActivity,
+        };
+        setActivity(activityData);
+        console.log(activityData);
+      } catch (error) {
+        console.error("Failed to fetch project activity:", error);
+        resetData();
+      }
+    }
+
+    fetchProjectActivity();
   }, [projectId, resetData]);
 
   // Fetching Tasks
@@ -391,6 +432,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     <ProjectContext.Provider
       value={{
         project,
+        activity,
         tasks,
         projectStatus,
         projectState,

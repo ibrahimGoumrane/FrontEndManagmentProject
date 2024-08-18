@@ -3,6 +3,7 @@ import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Task } from "../../../models/Tasks";
 import { autorisationModel } from "../../../models/auth";
+import { ActivityMap } from "../../../models/activity";
 
 // Create a context
 export const ProjectContext = createContext<
@@ -13,6 +14,7 @@ export const ProjectContext = createContext<
       projectState: ProjectStatus | null;
       members: autorisationModel[];
       taskStatus: TaskStatus[];
+      activity: ActivityMap | undefined;
       projectImg: string;
       createTask: (newTask: Task) => void;
       deleteTask: (newTaskId: string) => void;
