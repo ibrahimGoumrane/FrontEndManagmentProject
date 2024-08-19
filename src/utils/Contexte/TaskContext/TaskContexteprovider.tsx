@@ -67,8 +67,8 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       const commentsDb = await Promise.all(
         commentsData.map((comment) => saveComment(comment))
       );
+      
       setComments(commentsDb);
-
       localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsDb));
     },
     [taskId]
