@@ -14,14 +14,11 @@ import {
   updateProject as saveProjects,
 } from "../../../network/ProjectApi";
 import { getSkillsName, saveSkills } from "../../../network/SkillsApi";
-import {
-  deleteTasksUser,
-  getActiveUserTasks,
-  updateTask as saveTasks,
-} from "../../../network/TasksApi";
+import { getActiveUserTasks } from "../../../network/TasksApi";
 import { getTeamByUserId } from "../../../network/TeamApi";
 import {
   getLoggedInUser,
+  getUserProfile,
   updateUser as saveUser,
 } from "../../../network/UserApi";
 import { UserContext } from "./userContexte";
@@ -37,8 +34,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const savedUser = localStorage.getItem("userdata");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+
   const socket = useRef<Socket>();
 
+  const [profilePic, setProfilePic] = useState<string>(() => {
+    const savedImg = localStorage.getItem("userImg");
+    return savedImg ? JSON.parse(savedImg) : null;
+  });
   const [skills, setSkills] = useState<string[]>(() => {
     const savedSkills = localStorage.getItem("userskills");
     return savedSkills ? JSON.parse(savedSkills) : [];
@@ -74,7 +76,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       console.error("Failed to update user:", error);
     }
   }, []);
-
   const updateSkills = useCallback(async (newSkills: string[]) => {
     try {
       setSkills(newSkills);
@@ -105,19 +106,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           localStorage.setItem("userTasks", JSON.stringify(newTasks));
           return;
         }
-        const assignedTask = await Promise.all(
-          newTasks.assigned.map((task) => saveTasks(task))
-        );
-        const savedTask = await Promise.all(
-          newTasks.created.map((task) => saveTasks(task))
-        );
-        localStorage.setItem(
-          "userTasks",
-          JSON.stringify({
-            assigned: assignedTask,
-            created: savedTask,
-          })
-        );
       } catch (error) {
         console.error("Failed to update tasks:", error);
       }
@@ -142,19 +130,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     },
     []
   );
-
-  const clearUserTasks = useCallback(async () => {
-    try {
-      setActiveTasks({
-        assigned: [],
-        created: [],
-      });
-      await deleteTasksUser();
-      localStorage.removeItem("userTasks");
-    } catch (error) {
-      console.error("Failed to clear user tasks:", error);
-    }
-  }, []);
 
   const resetData = () => {
     setUser(null);
@@ -184,6 +159,22 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
     fetchUser();
   }, []);
+  useEffect(() => {
+    async function fetchProfilePic() {
+      try {
+        if (user) {
+          const loggedUserImg = await getUserProfile(user?.id);
+          setProfilePic(loggedUserImg);
+          localStorage.setItem("userImg", JSON.stringify(loggedUserImg));
+        }
+      } catch (error) {
+        console.error("Failed to fetch logged-in user:", error);
+        resetData();
+        localStorage.clear();
+      }
+    }
+    fetchProfilePic();
+  }, [user]);
 
   useEffect(() => {
     // Initialize socket connection
@@ -233,6 +224,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     <UserContext.Provider
       value={{
         user,
+        profilePic,
         skills,
         teams,
         activeTasks,
@@ -244,7 +236,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         updateActiveTasks,
         updateProjects,
         resetData,
-        clearUserTasks,
       }}
     >
       {children}

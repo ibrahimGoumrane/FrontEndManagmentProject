@@ -2,22 +2,11 @@ import { TaskStatus } from "../../../models/Status";
 import { Task, TaskModification } from "../../../models/Tasks";
 import { Id } from "../types/types";
 
-export function createNewStatus(
-  status: TaskStatus[],
-  setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>,
-  projectId: Id
-) {
-  const statusToAdd: TaskStatus = {
-    id: status.length + 1,
-    name: "",
-    projectId,
-  };
-  setStatus((status) => [...status, statusToAdd]);
-}
 export function createTask(
+  value: string,
   statusId: Id,
   tasks: Task[],
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+  createT: (newTask: Task) => void
 ) {
   const taskDescription = `Task Overview:<br>
   [Provide a brief overview of the task. Explain what needs to be done and why it is important.]<br><br>
@@ -43,33 +32,27 @@ export function createTask(
   [Dependency 2]`;
 
   const taskToAdd: Task = {
-    id: `task-${tasks.length + 1}`,
-    name: "",
+    id: tasks.length + 1,
+    name: value,
     statusId: statusId,
     startDate: new Date().toISOString(),
     description: taskDescription,
   };
-  setTasks([...tasks, taskToAdd]);
+  createT(taskToAdd);
 }
 export function updateStatus(
   id: Id,
   name: string,
   status: TaskStatus[],
-  setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>
+  updateS: (statusId: number, Status: TaskStatus) => void
 ) {
-  const newStatus = status.map((stat) => {
-    if (stat.id === id) {
-      return { ...stat, name };
-    }
-    return stat;
-  });
-  setStatus(newStatus);
+  const Newstatus = status.find((stat) => stat.id === id) as TaskStatus;
+  updateS(+id, { ...Newstatus, name });
 }
 export function deleteStatus(
   StatusId: Id,
   status: TaskStatus[],
-  setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>,
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+  deleteS: (newStatusId: string) => void,
   setErrorMsg?: React.Dispatch<React.SetStateAction<string>>
 ) {
   const deletedStatus = status.find((ele) => ele.id == StatusId);
@@ -77,27 +60,19 @@ export function deleteStatus(
     setErrorMsg && setErrorMsg("You cannot delete this column ");
     return;
   }
-
-  const filteredStatus = status.filter((stat) => stat.id !== StatusId);
-  setStatus(filteredStatus);
-  setTasks((tasks) => tasks.filter((task) => task.statusId !== StatusId));
+  deleteS(StatusId.toString());
 }
-export function deleteTask(
-  taskId: Id,
-  tasks: Task[],
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-) {
-  const filteredTask = tasks.filter((tsk) => tsk.id !== taskId);
-  setTasks(filteredTask);
+export function deleteTask(taskId: Id, deleteT: (newTaskId: string) => void) {
+  const formattedTaskId = taskId.toString().replace("task-", "");
+  deleteT(formattedTaskId.toString());
 }
 export function updateTask(
   taskId: Id,
   newTask: TaskModification,
   tasks: Task[],
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
 ): void {
-  const NewTasks: Task[] = tasks.map((task) =>
-    task.id == taskId ? { ...task, ...newTask } : task
-  );
-  setTasks(NewTasks);
+  const formattedTaskId = taskId.toString().replace("task-", "");
+  const NewTask = tasks.find((task) => task.id === formattedTaskId) as Task;
+  updateT(+formattedTaskId, { ...NewTask, ...newTask });
 }

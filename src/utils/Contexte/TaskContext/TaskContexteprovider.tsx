@@ -22,8 +22,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   taskId,
   children,
 }) => {
-
-  const { tasks, updateTasks } = useProject();
+  const { updateTask: updateT } = useProject();
 
   const [task, setTask] = useState<Task | null>(() => {
     const tasksDataLS = localStorage.getItem(`tasks${projectId}`);
@@ -47,18 +46,14 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
           ...task,
           ...newTask,
         };
-        const DbTask = await saveTask(TaskInfo);
-
-        await updateTasks(
-          [...tasks.filter((task) => task.id !== taskId), DbTask],
-          false
-        );
-   
+        const DbTask = await saveTask(TaskInfo, projectId.toString());
         setTask(DbTask);
+
+        updateT(+DbTask.id, DbTask, false);
         AddTaskToLocalStorage(projectId, taskId, DbTask);
       }
     },
-    [task, updateTasks, tasks, projectId, taskId]
+    [task, updateT, projectId, taskId]
   );
 
   const updateComments = useCallback(

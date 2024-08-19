@@ -131,7 +131,7 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
 
   useEffect(() => {
     async function fetchTaskInfo() {
-      if (tasksData) {
+      if (tasksData && tasksData.length > 0) {
         const newRows = await Promise.all(
           tasksData.map((task) => getTaskData(task.id))
         );

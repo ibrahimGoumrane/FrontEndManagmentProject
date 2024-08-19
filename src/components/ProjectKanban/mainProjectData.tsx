@@ -51,11 +51,11 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
     projectState,
     members,
     taskStatus,
+    projectImg,
     updateProject,
-    updateTasks,
+    createStatus,
     updateMembers,
     updateProjectState,
-    updateTaskStatus,
   } = useProject();
 
   return (
@@ -68,15 +68,15 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
           <MainProjectManip
             project={project || {}}
             tasks={tasks}
+            projectImg={projectImg}
             projectStatus={projectStatus}
             projectState={projectState || { id: -1, name: "" }}
             members={members}
             taskStatus={taskStatus}
+            createStatus={createStatus}
             updateProject={updateProject}
-            updateTasks={updateTasks}
             updateMembers={updateMembers}
             updateProjectState={updateProjectState}
-            updateTaskStatus={updateTaskStatus}
           />
         </div>
       </section>

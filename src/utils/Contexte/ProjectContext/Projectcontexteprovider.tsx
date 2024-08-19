@@ -3,28 +3,38 @@ import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
 import {
+  getActivities,
   getProjectData,
+  getProjectImg,
   getProjectMembers,
   getProjectState,
   updateProject as saveProjectData,
   updateProjectMembers,
 } from "../../../network/ProjectApi";
 import {
+  createTaskStatus,
+  deleteTaskStatus,
   getProjectStatus,
   getTaskStatus,
-  saveTaskStatus,
+  updateTaskStatus as updateTaskS,
 } from "../../../network/StatusApi";
 import {
   deleteTasks,
+  createTask as createT,
   getProjectTasks,
   getActiveUserTasks,
-  updateTask as saveTask,
+  updateTask as updateT,
 } from "../../../network/TasksApi";
 import { ProjectContext } from "./projectContexte";
 import { clearLocalStorage } from "./utils/utilities";
 import { useUser } from "../UserContext/userContexte";
 import { getProjectAuth } from "../../../network/authApi";
 import { autorisationModel } from "../../../models/auth";
+import {
+  ActivityMap,
+  TASKACTIVITYTYPE,
+  MEMBERACTIVITYTYPE,
+} from "../../../models/activity";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -46,10 +56,14 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     const savedTasks = localStorage.getItem(`tasks${projectId}`);
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
-
+  const [activity, setActivity] = useState<ActivityMap>();
   const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>(() => {
     const savedTasks = localStorage.getItem("projectStatus");
     return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+  const [projectImg, setProjectImg] = useState<string>(() => {
+    const savedTasks = localStorage.getItem("projectImg${projectId}");
+    return savedTasks ? JSON.parse(savedTasks) : "";
   });
   const [projectState, setProjectState] = useState<ProjectStatus | null>(() => {
     const projectState = localStorage.getItem(`projectState${projectId}`);
@@ -97,34 +111,99 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     [project, projectId, projects, updateProjects]
   );
 
-  const updateTasks = useCallback(
-    async (newTasks: Task[], saveToDb: boolean = true) => {
-      let NTasks: Task[] = [];
-      if (!saveToDb) {
-        NTasks = newTasks;
-        setTask(NTasks);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
-      } else {
-        await deleteTasks(projectId);
-        NTasks = await Promise.all(
-          newTasks.map((t) =>
-            saveTask({
-              ...t,
-              projectId: +projectId,
-            })
-          )
-        );
-        setTask(NTasks);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(NTasks));
+  const createTask = useCallback(
+    async (newTask: Task) => {
+      if (!newTask.name) {
+        throw new Error("Task name is required");
       }
-      //handling the syncing of data with the userContext provider
-      const userTasksData = await getActiveUserTasks();
 
-      updateActiveTasks(userTasksData, false);
+      const newT = await createT(
+        newTask.name,
+        projectId,
+        newTask.statusId ?? "1",
+        newTask.description ?? "Description"
+      );
+      const newTasks = [...tasks, newT];
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
     },
-    [projectId, updateActiveTasks]
+    [projectId, tasks]
   );
-
+  const deleteTask = useCallback(
+    async (newTaskId: string) => {
+      await deleteTasks(newTaskId, projectId);
+      const newTasks = tasks.filter((task) => +task.id !== +newTaskId);
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
+    },
+    [projectId, tasks]
+  );
+  const updateTask = useCallback(
+    async (taskId: number, newTask: Task, saveTodb: boolean = true) => {
+      let updatedTask = newTask;
+      if (saveTodb) {
+        updatedTask = await updateT(
+          {
+            ...newTask,
+            id: taskId,
+          },
+          projectId.toString()
+        );
+      }
+      const newTasks = tasks.map((task) => {
+        if (+task.id === +taskId) {
+          return updatedTask;
+        }
+        return task;
+      });
+      setTask(newTasks);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
+    },
+    [projectId, tasks]
+  );
+  const createStatus = useCallback(
+    async (newTaskStatus: TaskStatus) => {
+      const newStatus = await createTaskStatus(newTaskStatus.name, projectId);
+      const newTaskStatuses = [...taskStatus, newStatus];
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
+  const updateStatus = useCallback(
+    async (statusId: number, Status: TaskStatus) => {
+      const updatedStaus = await updateTaskS(projectId, Status);
+      const newTaskStatuses = taskStatus.map((status) => {
+        if (+status.id === +statusId) {
+          return updatedStaus;
+        }
+        return status;
+      });
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
+  const deleteStatus = useCallback(
+    async (newStatusId: string) => {
+      await deleteTaskStatus(newStatusId, projectId);
+      const newTaskStatuses = taskStatus.filter(
+        (status) => +status.id !== +newStatusId
+      );
+      setTaskStatus(newTaskStatuses);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(newTaskStatuses)
+      );
+    },
+    [projectId, taskStatus]
+  );
   const updateMembers = useCallback(
     async (newMembers: autorisationModel[], saveTodb: boolean = true) => {
       if (!saveTodb) {
@@ -164,15 +243,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     [projectId, projectStatus]
   );
 
-  const updateTaskStatus = useCallback(
-    async (newTaskStatus: TaskStatus[]) => {
-      const taskS = await saveTaskStatus(projectId, newTaskStatus);
-      setTaskStatus(taskS);
-      localStorage.setItem(`taskStatus${projectId}`, JSON.stringify(taskS));
-    },
-    [projectId]
-  );
-
   const resetData = useCallback(() => {
     setProject(null);
     const newProjects = projects?.filter((project) => {
@@ -191,6 +261,13 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   // Fetching data from DB -> FrontEnd
   useEffect(() => {
+    async function fetchNewUserTasks() {
+      const userTasksData = await getActiveUserTasks();
+      updateActiveTasks(userTasksData, false);
+    }
+    fetchNewUserTasks();
+  }, [tasks]);
+  useEffect(() => {
     async function fetchProject() {
       try {
         const projectData: Project = await getProjectData(projectId);
@@ -205,6 +282,59 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     }
     fetchProject();
+  }, [projectId, resetData]);
+  //Fetching Project Image
+  useEffect(() => {
+    async function fetchProjectImg() {
+      try {
+        const projectData = await getProjectImg(projectId);
+        setProjectImg(projectData);
+        localStorage.setItem(
+          `projectImg${projectId}`,
+          JSON.stringify(projectData)
+        );
+      } catch (error) {
+        console.error("Failed to fetch project Img:", error);
+        resetData();
+      }
+    }
+    fetchProjectImg();
+  }, [projectId, resetData]);
+
+  //FETCHING PROJECT ACTIVITY
+  useEffect(() => {
+    async function fetchProjectActivity() {
+      try {
+        const [
+          createActivity,
+          deleteActivity,
+          updateActivity,
+          joinActivity,
+          leaveActivity,
+        ] = await Promise.all([
+          getActivities(projectId, TASKACTIVITYTYPE.CREATE),
+          getActivities(projectId, TASKACTIVITYTYPE.DELETE),
+          getActivities(projectId, TASKACTIVITYTYPE.UPDATE),
+          getActivities(projectId, MEMBERACTIVITYTYPE.JOIN),
+          getActivities(projectId, MEMBERACTIVITYTYPE.LEAVE),
+        ]);
+
+        const activityData: ActivityMap = {
+          [TASKACTIVITYTYPE.CREATE]: createActivity,
+          [TASKACTIVITYTYPE.DELETE]: deleteActivity,
+          [TASKACTIVITYTYPE.UPDATE]: updateActivity,
+          [MEMBERACTIVITYTYPE.JOIN]: joinActivity,
+          [MEMBERACTIVITYTYPE.LEAVE]: leaveActivity,
+        };
+        setActivity(activityData);
+        console.log(activityData);
+      } catch (error) {
+        console.error("Failed to fetch project activity:", error);
+        resetData();
+      }
+    }
+
+    fetchProjectActivity();
   }, [projectId, resetData]);
 
   // Fetching Tasks
@@ -302,16 +432,22 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     <ProjectContext.Provider
       value={{
         project,
+        activity,
         tasks,
         projectStatus,
         projectState,
         members,
         taskStatus,
+        projectImg,
+        createTask,
+        deleteTask,
+        updateTask,
+        createStatus,
+        deleteStatus,
+        updateStatus,
         updateProject,
-        updateTasks,
         updateMembers,
         updateProjectState,
-        updateTaskStatus,
         resetData,
       }}
     >

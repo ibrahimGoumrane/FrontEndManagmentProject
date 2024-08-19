@@ -30,6 +30,15 @@ export async function getTeamDataById(id: number): Promise<TeamData> {
   });
   return response;
 }
+export async function getTeamImg(id: number): Promise<string> {
+  const response = await fetchData(`/api/teams/img/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}
 export async function getTeamByUserId(Userid: number): Promise<Team[]> {
   const response = await fetchData(`/api/teams/members/${Userid}`, {
     method: "GET",

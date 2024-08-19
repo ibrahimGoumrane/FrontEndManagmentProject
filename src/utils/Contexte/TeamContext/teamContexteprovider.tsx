@@ -8,6 +8,7 @@ import {
   addTeamMember,
   removeTeamMember,
   deleteTeam as deleteTeamUsingId,
+  getTeamImg,
 } from "../../../network/TeamApi.ts";
 import { User } from "../../../models/Users.ts";
 import { TeamContext } from "./teamContexte.ts";
@@ -25,7 +26,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   const [team, setTeam] = useState<Team | null>(null);
 
   const [teamMembers, setteamMembers] = useState<User[]>([]);
-
+  const [teamImg, setTeamImg] = useState<string>("");
   const updateTeam = useCallback(
     async (newTeam: Team | null) => {
       if (newTeam) {
@@ -74,12 +75,25 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     }
     fetchTeamData();
   }, [teamId]);
-
+  useEffect(() => {
+    async function fetchteamImg() {
+      try {
+        const TeamData = await getTeamImg(+teamId);
+        setTeamImg(TeamData);
+        localStorage.setItem(`projectImg${teamId}`, JSON.stringify(TeamData));
+      } catch (error) {
+        console.error("Failed to fetch project Img:", error);
+        resetData();
+      }
+    }
+    fetchteamImg();
+  }, [resetData, teamId]);
   return (
     <TeamContext.Provider
       value={{
         team,
         teamMembers,
+        teamImg,
         updateTeam,
         addMember,
         removeMember,

@@ -9,6 +9,7 @@ export const UserContext = createContext<
   | {
       user: User | null;
       socket: React.MutableRefObject<Socket | undefined>;
+      profilePic: string;
       skills: string[] | null;
       teams: Team[] | null;
       activeTasks: { assigned: Task[]; created: Task[] } | null;
@@ -28,7 +29,6 @@ export const UserContext = createContext<
         saveToDb?: boolean
       ) => Promise<void>;
       resetData: () => void;
-      clearUserTasks: () => void;
     }
   | undefined
 >(undefined);

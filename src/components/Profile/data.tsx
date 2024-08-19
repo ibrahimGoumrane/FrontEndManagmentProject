@@ -14,9 +14,15 @@ const Data = () => {
         </div>
         <div className="mr-4 p-3 text-center">
           <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-            {activeTasks?.length}
+            {activeTasks?.created.length}
           </span>
-          <span className="text-sm text-blueGray-400">Task's</span>
+          <span className="text-sm text-blueGray-400">Created Task's</span>
+        </div>
+        <div className="mr-4 p-3 text-center">
+          <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
+            {activeTasks?.assigned.length}
+          </span>
+          <span className="text-sm text-blueGray-400">Asigned Task's</span>
         </div>
         <div className="lg:mr-4 p-3 text-center">
           <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">

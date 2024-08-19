@@ -1,3 +1,9 @@
+import {
+  MActivity,
+  MEMBERACTIVITYTYPE,
+  TActivity,
+  TASKACTIVITYTYPE,
+} from "../models/activity";
 import { autorisationModel } from "../models/auth";
 import { getProject, Project, ProjectCreation } from "../models/Projects";
 import { ProjectStatus } from "../models/Status";
@@ -98,7 +104,15 @@ export const updateProject = async (data: Project): Promise<Project> => {
   );
   return response;
 };
-
+export const getProjectImg = async (id: number | string): Promise<string> => {
+  const response = await fetchData(`/api/projects/img/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
 export const deleteProject = async (id: number | string): Promise<Project> => {
   const response = await fetchData(`/api/projects/${id}?moduleId=${id}`, {
     method: "DELETE",
@@ -120,5 +134,22 @@ export const updateProjectMembers = async (
     },
     body: JSON.stringify(members),
   });
+  return response;
+};
+
+//stuff related to activities
+export const getActivities = async (
+  projectId: number | string,
+  activityType: TASKACTIVITYTYPE | MEMBERACTIVITYTYPE
+): Promise<TActivity[] | MActivity[]> => {
+  const response = await fetchData(
+    `/api/projects/activity/${projectId}/${activityType}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return response;
 };

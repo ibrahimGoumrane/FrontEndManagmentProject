@@ -1,48 +1,45 @@
 import { Button as FbButton, Tabs, TabsRef } from "flowbite-react";
-import { useState, useRef, useEffect } from "react";
-import { FaCat } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 import { FaPerson } from "react-icons/fa6";
 import { HiAdjustments, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
+import { autorisationModel } from "../../models/auth";
 import { Project, ProjectModif } from "../../models/Projects";
 import type { ProjectStatus, TaskStatus } from "../../models/Status";
 import type { Task } from "../../models/Tasks";
 import MembersComponent from "../MembersComponent/main";
 import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
-import KanbanBoard from "./kanbanBoard";
 import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
-import { autorisationModel } from "../../models/auth";
+import KanbanBoard from "./kanbanBoard";
 
 interface ComponentProps {
   project: Project;
   tasks: Task[];
   projectStatus: ProjectStatus[];
   projectState: ProjectStatus;
+  projectImg: string;
   members: autorisationModel[];
   taskStatus: TaskStatus[];
   updateProject: (newProject: ProjectModif | null) => Promise<void>;
-  updateTasks: (Tasks: Task[], saveToDb?: boolean) => Promise<void>;
   updateMembers: (
     users: autorisationModel[],
     saveTodb: boolean
   ) => Promise<void>;
   updateProjectState: (state: ProjectStatus) => Promise<void>;
-  updateTaskStatus: (taskStatus: TaskStatus[]) => Promise<void>;
+  createStatus: (newTaskStatus: TaskStatus) => void;
 }
 
 const MainProjectManip = ({
   project,
   tasks,
-  projectStatus,
-  projectState,
   members,
+  projectImg,
   taskStatus,
   updateProject,
-  updateTasks,
   updateMembers,
   updateProjectState,
-  updateTaskStatus,
+  createStatus,
 }: ComponentProps) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -54,6 +51,7 @@ const MainProjectManip = ({
       setShowTasks(false);
     }
   }, [activeTab]);
+
   const [updateProjectData, setUpdateProjectData] = useState<boolean>(false);
   function updateProjectInfo(newProject: ProjectModif | null) {
     updateProject(newProject);
@@ -73,11 +71,13 @@ const MainProjectManip = ({
           <div className=" flex items-center justify-between relative">
             <div className="w-full flex items-center justify-between px-5 pt-2">
               <div className="flex items-center justify-start  gap-3 p-3">
-                <span className="rounded-full h-10 p-1 flex items-center justify-center w-10 text-xl bg-white text-purple-600">
-                  <FaCat />
-                </span>
+                <img
+                  src={projectImg}
+                  alt="projectIcon"
+                  className="max-w-12 max-h-12 rounded-full"
+                />
                 <span className="text-md italic text-white font-bold flex flex-col-reverse">
-                  project Name
+                  {project.name}
                   <span>
                     {new Date().toLocaleDateString("en-US", {
                       weekday: "long",
@@ -114,22 +114,13 @@ const MainProjectManip = ({
                 icon={HiUserCircle}
                 className=" active:bg-white"
               >
-                <Summary
-                  project={project}
-                  tasks={tasks}
-                  projectStatus={projectStatus}
-                  projectState={projectState}
-                  members={members}
-                  taskStatus={taskStatus}
-                />
+                <Summary />
               </Tabs.Item>
               <Tabs.Item active title="Board" icon={MdDashboard}>
                 <KanbanBoard
-                  projectId={project?.id || -1}
                   taskStatus={taskStatus}
                   projectTasks={tasks}
-                  updateTasks={updateTasks}
-                  updateTaskStatus={updateTaskStatus}
+                  createStatus={createStatus}
                 />
               </Tabs.Item>
               <Tabs.Item title="Members" icon={FaPerson}>
