@@ -45,7 +45,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   projectId,
   children,
 }) => {
-  const { projects, updateProjects, updateActiveTasks } = useUser();
+  const { projects, updateProjects, updateActiveTasks, user } = useUser();
 
   const [project, setProject] = useState<Project | null>(() => {
     const projectData = localStorage.getItem(`project${projectId}`);
@@ -209,6 +209,22 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       if (!saveTodb) {
         setMembers(newMembers);
         localStorage.setItem(`members${projectId}`, JSON.stringify(newMembers));
+        //check if the user stil exsist in the project
+        const isExsist = newMembers.findIndex((member) => {
+          return member.id.toString() === user?.id.toString();
+        });
+        if (isExsist === -1) {
+          resetData();
+        } else {
+          updateProjects(
+            projects?.map((project) => {
+              if (+projectId === project.id) {
+                return { ...project, members: newMembers };
+              }
+              return project;
+            }) || []
+          );
+        }
         return;
       }
       const members = await updateProjectMembers(projectId, newMembers);

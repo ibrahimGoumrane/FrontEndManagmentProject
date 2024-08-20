@@ -1,9 +1,10 @@
-import * as React from "react";
-import { styled, css } from "@mui/system";
 import { Modal as BaseModal } from "@mui/base/Modal";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import { css, styled } from "@mui/system";
+import * as React from "react";
 import { PopUpType } from "../../../models/utils";
+import { Backdrop } from "@mui/material";
 interface ModalProps {
   mainData: string;
   secondData: string;
@@ -11,7 +12,17 @@ interface ModalProps {
   onDisapproval: () => void;
   type: PopUpType;
 }
-
+const style = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 export default function ModalUnstyled({
   mainData,
   secondData,
@@ -38,19 +49,10 @@ export default function ModalUnstyled({
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
         open={open}
+        slots={{ backdrop: Backdrop }}
         onClose={handleClose}
       >
-        <ModalContent
-          sx={{
-            paddingInline: 4,
-            paddingBlock: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-            borderRadius: 3,
-          }}
-        >
+        <ModalContent sx={style}>
           <h2
             id="unstyled-modal-title"
             className={"text-3xl font-bold capitalize font-mono " + colors}

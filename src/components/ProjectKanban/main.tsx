@@ -12,6 +12,11 @@ import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
 import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
 import KanbanBoard from "./kanbanBoard";
+import ModalUnstyled from "../ProjectComponent/components/modal";
+import { leaveProject } from "../../network/ProjectApi";
+import { useNavigate } from "react-router-dom";
+import { PopUpType } from "../../models/utils";
+import { useUser } from "../../utils/Contexte/UserContext/userContexte";
 
 interface ComponentProps {
   project: Project;
@@ -42,8 +47,10 @@ const MainProjectManip = ({
   createStatus,
 }: ComponentProps) => {
   const tabsRef = useRef<TabsRef>(null);
+  const { user } = useUser();
   const [activeTab, setActiveTab] = useState(0);
   const [showTasks, setShowTasks] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     if (activeTab === 3) {
       setShowTasks(true);
@@ -53,6 +60,26 @@ const MainProjectManip = ({
   }, [activeTab]);
 
   const [updateProjectData, setUpdateProjectData] = useState<boolean>(false);
+  const [showLeaveProject, setShowLeaveProject] = useState<boolean>(false);
+  function LeaveProject() {
+    async function handleLeaveProject() {
+      // leave project
+      if (project.id) {
+        await leaveProject(project.id);
+        const newMembersList = members.filter((member) => {
+          return member.id.toString() !== user?.id.toString();
+        });
+        updateMembers(newMembersList, false);
+        navigate("/home");
+        setShowLeaveProject(false);
+      }
+    }
+    handleLeaveProject();
+  }
+  function handleCancelLeaveProject() {
+    setShowLeaveProject(false);
+  }
+
   function updateProjectInfo(newProject: ProjectModif | null) {
     updateProject(newProject);
     updateProjectState({
@@ -66,6 +93,17 @@ const MainProjectManip = ({
 
   return (
     <div className="flex flex-col flex-shrink w-full  min-h-[90vh] bg-purple-600">
+      {showLeaveProject && (
+        <ModalUnstyled
+          mainData={"confirm you wanna leave"}
+          secondData={
+            "leaving means u will  not be able to access the project again and all ur permissions will be lost "
+          }
+          onApproval={LeaveProject}
+          onDisapproval={handleCancelLeaveProject}
+          type={PopUpType.Failed}
+        />
+      )}
       {!updateProjectData && (
         <section>
           <div className=" flex items-center justify-between relative">
@@ -88,10 +126,18 @@ const MainProjectManip = ({
                   </span>
                 </span>
               </div>
-              <div>
+              <div className="flex items-center justify-center gap-10">
                 <FbButton
                   gradientMonochrome="info"
-                  className="bg-white py-2 text-purple-500  px-3 hover:bg-purple-100 hover:text-purple-900 text-nowrap"
+                  className="bg-red-400 py-2 text-white  px-2 hover:bg-red-600 text-nowrap"
+                  onClick={() => setShowLeaveProject(true)}
+                >
+                  <HiAdjustments className="mr-3 h-4 w-4" />
+                  Leave Project
+                </FbButton>
+                <FbButton
+                  gradientMonochrome="info"
+                  className="bg-white py-2 text-purple-500  px-2 hover:bg-purple-100 hover:text-purple-900 text-nowrap"
                   onClick={() => setUpdateProjectData(true)}
                 >
                   <HiAdjustments className="mr-3 h-4 w-4" />
