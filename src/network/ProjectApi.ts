@@ -122,7 +122,15 @@ export const deleteProject = async (id: number | string): Promise<Project> => {
   });
   return response;
 };
-
+export const leaveProject = async (id: number | string): Promise<Project> => {
+  const response = await fetchData(`/api/projects/leaveProject/${id}}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+};
 export const updateProjectMembers = async (
   projectId: number | string,
   members: autorisationModel[]

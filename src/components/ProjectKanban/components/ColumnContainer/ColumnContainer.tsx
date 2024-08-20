@@ -57,17 +57,15 @@ const ColumnContainer = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
   if (isDragging) {
     return (
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-columnBackgroundColor w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col items-start opacity-30 border-2 border-puplr-400"
+        className="bg-columnBackgroundColor  w-[400px] h-[600px] max-h-[600px]  rounded-md flex flex-col items-start opacity-30 border-2 border-puplr-400"
       ></div>
     );
   }
-
   return (
     <>
       {errorMsg && (

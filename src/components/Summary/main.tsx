@@ -43,7 +43,7 @@ const Summary = () => {
     );
     setDoneTasks(
       tasks.filter(
-        (task) => task.statusId && +task.statusId === +taskStatus[3].id
+        (task) => task.statusId && +task.statusId === +taskStatus[6].id
       )
     );
   }, [tasks]);

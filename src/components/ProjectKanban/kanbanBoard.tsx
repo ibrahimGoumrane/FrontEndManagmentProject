@@ -23,6 +23,7 @@ import {
   onDragOver,
   onDragStart,
 } from "./utility/draggingFunctions";
+import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte";
 
 interface KanbanBoardProps {
   taskStatus: TaskStatus[];
@@ -31,6 +32,7 @@ interface KanbanBoardProps {
 }
 
 const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
+  const { updateTask: updateT } = useProject();
   const [status, setStatus] = useState<TaskStatus[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
 
@@ -69,7 +71,14 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
             onDragStart(event, setActiveStatus, setActiveTask)
           }
           onDragEnd={(event) =>
-            onDragEnd(event, setStatus, setActiveTask, setActiveStatus)
+            onDragEnd(
+              event,
+              tasks,
+              setStatus,
+              setActiveTask,
+              setActiveStatus,
+              updateT
+            )
           }
           onDragOver={(event) => onDragOver(event, setTasks)}
         >

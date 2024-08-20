@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ProjectKanBan from "../components/ProjectKanban/mainProjectData";
 import { ProjectProvider } from "../utils/Contexte/ProjectContext/Projectcontexteprovider";
 import { useUser } from "../utils/Contexte/UserContext/userContexte";
@@ -29,8 +29,18 @@ const ProjectDashBoard = () => {
     },
   ]);
   const { id: projectId } = useParams<{ id: string }>();
-
+  const navigate = useNavigate();
   const { updateProjects, projects } = useUser();
+
+  //check whether the user is allowed to access this page
+  useEffect(() => {
+    const exsists = projects?.findIndex(
+      (project) => project.id && +project.id === +(projectId ?? "")
+    );
+    if (exsists === -1) {
+      navigate("*");
+    }
+  });
   const [showProjectCreation, setShowProjectCreation] = useState(false);
 
   const TogglePojectCreation = useCallback(() => {

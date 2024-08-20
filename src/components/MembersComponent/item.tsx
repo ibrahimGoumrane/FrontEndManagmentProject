@@ -19,11 +19,13 @@ interface ItemProps {
   member: autorisationModel;
   handleDelete: (id: string, moduleId: string, memeberId: string) => void;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  kickMember: (memeberId: string) => void;
 }
 export default function Item({
   member,
   handleDelete,
   setErrorMessage,
+  kickMember,
 }: ItemProps) {
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
   const { members, updateMembers, project } = useProject();
@@ -85,7 +87,7 @@ export default function Item({
         }
       }
     }
-    
+
     saveNewAuth();
   }
   return (
@@ -102,6 +104,14 @@ export default function Item({
 
       <div className=" flex-1 h-full py-12 px-10 mx-auto bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg ">
         <div className="border-b px-4 pb-6">
+          <div className="flex items-end justify-end">
+            <button
+              className="flex items-center justify-center py-2 px-3 border-red-200 border bg-red-500  text-white hover:bg-red-600 rounded-md text-sm font-bold"
+              onClick={() => kickMember(member.id)}
+            >
+              Delete User
+            </button>
+          </div>
           <div className="text-center my-4">
             <img
               className="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 mx-auto my-4"

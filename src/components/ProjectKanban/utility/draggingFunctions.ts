@@ -25,21 +25,28 @@ export function onDragStart(
 }
 export function onDragEnd(
   event: DragEndEvent,
+  tasks: Task[],
   setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>,
   setActiveTask: React.Dispatch<React.SetStateAction<Task | null>>,
-  setActiveStatus: React.Dispatch<React.SetStateAction<TaskStatus | null>>
+  setActiveStatus: React.Dispatch<React.SetStateAction<TaskStatus | null>>,
+  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
 ) {
   setActiveStatus(null);
   setActiveTask(null);
   const { active, over } = event;
   if (!over) return;
-  const ActiveStatusId = active.id;
-  const overColumnId = over.id;
-  if (ActiveStatusId === overColumnId) return;
+  const ActiveId = active.id;
+  const overId = over.id;
+  const isActiveTask = active.data.current?.type === "Task";
+  if (isActiveTask) {
+    const newtask = active?.data?.current?.task;
+    const formattedTaskId = newtask.id.toString().replace("task-", "");
+    updateT(+formattedTaskId, newtask);
+  }
+  if (ActiveId === overId) return;
   setStatus((status) => {
-    const activeIndex = getArrayIndex(ActiveStatusId, status);
-    const overIndex = getArrayIndex(overColumnId, status);
-
+    const activeIndex = getArrayIndex(ActiveId, status);
+    const overIndex = getArrayIndex(overId, status);
     return arrayMove(status, activeIndex, overIndex);
   });
 }

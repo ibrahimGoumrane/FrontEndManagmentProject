@@ -29,7 +29,6 @@ export default function DataChart({ tasks }: DataChartProps) {
       )
     );
   }, [tasks]);
-
   return (
     <div className="w-full" style={{ height: "400px" }}>
       {" "}
@@ -41,17 +40,17 @@ export default function DataChart({ tasks }: DataChartProps) {
             data: [
               {
                 id: 0,
-                value: toDodo.length === 0 ? 1 : toDodo.length,
+                value: toDodo.length,
                 label: "To Dodo",
               },
               {
                 id: 1,
-                value: inProgress.length === 0 ? 1 : inProgress.length,
+                value: inProgress.length,
                 label: "In Progress",
               },
               {
                 id: 2,
-                value: done.length === 0 ? 1 : done.length,
+                value: done.length,
                 label: "Done",
               },
             ],

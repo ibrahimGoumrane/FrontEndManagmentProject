@@ -1,9 +1,7 @@
 import { authorisation, autorisationModel } from "../../models/auth.ts";
 import { Carousel } from "flowbite-react";
 import Item from "./item.tsx";
-import {
-  deleteProjectAuth,
-} from "../../network/authApi.ts";
+import { deleteProjectAuth } from "../../network/authApi.ts";
 import { useState } from "react";
 import PopUp from "../utils/popUp.tsx";
 import { PopUpType } from "../../models/utils.ts";
@@ -29,7 +27,8 @@ const MembersComponent = ({
           return member.id.toString() !== memeberId.toString();
         });
         const newAuth = newMembers.auth.filter(
-          (auth: authorisation) => auth.id && auth.id.toString() !== id.toString()
+          (auth: authorisation) =>
+            auth.id && auth.id.toString() !== id.toString()
         );
         const updatedUser: autorisationModel = {
           ...newMembers,
@@ -40,6 +39,12 @@ const MembersComponent = ({
       setSuccess(true);
     }
     deleteAuth();
+  }
+  function kickMember(memeberId: string) {
+    const newMembersList = members.filter((member) => {
+      return member.id.toString() !== memeberId.toString();
+    });
+    updateMembers(newMembersList, true);
   }
 
   return (
@@ -71,6 +76,7 @@ const MembersComponent = ({
                   member={member}
                   handleDelete={handleDelete}
                   setErrorMessage={setErrorMessage}
+                  kickMember={kickMember}
                 />
               </div>
             );
