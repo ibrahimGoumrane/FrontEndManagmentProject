@@ -14,6 +14,7 @@ import ProjectDashBoard from "./Pages/Project";
 import TeamSearch from "./Pages/teamSearch";
 import TeamDashboard from "./Pages/teamDashboard";
 import ProjectListing from "./Pages/projectListing";
+import Settings from "./Pages/settings";
 
 const theme = createTheme({
   palette: {
@@ -50,6 +51,7 @@ function App() {
           />
           <Route path="/Profile/" element={<ProtectedRoute />}>
             <Route path="" element={<Profile />} />
+            <Route path="settings/" element={<Settings />} />
           </Route>
           <Route path="/home/" element={<ProtectedRoute />}>
             <Route path="" element={<MainDashBoard />} />

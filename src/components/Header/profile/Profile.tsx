@@ -6,10 +6,10 @@ import { LogOut } from "../../../network/UserApi";
 import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
 import { useNavigate } from "react-router-dom";
 const Profile = () => {
-  const { user } = useUser();
+  const { user, profilePic } = useUser();
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
-  const { name, email, age } = user!;
+  const { name } = user!;
   function HandlerLogoutClick() {
     LogOut();
     setShowProfile(false);
@@ -28,6 +28,7 @@ const Profile = () => {
       >
         <Avatar
           alt="Remy Sharp"
+          src={profilePic}
           sx={{ bgcolor: deepPurple[500], width: "50px", height: "50px" }}
           component="div"
         />
@@ -36,9 +37,7 @@ const Profile = () => {
         <div className="absolute right-0 ">
           <Card
             title={name}
-            email={email}
-            age={age}
-            image="/img/profile.jpg"
+            image={profilePic}
             HandlerLogoutClick={HandlerLogoutClick}
             HandlerProfileClick={handleProfileClick}
           />

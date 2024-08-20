@@ -36,4 +36,13 @@ const validationSchemaLogin = Yup.object().shape({
   password: Yup.string().required("Password is required"),
 });
 
-export { validationSchemaSignUp, validationSchemaLogin };
+const validationUserUpdate = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  age: Yup.number()
+    .min(18, "Age must be at least 18")
+    .required("Age is required"),
+});
+export { validationSchemaSignUp, validationSchemaLogin, validationUserUpdate };

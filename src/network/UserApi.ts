@@ -67,7 +67,7 @@ export const deleteUser = async (id: string): Promise<User.User> => {
   return response;
 };
 export const updateUser = async (
-  updatedUser: User.User
+  updatedUser: User.UserUpdate
 ): Promise<User.User> => {
   const response = await fetchData(`/api/users/`, {
     method: "PUT",

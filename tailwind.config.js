@@ -1,5 +1,6 @@
 import flowbite from "flowbite/plugin";
 import withMT from "@material-tailwind/react/utils/withMT";
+import forms from "@tailwindcss/forms";
 
 // Content configuration
 export const content = [
@@ -24,4 +25,4 @@ export const theme = {
 };
 
 // Plugins configuration (including Material Tailwind)
-export const plugins = [flowbite, withMT];
+export const plugins = [flowbite, withMT, forms];

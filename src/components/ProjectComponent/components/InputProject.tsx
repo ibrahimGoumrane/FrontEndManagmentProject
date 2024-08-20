@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
 import { formatDateTime, toDateTimeLocal } from "../../../utils/utility";
 
 interface InputProps {
@@ -33,7 +32,6 @@ export default function Input({
   type = "text", // Default to text input
   value: initialValue = "",
 }: InputProps) {
-  const { project } = useProject();
   const [item, setItem] = useState<string | number>(() => {
     if (type === "datetime-local") {
       return toDateTimeLocal(String(initialValue));
@@ -54,16 +52,6 @@ export default function Input({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    if (type === "datetime-local") {
-      if (project?.startDate) {
-        const startDateValue = new Date(project?.startDate);
-        const endDateValue = new Date(newValue);
-        if (endDateValue < startDateValue) {
-          setItem(toDateTimeLocal(project?.startDate));
-          return;
-        }
-      }
-    }
     setItem(String(newValue));
   };
 
@@ -73,7 +61,7 @@ export default function Input({
   };
 
   return (
-    <div className="w-full h-10">
+    <div className="w-full">
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${

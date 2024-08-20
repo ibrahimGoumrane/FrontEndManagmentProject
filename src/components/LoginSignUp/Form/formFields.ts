@@ -1,4 +1,8 @@
-import { SignUpCredentials, LogInCredentials } from "../../../models/Users";
+import {
+  SignUpCredentials,
+  LogInCredentials,
+  UserUpdate,
+} from "../../../models/Users";
 import { getSkills } from "../../../network/SkillsApi";
 
 interface LogInField {
@@ -40,6 +44,17 @@ export interface SignupField {
   labelFor: string;
   id: string;
   name: keyof SignUpCredentials;
+  type: string;
+  isRequired: boolean;
+  placeholder: string;
+  options?: { label: string; value: string }[];
+}
+
+export interface UserUpdateField {
+  labelText: string;
+  labelFor: string;
+  id: string;
+  name: keyof UserUpdate;
   type: string;
   isRequired: boolean;
   placeholder: string;
@@ -122,5 +137,33 @@ async function getSignupFields(): Promise<SignupField[]> {
 
   return signupFields;
 }
-
-export { loginFields, getSignupFields };
+const userUpdateFields: UserUpdateField[] = [
+  {
+    labelText: "Name",
+    labelFor: "name",
+    id: "name",
+    name: "name",
+    type: "text",
+    isRequired: true,
+    placeholder: "Name",
+  },
+  {
+    labelText: "Email address",
+    labelFor: "email-address",
+    id: "email-address",
+    name: "email",
+    type: "email",
+    isRequired: true,
+    placeholder: "Email address",
+  },
+  {
+    labelText: "Age",
+    labelFor: "age",
+    id: "age",
+    name: "age",
+    type: "number",
+    isRequired: true,
+    placeholder: "Age",
+  },
+];
+export { loginFields, getSignupFields, userUpdateFields };

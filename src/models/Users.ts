@@ -8,6 +8,11 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+export interface UserUpdate {
+  name: string;
+  email: string;
+  age: number;
+}
 export interface Member {
   id: string;
   name: string;
