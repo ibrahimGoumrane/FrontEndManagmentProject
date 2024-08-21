@@ -80,9 +80,9 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
       try {
         const TeamData = await getTeamImg(+teamId);
         setTeamImg(TeamData);
-        localStorage.setItem(`projectImg${teamId}`, JSON.stringify(TeamData));
+        localStorage.setItem(`TeamImg${teamId}`, JSON.stringify(TeamData));
       } catch (error) {
-        console.error("Failed to fetch project Img:", error);
+        console.error("Failed to fetch Team Img:", error);
         resetData();
       }
     }

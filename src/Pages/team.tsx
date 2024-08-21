@@ -1,14 +1,12 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Teamprovider } from "../utils/Contexte/TeamContext/teamContexteprovider";
-import TeamDashboard from "./teamDashboard";
+import MainChatPage from "../components/Team/components/mainTeam/mainChatPage";
 
 export default function TeamMain() {
   const { id: teamId } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  if (!teamId) return navigate("*");
   return (
-    <Teamprovider teamId={teamId}>
-      <TeamDashboard teamId={teamId} />
+    <Teamprovider teamId={teamId || ""}>
+      <MainChatPage teamId={teamId || ""} />
     </Teamprovider>
   );
 }

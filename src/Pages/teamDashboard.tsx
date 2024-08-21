@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Logo from "../components/Header/Logo";
-import MainChatPage from "../components/Team/components/mainTeam/mainChatPage";
 import TeamLogo from "../components/Team/components/mainTeam/teamLogo";
 import UserData from "../components/Team/components/mainTeam/UserData";
 import { Team, TeamData } from "../models/Teams";
 import { getTeamDataById } from "../network/TeamApi";
 import { useUser } from "../utils/Contexte/UserContext/userContexte";
-interface props {
-  teamId: string;
-}
-function TeamDashboard({ teamId }: props) {
+import TeamMain from "./team";
+function TeamListing() {
   const { teams } = useUser();
   const navigate = useNavigate();
+  const { id: teamId } = useParams<{ id: string }>();
 
   //all team data and chats
   const [teamsData, setTeamsData] = useState<TeamData[]>([]);
@@ -66,7 +64,7 @@ function TeamDashboard({ teamId }: props) {
             <UserData />
             <div className="flex flex-col mt-8">
               <div className="flex flex-row items-center justify-between text-xs">
-                <span className="font-bold text-lg">Your Teams</span>
+                <span className="font-bold">Your Teams</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {LocalTeamInfo.map((t) => (
@@ -82,11 +80,11 @@ function TeamDashboard({ teamId }: props) {
             </div>
           </div>
           <div className="flex flex-col flex-auto h-full p-6">
-            {activeTeam && activeTeamData && <MainChatPage />}
+            {activeTeam && activeTeamData && <TeamMain />}
           </div>
         </div>
       </div>
     )
   );
 }
-export default TeamDashboard;
+export default TeamListing;
