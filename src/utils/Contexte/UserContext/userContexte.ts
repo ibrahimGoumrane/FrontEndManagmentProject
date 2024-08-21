@@ -16,6 +16,7 @@ export const UserContext = createContext<
       projects: Project[] | null;
       updateUser: (newUser: User | null) => Promise<void>;
       updateSkills: (skills: string[]) => Promise<void>;
+      updateProfilePic: (newProfilePic: FileList) => Promise<void>;
       updateTeams: (teams: Team[]) => void;
       updateActiveTasks: (
         tasks: {

@@ -1,10 +1,3 @@
-// import {
-//   updateProjectAuth,
-//   deleteProjectAuth,
-//   createTaskManagerAuth,
-//   updateTaskManagerAuth,
-//   deleteTaskManagerAuth,
-// } from "../../network/authApi.ts";
 import Backdrop from "@mui/material/Backdrop";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -86,7 +79,7 @@ export default function ModalUpdate({
       <DialogTitle>Create a new Auth </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To create a bew Auth, please fill out the form below.
+          To create a new Auth, please fill out the form below.
         </DialogContentText>
         <ProjectAuthCreation
           onCreatedSuccessfully={handleSubmit}

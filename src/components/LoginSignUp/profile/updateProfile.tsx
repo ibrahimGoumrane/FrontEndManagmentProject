@@ -11,13 +11,11 @@ import { userUpdateFields } from "../Form/formFields";
 
 interface updateUserProps {
   onUpdatedSuccessfull: (user: User.User) => void;
-  onCancelUpdate: () => void;
 }
 const fields = userUpdateFields;
 
 export default function UpdateProfileModal({
   onUpdatedSuccessfull,
-  onCancelUpdate,
 }: updateUserProps) {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [updatedSuccessfully, setupdatedSuccessfully] = useState(false);
@@ -53,14 +51,14 @@ export default function UpdateProfileModal({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col justify-between flex-1 mt-5"
+      className="flex flex-col justify-center mt-3 flex-1 gap-2"
     >
       <label htmlFor="Personnal" className="block text-lg font-bold leading-6 ">
         Personnal Information
       </label>
 
       {errorText && <div className="text-red-500">{errorText}</div>}
-      <div className=" overflow-x-hidden overflow-y-auto space-y-12 ">
+      <div className=" overflow-x-hidden overflow-y-auto space-y-6 ">
         {updatedSuccessfully && (
           <div className="text-green-500">User Updated Successfully</div>
         )}
@@ -80,14 +78,9 @@ export default function UpdateProfileModal({
       </div>
       <Stack direction="row" spacing={2} mt={5}>
         <button
-          onClick={onCancelUpdate}
-          className="w-full bg-red-600 text-white p-2 rounded-md hover:bg-red-400 "
-        >
-          Cancel
-        </button>
-        <button
           type="submit"
-          className="w-full bg-purple-600 text-white p-2 rounded-md hover:bg-purple-500  "
+          className="w-full bg-purple-600 text-white p-2 rounded-md hover:bg-purple-500 "
+          disabled={isSubmitting}
         >
           {isSubmitting ? "updateUser" + "..." : "updateUser"}
         </button>

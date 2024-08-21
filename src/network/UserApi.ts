@@ -21,6 +21,13 @@ export const SignUp = async (credentials: FormData): Promise<User.User> => {
   });
   return response;
 };
+export const updateProfile = async (credentials: FormData): Promise<string> => {
+  const response = await fetchData("/api/users/updateProfile", {
+    method: "PUT",
+    body: credentials,
+  });
+  return response;
+};
 export const LogOut = async (): Promise<User.User> => {
   const response = await fetchData("/api/users/logout", {
     method: "POST",

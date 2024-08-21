@@ -20,6 +20,7 @@ import {
   getLoggedInUser,
   getUserProfile,
   updateUser as saveUser,
+  updateProfile,
 } from "../../../network/UserApi";
 import { UserContext } from "./userContexte";
 import { io, Socket } from "socket.io-client";
@@ -78,14 +79,26 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
   const updateSkills = useCallback(async (newSkills: string[]) => {
     try {
-      setSkills(newSkills);
-      await saveSkills(newSkills);
+      const data = await saveSkills(newSkills);
+      setSkills(data);
       localStorage.setItem("userskills", JSON.stringify(newSkills));
     } catch (error) {
       console.error("Failed to update skills:", error);
     }
   }, []);
+  const updateProfilePic = useCallback(async (newProfilePic: FileList) => {
+    try {
+      const formdata = new FormData();
+      formdata.append("profileImg", newProfilePic[0]);
 
+      const newPic = await updateProfile(formdata);
+      setProfilePic(newPic);
+
+      localStorage.setItem("userImg", JSON.stringify(newPic));
+    } catch (error) {
+      console.error("Failed to update profile picture:", error);
+    }
+  }, []);
   const updateTeams = useCallback((newTeams: Team[]) => {
     try {
       setTeams(newTeams);
@@ -233,6 +246,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         updateUser,
         updateSkills,
         updateTeams,
+        updateProfilePic,
         updateActiveTasks,
         updateProjects,
         resetData,
