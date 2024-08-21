@@ -16,7 +16,7 @@ export const TeamContext = createContext<
     }
   | undefined
 >(undefined);
-export const useTask = () => {
+export const useTeam = () => {
   const context = useContext(TeamContext);
   if (context === undefined) {
     throw new Error("useTasks must be within a taskProvider");

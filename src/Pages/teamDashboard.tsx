@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "../components/Header/Logo";
 import MainChatPage from "../components/Team/components/mainTeam/mainChatPage";
 import TeamLogo from "../components/Team/components/mainTeam/teamLogo";
@@ -7,10 +7,12 @@ import UserData from "../components/Team/components/mainTeam/UserData";
 import { Team, TeamData } from "../models/Teams";
 import { getTeamDataById } from "../network/TeamApi";
 import { useUser } from "../utils/Contexte/UserContext/userContexte";
-function TeamListing() {
+interface props {
+  teamId: string;
+}
+function TeamDashboard({ teamId }: props) {
   const { teams } = useUser();
   const navigate = useNavigate();
-  const { id: teamId } = useParams<{ id: string }>();
 
   //all team data and chats
   const [teamsData, setTeamsData] = useState<TeamData[]>([]);
@@ -21,13 +23,18 @@ function TeamListing() {
   const [activeTeamData, setActiveTeamData] = useState<TeamData>();
 
   useEffect(() => {
+    //check if the user in team
+    if (teamId && !teams?.find((t) => +t.id === +teamId)) {
+      navigate("/home/teams/search");
+    }
+  }, [teamId, teams]);
+
+  useEffect(() => {
     if (teamId && LocalTeamInfo && teamsData) {
       setActiveTeam(LocalTeamInfo?.find((t) => +t.id === +teamId));
       setActiveTeamData(teamsData.find((t) => +t.id === +teamId));
     }
   }, [LocalTeamInfo, teamId, teamsData]);
-
-  // Scroll to the end of the container when LocalTeamInfo changes
 
   useEffect(() => {
     async function fetchTeamData() {
@@ -46,6 +53,7 @@ function TeamListing() {
     }
     fetchTeamData();
   }, [teams]);
+
   return (
     teamsData &&
     LocalTeamInfo && (
@@ -58,12 +66,9 @@ function TeamListing() {
             <UserData />
             <div className="flex flex-col mt-8">
               <div className="flex flex-row items-center justify-between text-xs">
-                <span className="font-bold">Active Teams</span>
-                <span className="flex items-center justify-center bg-indigo-300 h-4 w-4 rounded-full"></span>
+                <span className="font-bold text-lg">Your Teams</span>
               </div>
-              <div
-                className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto"
-              >
+              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {LocalTeamInfo.map((t) => (
                   <TeamLogo
                     id={t.id}
@@ -77,11 +82,11 @@ function TeamListing() {
             </div>
           </div>
           <div className="flex flex-col flex-auto h-full p-6">
-            {activeTeam && activeTeamData && <MainChatPage/>}
+            {activeTeam && activeTeamData && <MainChatPage />}
           </div>
         </div>
       </div>
     )
   );
 }
-export default TeamListing;
+export default TeamDashboard;

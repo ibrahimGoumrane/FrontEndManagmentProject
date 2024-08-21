@@ -7,7 +7,6 @@ import { Login } from "../../../network/UserApi";
 import { validationSchemaLogin } from "../Form/VlidationSchema";
 import { loginFields } from "../Form/formFields";
 import FormAction from "../../utils/Button";
-import FormExtra from "../../utils/FormExtra";
 import Input from "../../utils/Input";
 import Policies from "../../utils/policies";
 
@@ -20,8 +19,6 @@ const fields = loginFields;
 
 export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
   const [errorText, setErrorText] = useState<string | null>(null);
-  const [, setStaySignedIn] = useState(false);
-  const toggleRemmemberMe = () => setStaySignedIn((staySignIn) => !staySignIn);
   const formOptions = {
     resolver: yupResolver(validationSchemaLogin),
   };
@@ -50,10 +47,10 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
 
   return (
     <form
-      className="mt-3 space-y-6 xl:w-5/6   sm:max-w-[75vw] sm:w-[75vw] sm:px-32  w-screen "
+      className="my-10 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] sm:px-32 w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="-space-y-px">
+      <div className="space-y-6">
         {errorText && (
           <div className="text-red-500 font-mono font-bold text-center uppercase">
             {errorText}
@@ -72,12 +69,6 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
             type={field.type}
           />
         ))}
-        <FormExtra
-          Data1="Remember Me"
-          Data2="Forgot Password?"
-          Data2Link="/GetPassBack"
-          setIsChecked={toggleRemmemberMe}
-        />
 
         <FormAction
           text="Login"
@@ -86,7 +77,6 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
           isSubmitting={isSubmitting}
         />
         <Policies
-          name=""
           paragraph="Dont have an account Yet ? Sign Up "
           linkName="here"
           linkUrl="/signup"

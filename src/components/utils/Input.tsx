@@ -17,7 +17,8 @@ interface InputProps {
 
 const fixedInputClass =
   "rounded-md appearance-none   relative block w-full px-3   rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
-const fixedLabelClass = "block text-gray-700 text-sm font-light font-semibold ";
+const fixedLabelClass =
+  "block text-gray-700 text-sm mb-2 font-light font-semibold ";
 
 export default function Input({
   labelText,
@@ -32,7 +33,7 @@ export default function Input({
   ...props
 }: InputProps) {
   return (
-    <div className={"mb-5 w-full  " + `${type === "file" ? "col-span-2" : ""}`}>
+    <div className={"mb-7 w-full " + `${type === "file" ? "col-span-2" : ""}`}>
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${

@@ -18,10 +18,10 @@ export default function TaskContainer({ activeTasks }: TaskContainerProps) {
     setCreatedTasks(activeTasks?.created);
   }, [activeTasks]);
   return (
-    <div className="flex items-start justify-start w-[90%] mx-auto ">
+    <div className="flex items-start justify-start w-[90%] mx-auto mt-5">
       <div className="w-full ">
         <div className="flex items-center justify-between w-full">
-          <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
+          <h2 className="text-nowrap text-xl text-purple-400 font-mono font-light capitalize  ">
             assigned
           </h2>
           <div className="  py-3 flex items-center justify-between px-5"></div>
@@ -45,7 +45,7 @@ export default function TaskContainer({ activeTasks }: TaskContainerProps) {
       </div>
       <div className="w-full ">
         <div className="flex items-center justify-between w-full">
-          <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
+          <h2 className="text-nowrap text-xl font-mono font-light capitalize  text-purple-400 ">
             Created
           </h2>
           <div className="  py-3 flex items-center justify-between px-5"></div>

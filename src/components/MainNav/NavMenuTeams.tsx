@@ -36,9 +36,9 @@ export function TeamMenuItem({ name }: teamsProps) {
         <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
         <Dropdown.Item onClick={handleOpen}>Create a Team</Dropdown.Item>
         <Dropdown.Item>
-          <Link to={'/home/teams/search'}>Join a Team</Link>
+          <Link to={"/home/teams/search"}>Join a Team</Link>
         </Dropdown.Item>
-        <Dropdown.Item
+        <Dropdown.Header
           className="relative hover:bg-transparent "
           onMouseLeave={() => {
             setListTeams(false);
@@ -56,7 +56,7 @@ export function TeamMenuItem({ name }: teamsProps) {
             </span>
           </div>
           {listTeams ? <TeamListing /> : ""}
-        </Dropdown.Item>
+        </Dropdown.Header>
       </Dropdown>
     </div>
   );

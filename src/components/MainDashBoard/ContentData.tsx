@@ -17,10 +17,7 @@ const MainData = () => {
         </div>
         <hr className="  bg-black  -z-10 relative" />
         <div className="w-full max-h-[45vh] h-5/6  project-container">
-          <div className="2xl:w-5/6 w-full mx-auto py-3 flex items-center justify-between px-5">
-            <h2 className="text-nowrap text-xl font-mono font-light capitalize ">
-              Recent Projects
-            </h2>
+          <div className="2xl:w-5/6 w-full mx-auto py-3 flex items-center justify-end px-5">
             <Link to={"/home/projects/"}>
               <Button
                 variant="text"

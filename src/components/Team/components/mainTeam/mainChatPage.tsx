@@ -6,9 +6,11 @@ import { TChat } from "../../../../models/chat.ts";
 import { getTeamChat } from "../../../../network/chatApi.ts";
 import DayShower from "./dayShower.tsx";
 import { useUser } from "../../../../utils/Contexte/UserContext/userContexte.ts";
+import { useTeam } from "../../../../utils/Contexte/TeamContext/teamContexte.ts";
 
 export default function MainChatPage() {
   const { socket } = useUser();
+  const { teamImg, team } = useTeam();
   const [teamChat, setTeamChat] = useState<TChat[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,10 +58,19 @@ export default function MainChatPage() {
   return (
     <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-slate-200 h-full p-4">
       <div
-        className="flex flex-col h-full overflow-x-auto mb-6"
+        className="flex flex-col h-full overflow-x-auto mb-6 relative"
         ref={containerRef}
       >
-        <div className="flex flex-col h-full">
+        <div className="text-lg font-semibold text-white flex items-center justify-between min-h-16 bg-slate-100 rounded-t-lg p-3 absolute top-0 left-0 w-full ">
+          <span className="flex items-center justify-center gap-6 ">
+            <span>
+              <img src={teamImg} alt="team Img" />
+            </span>
+            <span>{team?.name}</span>
+          </span>
+          <span className="border border-black"></span>
+        </div>
+        <div className="flex flex-col h-full ">
           <div className="grid grid-cols-12 gap-y-2">
             {teamChat.map((chat, index) => {
               const chatDate = chat.createdAt ? new Date(chat.createdAt) : null;

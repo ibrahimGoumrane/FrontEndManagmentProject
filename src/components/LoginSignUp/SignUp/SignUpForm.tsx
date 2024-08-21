@@ -4,13 +4,12 @@ import { useForm } from "react-hook-form";
 import { ConflictError } from "../../../errors/http_errors";
 import * as User from "../../../models/Users";
 import { SignUp } from "../../../network/UserApi";
-import { validationSchemaSignUp } from "../Form/VlidationSchema";
-import { getSignupFields, SignupField } from "../Form/formFields";
 import FormAction from "../../utils/Button";
 import FormExtra from "../../utils/FormExtra";
 import Input from "../../utils/Input";
 import SelectModel from "../../utils/Select";
-import Policies from "../../utils/policies";
+import { validationSchemaSignUp } from "../Form/VlidationSchema";
+import { getSignupFields, SignupField } from "../Form/formFields";
 
 interface SignUpModalProps {
   onSignUpSuccessfull: (user: User.User) => void;
@@ -20,17 +19,6 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
   const [errorText, setErrorText] = useState<string | null>(null);
   const [fields, setFields] = useState<SignupField[]>([]);
   const [createdSuccessfully, setCreatedSuccessfully] = useState(false);
-  const [policiesCheked, setPoliciesCheked] = useState({
-    isChecked: false,
-    errorMsg: "",
-  });
-
-  const togglePolicies = () => {
-    setPoliciesCheked({
-      ...policiesCheked,
-      isChecked: !policiesCheked.isChecked,
-    });
-  };
 
   const formOptions = {
     resolver: yupResolver(validationSchemaSignUp),
@@ -50,19 +38,6 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
   } = useForm<User.SignUpCredentials>(formOptions);
   async function onSubmit(credentials: User.SignUpCredentials) {
     try {
-      if (!policiesCheked.isChecked) {
-        setPoliciesCheked({
-          ...policiesCheked,
-          errorMsg: "Please accept our policies",
-        });
-        return;
-      }
-
-      setPoliciesCheked({
-        ...policiesCheked,
-        errorMsg: "",
-      });
-
       // Create FormData instance
       const formData = new FormData();
 
@@ -98,7 +73,7 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
 
   return (
     <form
-      className="mt-3 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] w-screen "
+      className="mt-3 space-y-2 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
       {errorText && <div className="text-red-500">{errorText}</div>}
@@ -131,24 +106,13 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
           )
         )}
       </div>
-      <FormExtra
-        Data1="Accept Our Policies"
-        Data2="Already Have an account ?"
-        Data2Link="/login"
-        setIsChecked={togglePolicies}
-      />
-      {policiesCheked.errorMsg && (
-        <span className="text-red-500 text-sm italic">
-          {policiesCheked.errorMsg}
-        </span>
-      )}
       <FormAction
         text="Sign Up"
         type="Button"
         action="submit"
         isSubmitting={isSubmitting}
       />
-      <Policies name="" linkUrl="" />
+      <FormExtra Data2="Already Have an account ?" Data2Link="/login" />
     </form>
   );
 }

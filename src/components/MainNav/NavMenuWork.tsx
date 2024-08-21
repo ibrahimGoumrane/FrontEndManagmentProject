@@ -2,7 +2,7 @@
 import { Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { Dropdown } from "flowbite-react";
-import {  useMemo } from "react";
+import { useMemo } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Task } from "../../models/Tasks";
@@ -68,13 +68,6 @@ function MenuWork({ tasks, name }: WorkProps) {
         </Dropdown.Header>
       )}
       <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
-      <Dropdown.Item
-        onClick={() => {
-          navigate("/home/project/tasks");
-        }}
-      >
-        View Details
-      </Dropdown.Item>
       <Dropdown.Item onClick={() => navigate("/home")}>
         Go to Your Work Page
       </Dropdown.Item>

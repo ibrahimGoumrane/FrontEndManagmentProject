@@ -1,24 +1,24 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { Team, Id } from "../../../models/Teams.ts";
-import { useUser } from "../UserContext/userContexte.ts";
-import {
-  saveTeam,
-  getTeamById,
-  getTeamMembers,
-  addTeamMember,
-  removeTeamMember,
-  deleteTeam as deleteTeamUsingId,
-  getTeamImg,
-} from "../../../network/TeamApi.ts";
+import { Team } from "../../../models/Teams.ts";
 import { User } from "../../../models/Users.ts";
+import {
+  addTeamMember,
+  deleteTeam as deleteTeamUsingId,
+  getTeamById,
+  getTeamImg,
+  getTeamMembers,
+  removeTeamMember,
+  saveTeam,
+} from "../../../network/TeamApi.ts";
+import { useUser } from "../UserContext/userContexte.ts";
 import { TeamContext } from "./teamContexte.ts";
 
-interface TaskProviderProps {
-  teamId: Id;
+interface TeamproviderProps {
+  teamId: string;
   children: ReactNode;
 }
 
-export const TaskProvider: React.FC<TaskProviderProps> = ({
+export const Teamprovider: React.FC<TeamproviderProps> = ({
   teamId,
   children,
 }) => {

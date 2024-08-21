@@ -3,35 +3,20 @@ import FAQItem from "./FAQItem/FAQItem";
 const faqData = [
   {
     id: 1,
-    question: "Can I use Landwind in open-source projects?",
+    question: "Can I use this app for open-source projects?",
     mainContent:
-      "Landwind is an open-source library of interactive components built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and more.",
+      "Yes, our app is designed to be versatile and can be integrated into open-source projects. It offers a range of features to manage tasks, track progress, and collaborate with teams effectively.",
     additionalContent:
-      "Check out this guide to learn how to get started and start developing websites even faster with components on top of Tailwind CSS.",
-  },
-  {
-    id: 2,
-    question: "Is there a Figma file available?",
-    mainContent:
-      "Landwind is first conceptualized and designed using the Figma software so everything you see in the library has a design equivalent in our Figma file.",
-    additionalContent:
-      "Check out the Figma design system based on the utility classes from Tailwind CSS and components from Landwind.",
+      "Check out our documentation and integration guides to get started with incorporating our app into your open-source projects.",
   },
   {
     id: 3,
-    question: "What are the differences between Landwind and Tailwind UI?",
+    question:
+      "What are the main features of this app compared to other project management tools?",
     mainContent:
-      "The main difference is that the core components from Landwind are open-source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Landwind relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.",
+      "Our app stands out with its robust project tracking capabilities, intuitive task management, and real-time collaboration features. Unlike other tools, we focus on seamless integration with team workflows and customizable project views.",
     additionalContent:
-      "However, we actually recommend using both Landwind, Landwind Pro, and even Tailwind UI as there is no technical reason stopping you from using the best of two worlds. Learn more about these technologies:",
-  },
-  {
-    id: 4,
-    question: "What about browser support?",
-    mainContent:
-      "The main difference is that the core components from Landwind are open-source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Landwind relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.",
-    additionalContent:
-      "However, we actually recommend using both Landwind, Landwind Pro, and even Tailwind UI as there is no technical reason stopping you from using the best of two worlds. Learn more about these technologies:",
+      "We recommend exploring our feature comparison page to see how our app stacks up against other project management solutions and find out how it can fit into your team’s workflow.",
   },
 ];
 

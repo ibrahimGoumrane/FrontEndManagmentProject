@@ -18,12 +18,6 @@ const HomePage = () => {
       type: "simple",
     },
     {
-      name: "Services",
-      active: false,
-      href: "/services",
-      type: "simple",
-    },
-    {
       name: "Contact",
       active: false,
       href: "/contact",

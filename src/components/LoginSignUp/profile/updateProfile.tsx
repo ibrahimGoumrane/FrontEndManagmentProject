@@ -8,6 +8,8 @@ import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
 import Input from "../../ProjectComponent/components/InputProject";
 import { validationUserUpdate } from "../Form/VlidationSchema";
 import { userUpdateFields } from "../Form/formFields";
+import PopUp from "../../utils/popUp";
+import { PopUpType } from "../../../models/utils";
 
 interface updateUserProps {
   onUpdatedSuccessfull: (user: User.User) => void;
@@ -60,7 +62,18 @@ export default function UpdateProfileModal({
       {errorText && <div className="text-red-500">{errorText}</div>}
       <div className=" overflow-x-hidden overflow-y-auto space-y-6 ">
         {updatedSuccessfully && (
-          <div className="text-green-500">User Updated Successfully</div>
+          <PopUp
+            type={PopUpType.Success}
+            message="Updated Successfully"
+            setSuccess={setupdatedSuccessfully}
+          />
+        )}
+        {errorText && (
+          <PopUp
+            type={PopUpType.Failed}
+            message={errorText}
+            setSuccess={setupdatedSuccessfully}
+          />
         )}
         {fields.map((field, index) => (
           <Input
