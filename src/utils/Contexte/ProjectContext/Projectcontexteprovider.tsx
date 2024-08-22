@@ -343,7 +343,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           [MEMBERACTIVITYTYPE.LEAVE]: leaveActivity,
         };
         setActivity(activityData);
-        console.log(activityData);
       } catch (error) {
         console.error("Failed to fetch project activity:", error);
         resetData();

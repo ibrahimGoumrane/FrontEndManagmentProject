@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   age: number;
-  profileImg: File;
+  profileImg: string | File;
   skills: Array<string>;
   createdAt: string;
   updatedAt: string;

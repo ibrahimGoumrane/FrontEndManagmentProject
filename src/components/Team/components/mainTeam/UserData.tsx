@@ -2,7 +2,6 @@ import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
 
 export default function UserData() {
   const { user, skills, profilePic } = useUser();
-  console.log(skills);
   return (
     <div className="flex flex-col items-center bg-purple-300/60 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
       <div className="h-20 w-20 rounded-full border overflow-hidden">

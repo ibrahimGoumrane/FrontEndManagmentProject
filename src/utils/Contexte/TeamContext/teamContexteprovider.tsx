@@ -33,7 +33,7 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
         const SavedTeam = await saveTeam(+teamId, newTeam);
         setTeam(SavedTeam);
         const newTeams = teams?.map((team) =>
-          team.id == SavedTeam.id ? SavedTeam : team
+          +team.id == +SavedTeam.id ? SavedTeam : team
         ) || [SavedTeam];
         updateTeams(newTeams);
       }
