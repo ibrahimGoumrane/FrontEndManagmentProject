@@ -4,12 +4,13 @@ import { User } from "../../../../models/Users";
 import { useEffect, useState } from "react";
 import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
 import { MdDeleteOutline } from "react-icons/md";
+import PopUp from "../../../utils/popUp";
+import { PopUpType } from "../../../../models/utils";
 
 interface TeamMembersProps {
   showMembers: boolean;
   setShowMembers: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
 export default function TeamMembers({
   setShowMembers,
   showMembers,
@@ -18,6 +19,7 @@ export default function TeamMembers({
   const { user } = useUser();
   const [boss, setBoss] = useState<User | null>(null);
   const [members, setMembers] = useState<User[]>([]);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (teamMembers && team?.ownerId) {
@@ -36,6 +38,12 @@ export default function TeamMembers({
       setShowMembers(false);
     }
   };
+
+  async function handleKickUser(memberId: number) {
+    if (!memberId) return;
+    await removeMember(+memberId);
+    setSuccess(true);
+  }
   return (
     <div
       className={
@@ -44,6 +52,13 @@ export default function TeamMembers({
       }
       onClick={handleClose}
     >
+      {success && (
+        <PopUp
+          type={PopUpType.Success}
+          message="Member removed successfully"
+          setSuccess={setSuccess}
+        />
+      )}
       <div className=" min-h-screen  flex items-center justify-center flex-col  max-w-screen-2xl overflow-hidden  sm:mx-8 xl:mx-auto text-center">
         <div className=" space-y-5 col-span-8 overflow-hidden rounded-xl  sm:bg-gray-100 sm:px-16 sm:shadow min-h-[80vh] w-[50vw] shadow-slate-900 shadow-inner">
           <div className="flex items-center justify-between w-full border-b">
@@ -57,8 +72,8 @@ export default function TeamMembers({
               <IoClose />
             </div>
           </div>
-          <div className="max-h-[67vh] overflow-x-hidden overflow-y-auto">
-            <div className="grid gap-4 mb-6 lg:mb-16 ">
+          <div className="  ">
+            <div className="grid gap-4   ">
               <h1 className="text-lg italic font-mono text-gray-400">Boss</h1>
               {boss ? (
                 <div className="items-center bg-gray-50 rounded-lg shadow flex justify-between text-left dark:bg-gray-800 dark:border-gray-700 max-h-[120px]">
@@ -99,62 +114,59 @@ export default function TeamMembers({
 
               <hr className=" mb-8" />
             </div>
-            <div className="grid gap-8 mb-6 lg:mb-16 ">
+            <div className="grid gap-8 overflow-y-auto max-h-[50vh] ">
+              <h1 className="text-lg italic font-mono text-gray-400">
+                Members
+              </h1>
               {members.map((member, index) => (
-                <>
-                  <h1 className="text-lg italic font-mono text-gray-400">
-                    Members
-                  </h1>
-                  <div
-                    key={index}
-                    className="items-center bg-gray-50 rounded-lg shadow flex justify-between text-left dark:bg-gray-800 dark:border-gray-700 max-h-[120px]"
-                  >
-                    <img
-                      className="h-full w-auto rounded-lg sm:rounded-none sm:rounded-l-lg "
-                      src={String(member.profileImg)}
-                      alt="Profile pic"
-                    />
+                <div
+                  key={index}
+                  className="items-center bg-gray-50 rounded-lg shadow flex justify-between text-left dark:bg-gray-800 dark:border-gray-700 max-h-[120px]"
+                >
+                  <img
+                    className="h-full w-auto rounded-lg sm:rounded-none sm:rounded-l-lg "
+                    src={String(member.profileImg)}
+                    alt="Profile pic"
+                  />
 
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      <a href="#">{member.name}</a>
+                    </h3>
+                    <span className="text-slate-900 dark:text-gray-400">
+                      {member.email}
+                    </span>
+                    <div>
+                      <ul className="flex flex-wrap items-center justify-center my-3 gap-2 max-w-full h-auto">
+                        {member.skills && member.skills.length > 0 ? (
+                          member.skills.map((skill) => (
+                            <li
+                              key={skill}
+                              className="text-xs font-medium text-purple bg-white rounded-xl px-3 flex items-center justify-center py-2"
+                            >
+                              {skill}
+                            </li>
+                          ))
+                        ) : (
+                          <li>No skills</li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {user?.id === team?.ownerId && (
                     <div className="p-5">
-                      <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        <a href="#">{member.name}</a>
-                      </h3>
-                      <span className="text-slate-900 dark:text-gray-400">
-                        {member.email}
-                      </span>
-                      <div>
-                        <ul className="flex flex-wrap items-center justify-center my-3 gap-2 max-w-full h-auto">
-                          {member.skills && member.skills.length > 0 ? (
-                            member.skills.map((skill) => (
-                              <li
-                                key={skill}
-                                className="text-xs font-medium text-purple bg-white rounded-xl px-3 flex items-center justify-center py-2"
-                              >
-                                {skill}
-                              </li>
-                            ))
-                          ) : (
-                            <li>No skills</li>
-                          )}
-                        </ul>
+                      <div className="flex items-center justify-center gap-5 flex-col pr-5">
+                        <span
+                          onClick={() => handleKickUser(+member.id)}
+                          className="p-2 text-red-500 text-2xl  rounded-full cursor-pointer hover:bg-red-400 hover:text-white"
+                        >
+                          <MdDeleteOutline />
+                        </span>
                       </div>
                     </div>
-
-                    {user?.id === team?.ownerId && (
-                      <div className="p-5">
-                        <div className="flex items-center justify-center gap-5 flex-col pr-5">
-                          <span
-                            onClick={() => removeMember(+member.id)}
-                            className="p-2 text-red-500 text-2xl  rounded-full cursor-pointer hover:bg-red-400 hover:text-white"
-                          >
-                            <MdDeleteOutline />
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <hr className=" mb-8" />
-                </>
+                  )}
+                </div>
               ))}
             </div>
           </div>

@@ -112,7 +112,7 @@ const MainProjectManip = ({
                 <img
                   src={projectImg}
                   alt="projectIcon"
-                  className="max-w-12 max-h-12 rounded-full"
+                  className="w-12 h-12 rounded-full"
                 />
                 <span className="text-md italic text-white font-bold flex flex-col-reverse">
                   {project.name}

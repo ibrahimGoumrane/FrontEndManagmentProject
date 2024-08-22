@@ -3,11 +3,20 @@ import { IoMdClose } from "react-icons/io";
 import { useState } from "react";
 import TeamMembers from "./teamMembers";
 import TeamSettings from "./teamSettings";
+import { useTeam } from "../../../../utils/Contexte/TeamContext/teamContexte";
+import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
+import { useNavigate } from "react-router-dom";
+import ModalUnstyled from "../../../ProjectComponent/components/modal";
+import { PopUpType } from "../../../../models/utils";
 
 export default function Settings() {
+  const { team, deleteTeam, removeMember } = useTeam();
+  const { user } = useUser();
+  const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [showTeamSettings, setShowTeamSettings] = useState(false);
+  const [showConfirmLeave, setShowConfirmLeave] = useState(false);
   function handleClick() {
     setShowSettings((showSettings) => !showSettings);
   }
@@ -21,7 +30,18 @@ export default function Settings() {
   }
   function handleLeave() {
     setShowSettings(false);
+    setShowConfirmLeave(true);
   }
+  async function handleConfirmLeave() {
+    if (team?.ownerId === user?.id) {
+      await deleteTeam();
+      return navigate("/home");
+    }
+    if (!user?.id) return navigate("*");
+    else await removeMember(+user?.id);
+    navigate("/home");
+  }
+  console.log(showConfirmLeave);
   return (
     <>
       <div className="relative">
@@ -54,6 +74,17 @@ export default function Settings() {
               </button>
             </div>
           </div>
+        )}
+        {showConfirmLeave && (
+          <ModalUnstyled
+            mainData="you are sure you wanna leave"
+            secondData="leaving means u will  not be able to access the project again and all ur permissions will be lost "
+            onApproval={handleConfirmLeave}
+            onDisapproval={() => {
+              setShowConfirmLeave(false);
+            }}
+            type={PopUpType.Failed}
+          />
         )}
       </div>
       <TeamMembers setShowMembers={setShowMembers} showMembers={showMembers} />

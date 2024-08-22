@@ -30,8 +30,6 @@ export default function ModalUnstyled({
   onDisapproval,
   type,
 }: ModalProps) {
-  const [open, setOpen] = React.useState(true);
-  const handleClose = () => setOpen(false);
   let colors = "";
   switch (type) {
     case PopUpType.Success:
@@ -48,14 +46,14 @@ export default function ModalUnstyled({
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={open}
+        open={true}
         slots={{ backdrop: Backdrop }}
-        onClose={handleClose}
+        onClose={onDisapproval}
       >
         <ModalContent sx={style}>
           <h2
             id="unstyled-modal-title"
-            className={"text-3xl font-bold capitalize font-mono " + colors}
+            className={"text-xl font-semibold capitalize font-mono " + colors}
           >
             {mainData}
           </h2>
