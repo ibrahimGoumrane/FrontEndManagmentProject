@@ -1,13 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Header from "../components/MainNav/Header";
 import ProjectKanBan from "../components/ProjectKanban/mainProjectData";
 import { ProjectProvider } from "../utils/Contexte/ProjectContext/Projectcontexteprovider";
 import { useUser } from "../utils/Contexte/UserContext/userContexte";
-import { Project } from "../models/Projects";
-import ProjectCreationModal from "../components/ProjectTaskTeamForms/Project/ProjectCreation";
-import Header from "../components/MainNav/Header";
+import ProjectCreationBase from "../components/ProjectTaskTeamForms/Project/ProjectCreationBase";
 
 const ProjectDashBoard = () => {
+  const { id: projectId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { projects } = useUser();
+  //check whether the user is allowed to access this page
+  useEffect(() => {
+    const exsists = projects?.findIndex(
+      (project) => project.id && +project.id === +(projectId ?? "")
+    );
+    if (exsists === -1) {
+      navigate("*");
+    }
+  });
   const [HeaderNavigation, setHeaderNavigation] = useState([
     {
       name: "tasks",
@@ -28,51 +39,28 @@ const ProjectDashBoard = () => {
       type: "complexe",
     },
   ]);
-  const { id: projectId } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { updateProjects, projects } = useUser();
-
-  //check whether the user is allowed to access this page
-  useEffect(() => {
-    const exsists = projects?.findIndex(
-      (project) => project.id && +project.id === +(projectId ?? "")
-    );
-    if (exsists === -1) {
-      navigate("*");
-    }
-  });
   const [showProjectCreation, setShowProjectCreation] = useState(false);
-
-  const TogglePojectCreation = useCallback(() => {
-    setShowProjectCreation(!showProjectCreation);
-  }, [showProjectCreation]);
-  const onCreatedSuccessfully = (project: Project) => {
-    if (projects) updateProjects([...projects, project]);
-    else updateProjects([project]);
-    TogglePojectCreation();
-  };
-
-  if (showProjectCreation) {
-    return (
-      <div className="fixed top-0 left-0 h-screen w-[100vw] bg-purple-200  flex items-center  justify-center z-20 mx-0 ">
-        <div className="bg-white rounded flex items-start justify-start w-2/3">
-          <ProjectCreationModal
-            onCreatedSuccessfully={onCreatedSuccessfully}
-            onCancelCreation={TogglePojectCreation}
-          />
-        </div>
-      </div>
-    );
-  }
   return (
     <ProjectProvider projectId={projectId || ""}>
       <main className="flex-col flex max-w-[100vw] max-h-[100vh] overflow-hidden">
+        {showProjectCreation && (
+          <ProjectCreationBase
+            showProjectCreation={showProjectCreation}
+            setShowProjectCreation={setShowProjectCreation}
+          />
+        )}
         <Header
           itemLinks={HeaderNavigation}
           setItemLinks={setHeaderNavigation}
-          TogglePojectCreation={TogglePojectCreation}
+          TogglePojectCreation={() =>
+            setShowProjectCreation(!showProjectCreation)
+          }
         />
-        <ProjectKanBan TogglePojectCreation={TogglePojectCreation} />
+        <ProjectKanBan
+          TogglePojectCreation={() =>
+            setShowProjectCreation(!showProjectCreation)
+          }
+        />
       </main>
     </ProjectProvider>
   );

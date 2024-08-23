@@ -33,7 +33,7 @@ export default function Input({
   ...props
 }: InputProps) {
   return (
-    <div className={"mb-7 w-full " + `${type === "file" ? "col-span-2" : ""}`}>
+    <div className={" w-full " + `${type === "file" ? "col-span-2" : ""}`}>
       <label
         htmlFor={labelFor}
         className={`${stylesLabel ? stylesLabel : fixedLabelClass} ${
@@ -62,7 +62,6 @@ export default function Input({
           }`}
         />
       )}
-
       {error && <span className="text-red-500 text-sm italic">{error}</span>}
     </div>
   );

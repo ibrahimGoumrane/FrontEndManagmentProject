@@ -1,11 +1,19 @@
 import { FaArrowLeft } from "react-icons/fa";
 import TeamSearch from "../components/Team/components/teamSearch";
+import { useNavigate } from "react-router-dom";
 
 function TeamListing() {
+  const navigate = useNavigate();
+  function handleNavgate() {
+    navigate("/home");
+  }
   return (
     <main className="w-[100vw] h-[100vh] bg-slate-900 flex flex-col">
       <nav className="flex justify-between items-center">
-        <div className=" inline-flex items-center justify-start gap-x-5 text-white m-5  text-xl font-bold">
+        <div
+          className=" inline-flex items-center justify-start gap-x-5 text-white m-5  text-xl font-bold cursor-pointer"
+          onClick={handleNavgate}
+        >
           <span>
             <FaArrowLeft />
           </span>

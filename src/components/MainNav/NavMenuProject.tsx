@@ -46,7 +46,6 @@ function NavMenu({ name, TogglePojectCreation }: DropDownNavProps) {
         </Dropdown.Header>
       )}
       <Dropdown.Divider className="h-0.5 w-full bg-purple-400" />
-      <Dropdown.Item>View Details</Dropdown.Item>
 
       <Dropdown.Item onClick={TogglePojectCreation}>
         Create Projects

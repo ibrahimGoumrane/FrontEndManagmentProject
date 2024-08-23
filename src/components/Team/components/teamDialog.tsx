@@ -18,6 +18,7 @@ interface FormProps {
 export default function FormDialog({ open, setCreateTeam }: FormProps) {
   const [show, setShow] = useState(false);
   const { teams, updateTeams } = useUser();
+  const [error, setError] = useState("");
   return (
     <Dialog
       open={open}
@@ -27,18 +28,17 @@ export default function FormDialog({ open, setCreateTeam }: FormProps) {
         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault();
           async function saveTeam() {
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const name = formJson.name;
-            const newTeam = await createTeam(name.toString());
-            if (newTeam) {
-              //updateUserTeams
+            try {
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries(formData.entries());
+              const name = formJson.name;
+              const newTeam = await createTeam(name.toString());
               const newTeams = teams ? [...teams, newTeam] : [newTeam];
               updateTeams(newTeams);
-
               setShow(true);
-            } else {
-              console.error("Error creating team");
+            } catch (error) {
+              setError((error as Error).message);
+              console.error(error);
             }
           }
           saveTeam();
@@ -132,14 +132,19 @@ export default function FormDialog({ open, setCreateTeam }: FormProps) {
           Create
         </Button>
       </DialogActions>
-      {show ? (
+      {show && (
         <PopUp
           type={PopUpType.Success}
           message={"team Created Successfully"}
           setSuccess={setCreateTeam}
         />
-      ) : (
-        ""
+      )}
+      {error && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={error}
+          setSuccess={() => setError("")}
+        />
       )}
     </Dialog>
   );

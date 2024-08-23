@@ -21,7 +21,7 @@ export default function TextArea({
   ...props
 }: TextAreaProps) {
   return (
-    <div className="my-5">
+    <div className=" w-full">
       <label
         htmlFor={labelFor}
         className={`block text-gray-700 text-sm font-semibold mb-2 ${
