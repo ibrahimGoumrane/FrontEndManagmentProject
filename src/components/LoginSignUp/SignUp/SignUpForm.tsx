@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ConflictError } from "../../../errors/http_errors";
 import * as User from "../../../models/Users";
 import { SignUp } from "../../../network/UserApi";
 import FormAction from "../../utils/Button";
@@ -62,11 +61,7 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
       setCreatedSuccessfully(true);
       setErrorText("");
     } catch (error) {
-      if (error instanceof ConflictError) {
-        setErrorText(error.message);
-      } else {
-        setErrorText("An error occurred");
-      }
+      setErrorText((error as Error).message);
       console.error(error);
     }
   }
@@ -76,7 +71,11 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
       className="mt-3 space-y-2 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
-      {errorText && <div className="text-red-500">{errorText}</div>}
+      {errorText && (
+        <div className="text-red-500 font-sans font-bold text-left capitalize">
+          {errorText}
+        </div>
+      )}{" "}
       <div className=" grid grid-cols-2 grid-rows-3  max-h-[80vh] overflow-hidden  gap-10">
         {createdSuccessfully && (
           <div className="text-green-500">User Created Successfully</div>

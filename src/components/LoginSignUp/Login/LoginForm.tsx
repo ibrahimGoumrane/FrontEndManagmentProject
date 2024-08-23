@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { UnauthorizedError } from "../../../errors/http_errors";
 import * as User from "../../../models/Users";
 import { Login } from "../../../network/UserApi";
 import { validationSchemaLogin } from "../Form/VlidationSchema";
@@ -36,11 +35,7 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
         onLoginSuccessfull(newUser);
       }
     } catch (error) {
-      if (error instanceof UnauthorizedError) {
-        setErrorText(error.message);
-      } else {
-        setErrorText("An error occurred");
-      }
+      setErrorText((error as Error).message);
       console.error(error);
     }
   }
@@ -50,12 +45,12 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
       className="my-10 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] sm:px-32 w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
+      {errorText && (
+        <div className="text-red-500 font-sans font-bold text-left capitalize">
+          {errorText}
+        </div>
+      )}
       <div className="space-y-6">
-        {errorText && (
-          <div className="text-red-500 font-mono font-bold text-center uppercase">
-            {errorText}
-          </div>
-        )}
         {fields.map((field, index) => (
           <Input
             key={index}

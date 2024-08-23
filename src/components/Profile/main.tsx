@@ -32,12 +32,9 @@ const Main = () => {
           <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
             <div className="flex flex-wrap justify-center">
               <div className="w-full lg:w-9/12 px-4">
-                <a
-                  href="#pablo"
-                  className="font-bold font-mono text-3xl mb-6 block text-purple-700  uppercase"
-                >
+                <span className="font-bold font-mono text-xl mb-2 block text-purple-700  uppercase">
                   Skills :
-                </a>
+                </span>
                 <div className="flex items-center justify-center">
                   <ListSkills skills={skills || ["No skills available"]} />
                 </div>

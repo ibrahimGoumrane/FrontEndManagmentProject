@@ -31,7 +31,7 @@ export default function ListSkills({ skills }: ListSkillsProps) {
                   fontWeight: "semibold",
                 }}
               >
-                {index + 1} . {skill}
+                {skill}
               </Typography>
             </ListItem>
           ))}
