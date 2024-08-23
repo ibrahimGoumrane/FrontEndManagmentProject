@@ -8,43 +8,64 @@ interface ColumnContainerProps {
   deleteStatus?: (
     StatusId: Id,
     status: TaskStatus[],
-    deleteS: (newStatusId: string) => void,
-    setErrorMsg?: React.Dispatch<React.SetStateAction<string>>
-  ) => void;
+    deleteS: (newStatusId: string) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   updateStatus?: (
     id: Id,
     name: string,
     status: TaskStatus[],
-    updateS: (statusId: number, Status: TaskStatus) => void
-  ) => void;
+    updateS: (statusId: number, Status: TaskStatus) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   createTask: (
     value: string,
     statusId: Id,
     tasks: Task[],
-    createT: (newTask: Task) => void
-  ) => void;
+    createT: (newTask: Task) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   status: TaskStatus[];
   tasks: Task[];
   ownTasks: Task[];
-  deleteTask: (taskId: Id, deleteT: (newTaskId: string) => void) => void;
+  deleteTask: (
+    taskId: Id,
+    deleteT: (newTaskId: string) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   updateTask: (
     taskId: Id,
     newTask: TaskModification,
     tasks: Task[],
-    updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
-  ) => void;
+    updateT: (
+      taskId: number,
+      newTask: Task,
+      saveTodb?: boolean
+    ) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
 }
 
 interface TaskContainerProps {
   task: Task;
-  deleteTask: (taskId: Id, deleteT: (newTaskId: string) => void) => void;
+  setErrorMsg?: React.Dispatch<React.SetStateAction<string>>;
+  deleteTask: (
+    taskId: Id,
+    deleteT: (newTaskId: string) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   tasks: Task[];
   updateTask: (
     taskId: Id,
     newTask: TaskModification,
     tasks: Task[],
-    updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
-  ) => void;
+    updateT: (
+      taskId: number,
+      newTask: Task,
+      saveTodb?: boolean
+    ) => Promise<void>,
+    setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+  ) => Promise<void>;
   editMode: boolean;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }

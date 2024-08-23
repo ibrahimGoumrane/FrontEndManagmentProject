@@ -4,7 +4,6 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { UnauthorizedError } from "../../../../errors/http_errors";
 import { ProjectModif } from "../../../../models/Projects";
 import { PopUpType } from "../../../../models/utils.ts";
 import { deleteProject } from "../../../../network/ProjectApi";
@@ -21,24 +20,34 @@ import ModalUnstyled from "../modal.tsx";
 import SelectUnique from "../../../utils/SelectUnique.tsx";
 
 interface ProjectModifProps {
-  onUpdatedSuccessfully: (newProject: ProjectModif | null) => void;
   onCancelModif: () => void;
 }
 
 export default function ProjectModifComponent({
-  onUpdatedSuccessfully,
   onCancelModif,
 }: ProjectModifProps) {
-  const { project, updateProject } = useProject();
+  const { project, updateProject, updateProjectState } = useProject();
   const navigate = useNavigate();
   const [fields, setFields] = useState<ProjectModificationField[]>([]);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [showConfirmDelete, setConfirmDelete] = useState(false);
+
+  async function updateProjectInfo(newProject: ProjectModif | null) {
+    try {
+      await updateProject(newProject);
+      await updateProjectState({
+        id: newProject?.statusId || -1,
+        name: "",
+      });
+      setSuccess(true);
+    } catch (error) {
+      setErrorText((error as Error).message);
+    }
+  }
   const formOptions = {
     resolver: yupResolver(validationSchemaProjectModification),
   };
-
   const {
     register,
     handleSubmit,
@@ -64,17 +73,7 @@ export default function ProjectModifComponent({
   };
 
   async function onSubmit(credentials: ProjectModif) {
-    try {
-      onUpdatedSuccessfully(credentials);
-      setSuccess(true);
-    } catch (error) {
-      if (error instanceof UnauthorizedError) {
-        setErrorText(error.message);
-      } else {
-        setErrorText("An error occurred");
-      }
-      console.error(error);
-    }
+    updateProjectInfo(credentials);
   }
 
   function getErrorMessage(fieldName: keyof ProjectModif): string | undefined {
@@ -98,6 +97,13 @@ export default function ProjectModifComponent({
           setSuccess={setSuccess}
         />
       )}
+      {errorText && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={errorText}
+          setSuccess={() => setErrorText("")}
+        />
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-20"
@@ -108,11 +114,6 @@ export default function ProjectModifComponent({
         }}
         id="projectModif"
       >
-        {errorText && (
-          <div className="text-red-500 font-mono font-bold text-center uppercase">
-            {errorText}
-          </div>
-        )}
         {fields.map((field, index) =>
           field.type === "select" ? (
             <SelectUnique

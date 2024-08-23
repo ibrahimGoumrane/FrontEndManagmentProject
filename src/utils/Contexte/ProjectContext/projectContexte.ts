@@ -16,13 +16,17 @@ export const ProjectContext = createContext<
       taskStatus: TaskStatus[];
       activity: ActivityMap | undefined;
       projectImg: string;
-      createTask: (newTask: Task) => void;
-      deleteTask: (newTaskId: string) => void;
-      updateTask: (taskId: number, newTask: Task, saveTodb?: boolean) => void;
-      updatePicture: (newPicture: FileList) => void;
-      createStatus: (newTaskStatus: TaskStatus) => void;
-      deleteStatus: (newStatusId: string) => void;
-      updateStatus: (statusId: number, Status: TaskStatus) => void;
+      createTask: (newTask: Task) => Promise<void>;
+      deleteTask: (newTaskId: string) => Promise<void>;
+      updateTask: (
+        taskId: number,
+        newTask: Task,
+        saveTodb?: boolean
+      ) => Promise<void>;
+      updatePicture: (newPicture: FileList) => Promise<void>;
+      createStatus: (newTaskStatus: TaskStatus) => Promise<void>;
+      deleteStatus: (newStatusId: string) => Promise<void>;
+      updateStatus: (statusId: number, Status: TaskStatus) => Promise<void>;
       updateProject: (newProject: ProjectModif | null) => Promise<void>;
       updateMembers: (
         users: autorisationModel[],

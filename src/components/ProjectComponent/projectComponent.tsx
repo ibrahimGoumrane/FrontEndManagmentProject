@@ -18,10 +18,7 @@ export default function ProjectContainer({ projects }: ProjectContainerProps) {
         ))
       ) : (
         <div className="gap-10 flex-col flex items-center justify-center font-serif w-full text-center">
-          <div className="text-sm font-light">
-            No project found : <br /> You can Create a new One by clicking :{" "}
-            <span className="text-purple-500">ctrl + shift + p</span>
-          </div>
+          <div className="text-sm font-light">Start by creating a project</div>
         </div>
       )}
     </div>

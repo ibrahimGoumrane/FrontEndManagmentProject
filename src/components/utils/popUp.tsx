@@ -11,7 +11,7 @@ interface PopUpProps {
 function PopUp({
   type = PopUpType.Default,
   message,
-  duration = 1000,
+  duration = 2000,
   setSuccess,
 }: PopUpProps) {
   const [show, setShow] = useState(true);

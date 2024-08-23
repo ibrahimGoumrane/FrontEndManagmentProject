@@ -5,46 +5,49 @@ import { deleteProjectAuth } from "../../network/authApi.ts";
 import { useState } from "react";
 import PopUp from "../utils/popUp.tsx";
 import { PopUpType } from "../../models/utils.ts";
+import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte.ts";
 
-interface MembersComponentProps {
-  members: autorisationModel[];
-  updateMembers: (users: autorisationModel[], saveTodb: boolean) => void;
-}
-const MembersComponent = ({
-  members,
-  updateMembers,
-}: MembersComponentProps) => {
+const MembersComponent = () => {
   const [successMessage, setSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const { members, updateMembers } = useProject();
   function handleDelete(id: string, moduleId: string, memeberId: string) {
     async function deleteAuth() {
-      await deleteProjectAuth(id, moduleId);
-      const newMembers = members.find(
-        (member) => member.id.toString() === memeberId.toString()
-      );
-      if (newMembers) {
-        const newMembersList = members.filter((member) => {
-          return member.id.toString() !== memeberId.toString();
-        });
-        const newAuth = newMembers.auth.filter(
-          (auth: authorisation) =>
-            auth.id && auth.id.toString() !== id.toString()
+      try {
+        await deleteProjectAuth(id, moduleId);
+        const newMembers = members.find(
+          (member) => member.id.toString() === memeberId.toString()
         );
-        const updatedUser: autorisationModel = {
-          ...newMembers,
-          auth: newAuth,
-        };
-        updateMembers([...newMembersList, updatedUser], false);
+        if (newMembers) {
+          const newMembersList = members.filter((member) => {
+            return member.id.toString() !== memeberId.toString();
+          });
+          const newAuth = newMembers.auth.filter(
+            (auth: authorisation) =>
+              auth.id && auth.id.toString() !== id.toString()
+          );
+          const updatedUser: autorisationModel = {
+            ...newMembers,
+            auth: newAuth,
+          };
+          updateMembers([...newMembersList, updatedUser], false);
+        }
+        setSuccess(true);
+      } catch (error) {
+        setErrorMessage((error as Error).message);
       }
-      setSuccess(true);
     }
     deleteAuth();
   }
-  function kickMember(memeberId: string) {
-    const newMembersList = members.filter((member) => {
-      return member.id.toString() !== memeberId.toString();
-    });
-    updateMembers(newMembersList, true);
+  async function kickMember(memeberId: string) {
+    try {
+      const newMembersList = members.filter((member) => {
+        return member.id.toString() !== memeberId.toString();
+      });
+      await updateMembers(newMembersList, true);
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    }
   }
 
   return (
@@ -60,7 +63,7 @@ const MembersComponent = ({
         <PopUp
           type={PopUpType.Failed}
           message={errorMessage}
-          setSuccess={setSuccess}
+          setSuccess={() => setErrorMessage("")}
         />
       )}
 

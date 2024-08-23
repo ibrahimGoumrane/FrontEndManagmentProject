@@ -12,7 +12,6 @@ export default function DataChart({ tasks }: DataChartProps) {
   const [inProgress, setinProgress] = useState<Task[]>([]);
 
   useEffect(() => {
-    if (tasks.length === 0) return;
     setinProgress(
       tasks.filter(
         (task) => task.statusId !== undefined && +task.statusId === 4
@@ -29,6 +28,7 @@ export default function DataChart({ tasks }: DataChartProps) {
       )
     );
   }, [tasks]);
+  console.log(done, toDodo, inProgress, tasks);
   return (
     <div className="w-full" style={{ height: "400px" }}>
       {done.length === 0 && toDodo.length === 0 && inProgress.length === 0 ? (

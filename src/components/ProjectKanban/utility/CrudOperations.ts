@@ -2,13 +2,15 @@ import { TaskStatus } from "../../../models/Status";
 import { Task, TaskModification } from "../../../models/Tasks";
 import { Id } from "../types/types";
 
-export function createTask(
+export async function createTask(
   value: string,
   statusId: Id,
   tasks: Task[],
-  createT: (newTask: Task) => void
+  createT: (newTask: Task) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
 ) {
-  const taskDescription = `Task Overview:<br>
+  try {
+    const taskDescription = `Task Overview:<br>
   [Provide a brief overview of the task. Explain what needs to be done and why it is important.]<br><br>
 
   Acceptance Criteria:<br>
@@ -31,48 +33,73 @@ export function createTask(
   [Dependency 1]<br>
   [Dependency 2]`;
 
-  const taskToAdd: Task = {
-    id: tasks.length + 1,
-    name: value,
-    statusId: statusId,
-    startDate: new Date().toISOString(),
-    description: taskDescription,
-  };
-  createT(taskToAdd);
+    const taskToAdd: Task = {
+      id: tasks.length + 1,
+      name: value,
+      statusId: statusId,
+      startDate: new Date().toISOString(),
+      description: taskDescription,
+    };
+    await createT(taskToAdd);
+  } catch (error) {
+    setErrorMsg("Error creating task : " + (error as Error).message);
+  }
 }
-export function updateStatus(
+export async function updateStatus(
   id: Id,
   name: string,
   status: TaskStatus[],
-  updateS: (statusId: number, Status: TaskStatus) => void
+  updateS: (statusId: number, Status: TaskStatus) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
 ) {
-  const Newstatus = status.find((stat) => stat.id === id) as TaskStatus;
-  updateS(+id, { ...Newstatus, name });
+  try {
+    const Newstatus = status.find((stat) => stat.id === id) as TaskStatus;
+    await updateS(+id, { ...Newstatus, name });
+  } catch (error) {
+    setErrorMsg("Error updating status : " + (error as Error).message);
+  }
 }
-export function deleteStatus(
+export async function deleteStatus(
   StatusId: Id,
   status: TaskStatus[],
-  deleteS: (newStatusId: string) => void,
-  setErrorMsg?: React.Dispatch<React.SetStateAction<string>>
+  deleteS: (newStatusId: string) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
 ) {
-  const deletedStatus = status.find((ele) => ele.id == StatusId);
-  if (!deletedStatus?.projectId) {
-    setErrorMsg && setErrorMsg("You cannot delete this column ");
-    return;
+  try {
+    const deletedStatus = status.find((ele) => ele.id == StatusId);
+    if (!deletedStatus?.projectId) {
+      setErrorMsg && setErrorMsg("You cannot delete this column ");
+      return;
+    }
+    await deleteS(StatusId.toString());
+  } catch (error) {
+    setErrorMsg("Error deleting status : " + (error as Error).message);
   }
-  deleteS(StatusId.toString());
 }
-export function deleteTask(taskId: Id, deleteT: (newTaskId: string) => void) {
-  const formattedTaskId = taskId.toString().replace("task-", "");
-  deleteT(formattedTaskId.toString());
+export async function deleteTask(
+  taskId: Id,
+  deleteT: (newTaskId: string) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+) {
+  try {
+    const formattedTaskId = taskId.toString().replace("task-", "");
+    await deleteT(formattedTaskId.toString());
+  } catch (error) {
+    setErrorMsg("Error deleting task : " + (error as Error).message);
+  }
 }
-export function updateTask(
+export async function updateTask(
   taskId: Id,
   newTask: TaskModification,
   tasks: Task[],
-  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
-): void {
-  const formattedTaskId = taskId.toString().replace("task-", "");
-  const NewTask = tasks.find((task) => task.id === formattedTaskId) as Task;
-  updateT(+formattedTaskId, { ...NewTask, ...newTask });
+  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
+): Promise<void> {
+  try {
+    const formattedTaskId = taskId.toString().replace("task-", "");
+    const NewTask = tasks.find((task) => task.id === formattedTaskId) as Task;
+    await updateT(+formattedTaskId, { ...NewTask, ...newTask });
+  } catch (error) {
+    setErrorMsg("Error updating task : " + (error as Error).message);
+  }
 }

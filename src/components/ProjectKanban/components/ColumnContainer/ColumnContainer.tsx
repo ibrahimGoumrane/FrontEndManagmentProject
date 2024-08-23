@@ -6,6 +6,8 @@ import TrashIcon from "../PlusIcon/Trash";
 import PlusIcon from "../PlusIcon/icons";
 import TaskContainer from "../TaskContainer/taskContainer";
 import { useProject } from "../../../../utils/Contexte/ProjectContext/projectContexte.ts";
+import { PopUpType } from "../../../../models/utils.ts";
+import PopUp from "../../../utils/popUp.tsx";
 
 const ColumnContainer = ({
   state,
@@ -69,7 +71,11 @@ const ColumnContainer = ({
   return (
     <>
       {errorMsg && (
-        <div className="bg-red-500 text-white p-2 rounded-md">{errorMsg}</div>
+        <PopUp
+          type={PopUpType.Failed}
+          message={errorMsg}
+          setSuccess={() => setErrorMsg("")}
+        />
       )}
       <div
         ref={setNodeRef}
@@ -104,7 +110,8 @@ const ColumnContainer = ({
                 onBlur={() => setEditMode(false)}
                 onKeyDown={(e) => {
                   if (e.key !== "Enter") return;
-                  updateStatus && updateStatus(state.id, name, status, updateS);
+                  updateStatus &&
+                    updateStatus(state.id, name, status, updateS, setErrorMsg);
                   setEditMode(false);
                 }}
               />
@@ -129,6 +136,7 @@ const ColumnContainer = ({
             {ownTasks?.map((task) => (
               <TaskContainer
                 key={task.id}
+                setErrorMsg={setErrorMsg}
                 task={task}
                 deleteTask={deleteTask}
                 tasks={tasks}
@@ -157,7 +165,7 @@ const ColumnContainer = ({
             onSubmit={(e) => {
               e.preventDefault();
               if (taskName.trim()) {
-                createTask(taskName, state.id, tasks, createT);
+                createTask(taskName, state.id, tasks, createT, setErrorMsg);
               }
               setCreateMode(false);
               setTaskName("");

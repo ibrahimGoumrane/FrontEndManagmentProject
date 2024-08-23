@@ -13,6 +13,7 @@ const TaskContainer = ({
   deleteTask,
   editMode,
   setEditMode,
+  setErrorMsg,
 }: TaskContainerProps) => {
   const { deleteTask: deleteT, project } = useProject();
   const [mouseIsOver, setMouseIsOver] = useState(false);
@@ -74,12 +75,12 @@ const TaskContainer = ({
       <p className="task my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.name}
       </p>
-      {mouseIsOver && (
+      {mouseIsOver && setErrorMsg && (
         <button
           className="stroke-black absolute right-8 top-1/2 -translate-y-1/2 p-2 rounded bg-columnBackgroundColor  opacity-60 hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
-            deleteTask(task.id, deleteT);
+            deleteTask(task.id, deleteT, setErrorMsg);
           }}
         >
           <TrashIcon />

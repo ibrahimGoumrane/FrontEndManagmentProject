@@ -239,9 +239,19 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       formData.append("projectImg", newPicture[0]);
       const response = await updateProjectPic(formData, projectId.toString());
       setProjectImg(response);
+      //need to update the image in project context provider
+      if (projects) {
+        const newProjects = projects?.map((project) => {
+          if (project.id && +project.id === +projectId) {
+            return { ...project, projectImage: response };
+          }
+          return project;
+        });
+        updateProjects(newProjects);
+      }
       localStorage.setItem(`projectImg${projectId}`, JSON.stringify(response));
     },
-    [projectId]
+    [projectId, projects, updateProjects]
   );
   const updateProjectState = useCallback(
     async (newProjectState: ProjectStatus | null) => {

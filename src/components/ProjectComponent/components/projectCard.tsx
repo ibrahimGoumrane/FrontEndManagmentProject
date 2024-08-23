@@ -26,7 +26,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       className="relative project-card "
     >
       <div className="project-content">
-        <img alt="project" src="/img/project.png" className="h-[20vh] w-full" />
+        <img
+          alt="project"
+          src={project.projectImage}
+          className="h-[20vh] w-full"
+        />
         <CardContent className="w-full flex items-center justify-center flex-col ">
           <Typography
             gutterBottom

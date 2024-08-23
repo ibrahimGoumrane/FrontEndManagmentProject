@@ -10,6 +10,7 @@ export interface Project {
   description?: string;
   startDate?: string;
   endDate?: string;
+  projectImage?: string;
 }
 export interface getProject {
   id: number;

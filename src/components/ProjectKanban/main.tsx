@@ -41,9 +41,7 @@ const MainProjectManip = ({
   members,
   projectImg,
   taskStatus,
-  updateProject,
   updateMembers,
-  updateProjectState,
   createStatus,
 }: ComponentProps) => {
   const tabsRef = useRef<TabsRef>(null);
@@ -78,17 +76,6 @@ const MainProjectManip = ({
   }
   function handleCancelLeaveProject() {
     setShowLeaveProject(false);
-  }
-
-  function updateProjectInfo(newProject: ProjectModif | null) {
-    updateProject(newProject);
-    updateProjectState({
-      id: newProject?.statusId || -1,
-      name: "",
-    });
-    setTimeout(() => {
-      setUpdateProjectData(false);
-    }, 1200);
   }
 
   return (
@@ -173,10 +160,7 @@ const MainProjectManip = ({
                 />
               </Tabs.Item>
               <Tabs.Item title="Members" icon={FaPerson}>
-                <MembersComponent
-                  members={members}
-                  updateMembers={updateMembers}
-                />
+                <MembersComponent />
               </Tabs.Item>
               <Tabs.Item title="Tasks" icon={HiAdjustments}>
                 <TaskContainer tasksData={tasks} isVisible={showTasks} />
@@ -186,10 +170,7 @@ const MainProjectManip = ({
         </section>
       )}
       {updateProjectData && (
-        <ProjectModifModal
-          onUpdatedSuccessfully={updateProjectInfo}
-          onCancelModif={() => setUpdateProjectData(false)}
-        />
+        <ProjectModifModal onCancelModif={() => setUpdateProjectData(false)} />
       )}
     </div>
   );

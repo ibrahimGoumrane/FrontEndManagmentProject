@@ -45,45 +45,49 @@ export default function Item({
         (member) => member.id.toString() === memeberId.toString()
       );
       if (newMembers) {
-        const authExists = newMembers?.auth.some(
-          (auth: authorisation) =>
-            auth.moduleId === moduleId &&
-            auth.moduleType === newAuth.moduleType &&
-            auth.action === newAuth.action
-        );
+        try {
+          const authExists = newMembers?.auth.some(
+            (auth: authorisation) =>
+              auth.moduleId === moduleId &&
+              auth.moduleType === newAuth.moduleType &&
+              auth.action === newAuth.action
+          );
 
-        if (authExists) {
-          setErrorMessage("User already have this permission");
-        } else {
-          if (action === "CREATE") {
-            await createTaskManagerAuth({
-              userId: memeberId,
-              moduleId: moduleId,
-            });
-          } else if (action === "UPDATE") {
-            await updateTaskManagerAuth({
-              userId: memeberId,
-              moduleId: moduleId,
-            });
-          } else if (action === "DELETE") {
-            await DeleteTaskAuth({
-              userId: memeberId,
-              moduleId: moduleId,
-            });
+          if (authExists) {
+            setErrorMessage("User already have this permission");
           } else {
-            setErrorMessage(
-              "An Error Occured during your choice , permission has not been given , try Again. "
-            );
-          }
+            if (action === "CREATE") {
+              await createTaskManagerAuth({
+                userId: memeberId,
+                moduleId: moduleId,
+              });
+            } else if (action === "UPDATE") {
+              await updateTaskManagerAuth({
+                userId: memeberId,
+                moduleId: moduleId,
+              });
+            } else if (action === "DELETE") {
+              await DeleteTaskAuth({
+                userId: memeberId,
+                moduleId: moduleId,
+              });
+            } else {
+              setErrorMessage(
+                "An Error Occured during your choice , permission has not been given , try Again. "
+              );
+            }
 
-          const newMembersList = members.filter((member) => {
-            return member.id.toString() !== memeberId.toString();
-          });
-          const updatedUser: autorisationModel = {
-            ...newMembers,
-            auth: [...newMembers.auth, newAuth],
-          };
-          updateMembers([...newMembersList, updatedUser], false);
+            const newMembersList = members.filter((member) => {
+              return member.id.toString() !== memeberId.toString();
+            });
+            const updatedUser: autorisationModel = {
+              ...newMembers,
+              auth: [...newMembers.auth, newAuth],
+            };
+            updateMembers([...newMembersList, updatedUser], false);
+          }
+        } catch (error) {
+          setErrorMessage((error as Error).message);
         }
       }
     }

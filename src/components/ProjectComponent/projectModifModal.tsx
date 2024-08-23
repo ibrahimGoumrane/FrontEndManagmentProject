@@ -1,14 +1,11 @@
-import { ProjectModif } from "../../models/Projects";
 import ProjectModifComponent from "./components/projectModif/ProjectModif";
 import UpdateProjectPicModal from "./components/projectPicture";
 
 interface ProjectModifProps {
-  onUpdatedSuccessfully: (newProject: ProjectModif | null) => void;
   onCancelModif: () => void;
 }
 
 export default function ProjectModifModal({
-  onUpdatedSuccessfully,
   onCancelModif,
 }: ProjectModifProps) {
   return (
@@ -26,10 +23,7 @@ export default function ProjectModifModal({
           </div>
         </div>
         <UpdateProjectPicModal />
-        <ProjectModifComponent
-          onUpdatedSuccessfully={onUpdatedSuccessfully}
-          onCancelModif={onCancelModif}
-        />
+        <ProjectModifComponent onCancelModif={onCancelModif} />
       </section>
     </main>
   );
