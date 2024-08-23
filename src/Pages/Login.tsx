@@ -2,6 +2,7 @@ import Header from "../components/utils/NotSignIn";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginSignUp/Login/LoginForm";
 import { User } from "../models/Users";
+import { useUser } from "../utils/Contexte/UserContext/userContexte";
 const img = () => {
   return (
     <img
@@ -11,15 +12,13 @@ const img = () => {
   );
 };
 
-interface login {
-  Successfull: (user: User) => void;
-}
-
-const Login = ({ Successfull }: login) => {
+const Login = () => {
   const navigate = useNavigate(); // Use the useNavigate hook
+  const { updateUser } = useUser();
+
   const handleLoginSuccess = (user: User) => {
-    Successfull(user);
-    navigate("/"); // Redirect to the homepage or any desired route
+    updateUser(user);
+    navigate("/home/"); // Redirect to the homepage or any desired route
   };
   return (
     <>
