@@ -8,6 +8,7 @@ import { loginFields } from "../Form/formFields";
 import FormAction from "../../utils/Button";
 import Input from "../../utils/Input";
 import Policies from "../../utils/policies";
+import FormExtra from "../../utils/FormExtra";
 
 interface LoginModalProps {
   onLoginSuccessfull: (user: User.User) => void;
@@ -42,7 +43,7 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
 
   return (
     <form
-      className="my-10 space-y-6 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] sm:px-32 w-screen "
+      className="my-10 space-y-3 xl:w-5/6 sm:max-w-[75vw] sm:w-[75vw] sm:px-32 w-screen "
       onSubmit={handleSubmit(onSubmit)}
     >
       {errorText && (
@@ -50,7 +51,7 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
           {errorText}
         </div>
       )}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {fields.map((field, index) => (
           <Input
             key={index}
@@ -71,11 +72,14 @@ export default function LoginModal({ onLoginSuccessfull }: LoginModalProps) {
           action="submit"
           isSubmitting={isSubmitting}
         />
-        <Policies
-          paragraph="Dont have an account Yet ? Sign Up "
-          linkName="here"
-          linkUrl="/signup"
-        />
+        <div className="space-y-1 flex items-center flex-col justify-between">
+          <Policies
+            paragraph="Dont have an account Yet ? Sign Up "
+            linkName="here"
+            linkUrl="/signup"
+          />{" "}
+          <FormExtra Data2="Go to Home Page" Data2Link="/" />
+        </div>
       </div>
     </form>
   );

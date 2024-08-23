@@ -1,5 +1,6 @@
 import { ProjectModif } from "../../models/Projects";
 import ProjectModifComponent from "./components/projectModif/ProjectModif";
+import UpdateProjectPicModal from "./components/projectPicture";
 
 interface ProjectModifProps {
   onUpdatedSuccessfully: (newProject: ProjectModif | null) => void;
@@ -12,7 +13,7 @@ export default function ProjectModifModal({
 }: ProjectModifProps) {
   return (
     <main className="w-full min-h-[90vh] flex items-start justify-center bg-purple-500">
-      <section className="basis-1/3 min-h-[90vh] px-12  rounded-md bg-white flex justify-start pt-6 items-center flex-col space-y-10 border-black border-4">
+      <section className="basis-1/3 min-h-[90vh] max-h-[90vh] overflow-y-auto px-12  rounded-md bg-white flex justify-start pt-6 items-center flex-col space-y-10 border-black border-4">
         <div>
           <h2 className="text-3xl font-bold dark:text-white">
             Project Settings
@@ -24,6 +25,7 @@ export default function ProjectModifModal({
             </p>
           </div>
         </div>
+        <UpdateProjectPicModal />
         <ProjectModifComponent
           onUpdatedSuccessfully={onUpdatedSuccessfully}
           onCancelModif={onCancelModif}

@@ -146,7 +146,7 @@ export default function ProjectModifComponent({
           )
         )}
       </form>
-      <div className="flex items-center justify-between flex-col w-full gap-3">
+      <div className="flex items-center justify-between flex-col w-full gap-3 py-8 ">
         <Stack direction="row" spacing={2} width={"100%"}>
           <Button
             variant="contained"

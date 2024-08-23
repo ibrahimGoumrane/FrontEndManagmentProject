@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ProjectCreationBase from "../ProjectTaskTeamForms/Project/ProjectCreationBase";
 import Header from "./Header";
-import ProjectListing from "../ProjectComponent/components/projectListings";
 
 export default function MainNavigation() {
   const [HeaderNavigation, setHeaderNavigation] = useState([
@@ -27,7 +26,7 @@ export default function MainNavigation() {
   const [showProjectCreation, setShowProjectCreation] = useState(false);
 
   return (
-    <div className="w-screen h-screen overflow-hidden ">
+    <>
       {showProjectCreation && (
         <ProjectCreationBase
           showProjectCreation={showProjectCreation}
@@ -41,7 +40,6 @@ export default function MainNavigation() {
           setShowProjectCreation(!showProjectCreation)
         }
       />
-      <ProjectListing />
-    </div>
+    </>
   );
 }

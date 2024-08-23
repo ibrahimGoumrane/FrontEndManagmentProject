@@ -19,6 +19,7 @@ export const ProjectContext = createContext<
       createTask: (newTask: Task) => void;
       deleteTask: (newTaskId: string) => void;
       updateTask: (taskId: number, newTask: Task, saveTodb?: boolean) => void;
+      updatePicture: (newPicture: FileList) => void;
       createStatus: (newTaskStatus: TaskStatus) => void;
       deleteStatus: (newStatusId: string) => void;
       updateStatus: (statusId: number, Status: TaskStatus) => void;

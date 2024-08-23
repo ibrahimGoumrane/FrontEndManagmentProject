@@ -35,7 +35,7 @@ export default function ProjectCreationBase({
       open={showProjectCreation}
       onClose={() => setShowProjectCreation(false)}
       PaperProps={{
-        component: "form",
+        component: "div",
       }}
       sx={{
         "&": {

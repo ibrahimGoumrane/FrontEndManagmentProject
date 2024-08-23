@@ -100,24 +100,6 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
               </div>
             </div>
           </div>
-
-          <div className="w-full min-h-[30vh]  bg-purple-600 pt-4  pr-2 border-r-2 border-black">
-            <span className="text-white  text-md pl-2 font-bold ">
-              Add Members
-            </span>
-            <form action="" className="flex items-center justify-start">
-              <input
-                type="number"
-                placeholder="Entre Member Id  "
-                className="rounded-md flex-1 border-purple-600/50  py-2 px-2 text-white pl-2 text-sm font-bold bg-purple-300 "
-              />
-              <button className="flex-0 ">
-                <span className=" p-2.5 rounded-lg bg-white text-purple-500 font-bold text-xl flex items-center justify-center">
-                  <IoAdd />
-                </span>
-              </button>
-            </form>
-          </div>
         </div>
       </div>
       <div

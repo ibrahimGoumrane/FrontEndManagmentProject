@@ -7,7 +7,7 @@ interface FormExtraProps {
 
 export default function FormExtra({ Data2, Data2Link }: FormExtraProps) {
   return (
-    <div className="flex xl:justify-center justify-evenly h-10  xl:flex-row items-center ">
+    <div className="flex xl:justify-center justify-end  xl:flex-row items-center ">
       <div className="text-sm">
         <Link
           to={Data2Link}

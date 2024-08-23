@@ -10,6 +10,7 @@ import {
   getProjectState,
   updateProject as saveProjectData,
   updateProjectMembers,
+  updateProjectPic,
 } from "../../../network/ProjectApi";
 import {
   createTaskStatus,
@@ -110,7 +111,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     },
     [project, projectId, projects, updateProjects]
   );
-
   const createTask = useCallback(
     async (newTask: Task) => {
       if (!newTask.name) {
@@ -233,7 +233,16 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     },
     [projectId]
   );
-
+  const updatePicture = useCallback(
+    async (newPicture: FileList) => {
+      const formData = new FormData();
+      formData.append("projectImg", newPicture[0]);
+      const response = await updateProjectPic(formData, projectId.toString());
+      setProjectImg(response);
+      localStorage.setItem(`projectImg${projectId}`, JSON.stringify(response));
+    },
+    [projectId]
+  );
   const updateProjectState = useCallback(
     async (newProjectState: ProjectStatus | null) => {
       setProjectState(newProjectState);
@@ -422,6 +431,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       value={{
         project,
         activity,
+        updatePicture,
         tasks,
         projectStatus,
         projectState,

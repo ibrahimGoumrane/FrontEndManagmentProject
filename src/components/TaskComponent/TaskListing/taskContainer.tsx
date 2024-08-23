@@ -163,31 +163,31 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
     fetchTaskInfo();
   }, [tasksData]);
 
+  if (!isVisible) return null; // Don't render the DataGrid if the tab is not visible
+
   return (
     <div className="task-container">
-      {isVisible && (
-        <StyledDataGrid
-          getRowId={(rows) => rows.id}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[PAGE_SIZE]}
-          slots={{
-            pagination: CustomPagination,
-          }}
-          rows={rows}
-          columns={columns}
-          className="task"
-          autoHeight
-          loading={loading}
-          slotProps={{
-            loadingOverlay: {
-              variant: "skeleton",
-              noRowsVariant: "skeleton",
-            },
-          }}
-          initialState={{}}
-        />
-      )}
+      <StyledDataGrid
+        getRowId={(rows) => rows.id}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[PAGE_SIZE]}
+        slots={{
+          pagination: CustomPagination,
+        }}
+        rows={rows}
+        columns={columns}
+        className="task"
+        autoHeight
+        loading={loading}
+        slotProps={{
+          loadingOverlay: {
+            variant: "skeleton",
+            noRowsVariant: "skeleton",
+          },
+        }}
+        initialState={{}}
+      />
     </div>
   );
 }

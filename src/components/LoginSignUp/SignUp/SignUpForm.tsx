@@ -9,6 +9,7 @@ import Input from "../../utils/Input";
 import SelectModel from "../../utils/Select";
 import { validationSchemaSignUp } from "../Form/VlidationSchema";
 import { getSignupFields, SignupField } from "../Form/formFields";
+import Policies from "../../utils/policies";
 
 interface SignUpModalProps {
   onSignUpSuccessfull: (user: User.User) => void;
@@ -111,7 +112,14 @@ export default function SignupModal({ onSignUpSuccessfull }: SignUpModalProps) {
         action="submit"
         isSubmitting={isSubmitting}
       />
-      <FormExtra Data2="Already Have an account ?" Data2Link="/login" />
+      <div className="space-y-1 flex items-center flex-col justify-between">
+        <Policies
+          paragraph="Already have an account ? Login "
+          linkName="here"
+          linkUrl="/login"
+        />{" "}
+        <FormExtra Data2="Go to Home Page" Data2Link="/" />
+      </div>
     </form>
   );
 }

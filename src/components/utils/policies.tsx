@@ -8,8 +8,8 @@ interface PoliciesProps {
 
 const Policies = ({ linkName, linkUrl, paragraph }: PoliciesProps) => {
   return (
-    <div className="flex items-center justify-center flex-col pt-4">
-      <p className=" text-center text-sm text-gray-600 ">
+    <div className="flex items-center justify-end pt-4">
+      <p className=" text-right text-sm text-gray-600 ">
         {paragraph}{" "}
         <Link
           to={linkUrl}

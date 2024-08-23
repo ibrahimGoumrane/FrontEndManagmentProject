@@ -104,6 +104,19 @@ export const updateProject = async (data: Project): Promise<Project> => {
   );
   return response;
 };
+export const updateProjectPic = async (
+  credentials: FormData,
+  projectId: string
+): Promise<string> => {
+  const response = await fetchData(
+    `/api/projects/projectImage/${projectId}?moduleId=${projectId}`,
+    {
+      method: "PUT",
+      body: credentials,
+    }
+  );
+  return response;
+};
 export const getProjectImg = async (id: number | string): Promise<string> => {
   const response = await fetchData(`/api/projects/img/${id}`, {
     method: "GET",

@@ -115,8 +115,8 @@ export default function Item({
           <div className="text-center my-4">
             <img
               className="h-32 w-32 rounded-full border-4 border-white dark:border-gray-800 mx-auto my-4"
-              src="https://randomuser.me/api/portraits/women/21.jpg"
-              alt=""
+              src={member.profileImg ? member.profileImg.toString() : ""}
+              alt="Profile Picture"
             />
             <div className="py-2">
               <h3 className="font-bold text-2xl text-gray-800 dark:text-white mb-1">

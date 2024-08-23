@@ -138,7 +138,10 @@ const MainProjectManip = ({
                 <FbButton
                   gradientMonochrome="info"
                   className="bg-white py-2 text-purple-500  px-2 hover:bg-purple-100 hover:text-purple-900 text-nowrap"
-                  onClick={() => setUpdateProjectData(true)}
+                  onClick={() => {
+                    setActiveTab(0);
+                    setUpdateProjectData(true);
+                  }}
                 >
                   <HiAdjustments className="mr-3 h-4 w-4" />
                   Project Settings
@@ -175,11 +178,7 @@ const MainProjectManip = ({
                   updateMembers={updateMembers}
                 />
               </Tabs.Item>
-              <Tabs.Item
-                title="Tasks"
-                icon={HiAdjustments}
-                onClick={() => tabsRef.current?.setActiveTab(0)}
-              >
+              <Tabs.Item title="Tasks" icon={HiAdjustments}>
                 <TaskContainer tasksData={tasks} isVisible={showTasks} />
               </Tabs.Item>
             </Tabs>

@@ -43,7 +43,8 @@ const MenuProps = {
     },
   },
 };
-
+const fixedInputClass =
+  "rounded-md appearance-none   relative block w-full px-3   rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
 export default function SelectModal({
   labelText,
   name,
@@ -68,7 +69,7 @@ export default function SelectModal({
   };
 
   return (
-    <Box sx={{ minWidth: 80, display: "flex", alignItems: "center" }}>
+    <Box sx={{ minWidth: 80, display: "flex", alignItems: "end" }}>
       {" "}
       {/* Reduced minWidth to make the select smaller */}
       <ThemeProvider theme={theme}>
@@ -84,6 +85,9 @@ export default function SelectModal({
               height: "41px", // Adjust the height of the input
               borderRadius: "6px",
             },
+            // "& .MuiInputBase-root:hover": {
+            //   borderColor: "transparent", // Change the border color on hover
+            // },
           }}
         >
           <InputLabel id="demo-select-small-label" htmlFor={labelFor}>

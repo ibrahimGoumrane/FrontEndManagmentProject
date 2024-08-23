@@ -17,6 +17,7 @@ export interface Member {
   id: string;
   name: string;
   email: string;
+  profileImg?: string | File;
 }
 export interface SignUpCredentials {
   skills?: Array<string>; // Provide a type argument for the Array generic type.

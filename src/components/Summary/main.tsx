@@ -78,6 +78,7 @@ const Summary = () => {
               Get an overview of your project progression
             </span>
           </div>
+
           <DataChart tasks={tasks} />
         </div>
         <div className="flex items-start flex-1 justify-start flex-col border-2 border-slate-600/20  rounded-xl bg-purple-100 my-5 p-4">

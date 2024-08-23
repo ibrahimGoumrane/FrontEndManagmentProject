@@ -19,7 +19,7 @@ export default function Settings() {
           <UpdatePicModal />
           <UpdateSkills />
           <UpdateProfileModal onUpdatedSuccessfull={() => {}} />
-          <ActiveLink to="/">
+          <ActiveLink to="/home/">
             <FaHome />
             <span className="font-bold text-black">Go to Home</span>
           </ActiveLink>
