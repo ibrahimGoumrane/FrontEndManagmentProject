@@ -65,47 +65,31 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return savedProjects ? JSON.parse(savedProjects) : [];
   });
   const updateUser = useCallback(async (newUser: User | null) => {
-    try {
-      setUser(newUser);
-      if (newUser) {
-        localStorage.setItem("userdata", JSON.stringify(newUser));
-        await saveUser(newUser);
-      } else {
-        localStorage.removeItem("userdata");
-      }
-    } catch (error) {
-      console.error("Failed to update user:", error);
+    setUser(newUser);
+    if (newUser) {
+      localStorage.setItem("userdata", JSON.stringify(newUser));
+      await saveUser(newUser);
+    } else {
+      localStorage.removeItem("userdata");
     }
   }, []);
   const updateSkills = useCallback(async (newSkills: string[]) => {
-    try {
-      const data = await saveSkills(newSkills);
-      setSkills(data);
-      localStorage.setItem("userskills", JSON.stringify(newSkills));
-    } catch (error) {
-      console.error("Failed to update skills:", error);
-    }
+    const data = await saveSkills(newSkills);
+    setSkills(data);
+    localStorage.setItem("userskills", JSON.stringify(newSkills));
   }, []);
   const updateProfilePic = useCallback(async (newProfilePic: FileList) => {
-    try {
-      const formdata = new FormData();
-      formdata.append("profileImg", newProfilePic[0]);
+    const formdata = new FormData();
+    formdata.append("profileImg", newProfilePic[0]);
 
-      const newPic = await updateProfile(formdata);
-      setProfilePic(newPic);
+    const newPic = await updateProfile(formdata);
+    setProfilePic(newPic);
 
-      localStorage.setItem("userImg", JSON.stringify(newPic));
-    } catch (error) {
-      console.error("Failed to update profile picture:", error);
-    }
+    localStorage.setItem("userImg", JSON.stringify(newPic));
   }, []);
   const updateTeams = useCallback((newTeams: Team[]) => {
-    try {
-      setTeams(newTeams);
-      localStorage.setItem("userTeams", JSON.stringify(newTeams));
-    } catch (error) {
-      console.error("Failed to update teams:", error);
-    }
+    setTeams(newTeams);
+    localStorage.setItem("userTeams", JSON.stringify(newTeams));
   }, []);
 
   const updateActiveTasks = useCallback(
@@ -113,14 +97,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       newTasks: { assigned: Task[]; created: Task[] },
       saveToDb: boolean = true
     ) => {
-      try {
-        if (!saveToDb) {
-          setActiveTasks(newTasks);
-          localStorage.setItem("userTasks", JSON.stringify(newTasks));
-          return;
-        }
-      } catch (error) {
-        console.error("Failed to update tasks:", error);
+      if (!saveToDb) {
+        setActiveTasks(newTasks);
+        localStorage.setItem("userTasks", JSON.stringify(newTasks));
+        return;
       }
     },
     []
@@ -128,18 +108,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const updateProjects = useCallback(
     async (newProjects: Project[], saveToDb: boolean = true) => {
-      try {
+      setProjects(newProjects);
+      if (!saveToDb) {
         setProjects(newProjects);
-        if (!saveToDb) {
-          setProjects(newProjects);
-          localStorage.setItem("userProjects", JSON.stringify(newProjects));
-          return;
-        }
-        await Promise.all(newProjects.map((project) => saveProjects(project)));
         localStorage.setItem("userProjects", JSON.stringify(newProjects));
-      } catch (error) {
-        console.error("Failed to update projects:", error);
+        return;
       }
+      await Promise.all(newProjects.map((project) => saveProjects(project)));
+      localStorage.setItem("userProjects", JSON.stringify(newProjects));
     },
     []
   );
@@ -156,16 +132,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
+    if (user) return;
+
     async function fetchUser() {
       try {
         const loggedUserData = await getLoggedInUser();
-        if (!loggedUserData) throw new Error("User not yet authenticated");
-        if (!user) {
-          setUser(loggedUserData);
-          localStorage.setItem("userdata", JSON.stringify(loggedUserData));
-        }
+        setUser(loggedUserData);
+        localStorage.setItem("userdata", JSON.stringify(loggedUserData));
       } catch (error) {
-        console.error("Failed to fetch logged-in user:", error);
         resetData();
         localStorage.clear();
       }
@@ -173,6 +147,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     fetchUser();
   }, []);
   useEffect(() => {
+    if (!user) return;
+
     async function fetchProfilePic() {
       try {
         if (user) {
@@ -181,7 +157,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           localStorage.setItem("userImg", JSON.stringify(loggedUserImg));
         }
       } catch (error) {
-        console.error("Failed to fetch logged-in user:", error);
         resetData();
         localStorage.clear();
       }
@@ -204,31 +179,29 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+
     async function fetchUserData() {
       if (!user) return;
 
-      try {
-        const [userSkillsData, userTeamsData, userTasksData, userProjectsData] =
-          await Promise.all([
-            getSkillsName(user.id),
-            getTeamByUserId(+user.id),
-            getActiveUserTasks(),
-            getUserProjects(),
-          ]);
-        setSkills(userSkillsData);
-        localStorage.setItem("userskills", JSON.stringify(userSkillsData));
+      const [userSkillsData, userTeamsData, userTasksData, userProjectsData] =
+        await Promise.all([
+          getSkillsName(user.id),
+          getTeamByUserId(+user.id),
+          getActiveUserTasks(),
+          getUserProjects(),
+        ]);
+      setSkills(userSkillsData);
+      localStorage.setItem("userskills", JSON.stringify(userSkillsData));
 
-        setTeams(userTeamsData);
-        localStorage.setItem("userTeams", JSON.stringify(userTeamsData));
+      setTeams(userTeamsData);
+      localStorage.setItem("userTeams", JSON.stringify(userTeamsData));
 
-        setActiveTasks(userTasksData);
-        localStorage.setItem("userTasks", JSON.stringify(userTasksData));
+      setActiveTasks(userTasksData);
+      localStorage.setItem("userTasks", JSON.stringify(userTasksData));
 
-        setProjects(userProjectsData);
-        localStorage.setItem("userProjects", JSON.stringify(userProjectsData));
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      }
+      setProjects(userProjectsData);
+      localStorage.setItem("userProjects", JSON.stringify(userProjectsData));
     }
     fetchUserData();
   }, [user]);

@@ -82,7 +82,6 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
         setTeamImg(TeamData);
         localStorage.setItem(`TeamImg${teamId}`, JSON.stringify(TeamData));
       } catch (error) {
-        console.error("Failed to fetch Team Img:", error);
         resetData();
       }
     }

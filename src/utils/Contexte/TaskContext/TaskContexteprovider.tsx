@@ -62,7 +62,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       const commentsDb = await Promise.all(
         commentsData.map((comment) => saveComment(comment))
       );
-      
       setComments(commentsDb);
       localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsDb));
     },
@@ -77,13 +76,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
 
   useEffect(() => {
     async function fetchComments() {
-      try {
-        const commentsData: CommentData[] = await getCommentByTaskId(taskId);
-        setComments(commentsData);
-        localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsData));
-      } catch (error) {
-        console.error("Failed to fetch comments:", error);
-      }
+      const commentsData: CommentData[] = await getCommentByTaskId(taskId);
+      setComments(commentsData);
+      localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsData));
     }
     fetchComments();
   }, [taskId]);

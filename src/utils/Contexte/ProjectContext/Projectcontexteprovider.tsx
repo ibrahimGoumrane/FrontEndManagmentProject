@@ -293,7 +293,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           JSON.stringify(projectData)
         );
       } catch (error) {
-        console.error("Failed to fetch project:", error);
         resetData();
       }
     }
@@ -310,7 +309,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           JSON.stringify(projectData)
         );
       } catch (error) {
-        console.error("Failed to fetch project Img:", error);
         resetData();
       }
     }
@@ -344,7 +342,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         };
         setActivity(activityData);
       } catch (error) {
-        console.error("Failed to fetch project activity:", error);
         resetData();
       }
     }
@@ -355,13 +352,9 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Tasks
   useEffect(() => {
     async function fetchTasks() {
-      try {
-        const tasksData = await getProjectTasks(projectId);
-        setTask(tasksData);
-        localStorage.setItem(`tasks${projectId}`, JSON.stringify(tasksData));
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
+      const tasksData = await getProjectTasks(projectId);
+      setTask(tasksData);
+      localStorage.setItem(`tasks${projectId}`, JSON.stringify(tasksData));
     }
     fetchTasks();
   }, [projectId]);
@@ -369,16 +362,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Project Status
   useEffect(() => {
     async function fetchProjectStatus() {
-      try {
-        const ProjectStatus = localStorage.getItem("projectStatus");
-        const statusData = ProjectStatus
-          ? JSON.parse(ProjectStatus)
-          : await getProjectStatus();
-        setProjectStatus(statusData);
-        localStorage.setItem("projectStatus", JSON.stringify(statusData));
-      } catch (error) {
-        console.error("Failed to fetch project statuses:", error);
-      }
+      const ProjectStatus = localStorage.getItem("projectStatus");
+      const statusData = ProjectStatus
+        ? JSON.parse(ProjectStatus)
+        : await getProjectStatus();
+      setProjectStatus(statusData);
+      localStorage.setItem("projectStatus", JSON.stringify(statusData));
     }
     fetchProjectStatus();
   }, []);
@@ -386,19 +375,15 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Project State
   useEffect(() => {
     async function fetchProjectState() {
-      try {
-        const stateData = await getProjectState(projectId);
-        setProjectState(stateData);
-        if (stateData) {
-          localStorage.setItem(
-            `projectState${projectId}`,
-            JSON.stringify(stateData)
-          );
-        } else {
-          localStorage.removeItem(`projectState${projectId}`);
-        }
-      } catch (error) {
-        console.error("Failed to fetch project state:", error);
+      const stateData = await getProjectState(projectId);
+      setProjectState(stateData);
+      if (stateData) {
+        localStorage.setItem(
+          `projectState${projectId}`,
+          JSON.stringify(stateData)
+        );
+      } else {
+        localStorage.removeItem(`projectState${projectId}`);
       }
     }
     fetchProjectState();
@@ -407,21 +392,14 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Members
   useEffect(() => {
     async function fetchMembers() {
-      try {
-        const membersData = await getProjectMembers(projectId);
-        const fetchMembersAuth = await Promise.all(
-          membersData.map(async (user) => {
-            return await getProjectAuth(user.id, projectId.toString());
-          })
-        );
-        setMembers(fetchMembersAuth);
-        localStorage.setItem(
-          `members${projectId}`,
-          JSON.stringify(membersData)
-        );
-      } catch (error) {
-        console.error("Failed to fetch members:", error);
-      }
+      const membersData = await getProjectMembers(projectId);
+      const fetchMembersAuth = await Promise.all(
+        membersData.map(async (user) => {
+          return await getProjectAuth(user.id, projectId.toString());
+        })
+      );
+      setMembers(fetchMembersAuth);
+      localStorage.setItem(`members${projectId}`, JSON.stringify(membersData));
     }
     fetchMembers();
   }, [projectId]);
@@ -429,16 +407,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Task Status
   useEffect(() => {
     async function fetchTaskStatus() {
-      try {
-        const statusData = await getTaskStatus(projectId);
-        setTaskStatus(statusData);
-        localStorage.setItem(
-          `taskStatus${projectId}`,
-          JSON.stringify(statusData)
-        );
-      } catch (error) {
-        console.error("Failed to fetch task statuses:", error);
-      }
+      const statusData = await getTaskStatus(projectId);
+      setTaskStatus(statusData);
+      localStorage.setItem(
+        `taskStatus${projectId}`,
+        JSON.stringify(statusData)
+      );
     }
     fetchTaskStatus();
   }, [projectId]);
