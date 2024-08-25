@@ -42,7 +42,10 @@ export async function createTask(
     };
     await createT(taskToAdd);
   } catch (error) {
-    setErrorMsg("Error creating task : " + (error as Error).message);
+    setErrorMsg(
+      "Warning :Error updating task ur changes are not being Save :" +
+        (error as Error).message
+    );
   }
 }
 export async function updateStatus(
@@ -56,7 +59,10 @@ export async function updateStatus(
     const Newstatus = status.find((stat) => stat.id === id) as TaskStatus;
     await updateS(+id, { ...Newstatus, name });
   } catch (error) {
-    setErrorMsg("Error updating status : " + (error as Error).message);
+    setErrorMsg(
+      "Warning : Ur changes are not being proccessed cause :  " +
+        (error as Error).message
+    );
   }
 }
 export async function deleteStatus(
@@ -73,7 +79,10 @@ export async function deleteStatus(
     }
     await deleteS(StatusId.toString());
   } catch (error) {
-    setErrorMsg("Error deleting status : " + (error as Error).message);
+    setErrorMsg(
+      "Warning : Ur changes are not being proccessed cause :  " +
+        (error as Error).message
+    );
   }
 }
 export async function deleteTask(
@@ -85,7 +94,10 @@ export async function deleteTask(
     const formattedTaskId = taskId.toString().replace("task-", "");
     await deleteT(formattedTaskId.toString());
   } catch (error) {
-    setErrorMsg("Error deleting task : " + (error as Error).message);
+    setErrorMsg(
+      "Warning : Ur changes are not being proccessed cause :  " +
+        (error as Error).message
+    );
   }
 }
 export async function updateTask(
@@ -100,6 +112,9 @@ export async function updateTask(
     const NewTask = tasks.find((task) => task.id === formattedTaskId) as Task;
     await updateT(+formattedTaskId, { ...NewTask, ...newTask });
   } catch (error) {
-    setErrorMsg("Error updating task : " + (error as Error).message);
+    setErrorMsg(
+      "Warning : Ur changes are not being proccessed cause : " +
+        (error as Error).message
+    );
   }
 }

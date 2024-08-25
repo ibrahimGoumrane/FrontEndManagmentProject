@@ -5,6 +5,8 @@ import { TaskStatus } from "../../../models/Status";
 
 interface ColumnContainerProps {
   state: TaskStatus;
+  errorMsg: string;
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>;
   deleteStatus?: (
     StatusId: Id,
     status: TaskStatus[],
@@ -66,7 +68,5 @@ interface TaskContainerProps {
     ) => Promise<void>,
     setErrorMsg: React.Dispatch<React.SetStateAction<string>>
   ) => Promise<void>;
-  editMode: boolean;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export type { ColumnContainerProps, TaskContainerProps };

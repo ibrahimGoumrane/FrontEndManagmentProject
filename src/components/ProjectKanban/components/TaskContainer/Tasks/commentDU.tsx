@@ -3,19 +3,14 @@ import { MdDelete, MdOutlinePublishedWithChanges } from "react-icons/md";
 import Spinner from "../../../../utils/spinner.tsx";
 import { CommentData } from "../../../../../models/Comment.ts";
 import { formatDateTime } from "../../../../../utils/utility.ts";
+import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte.ts";
 interface commentDeleteInterface {
   comment: CommentData;
   userId: number;
-  onUpdatedSuccessfully: (comment: CommentData) => void;
-  onDeletedSuccessfuly: (commentId: string) => void;
 }
 
-function CommentDU({
-  comment,
-  userId,
-  onUpdatedSuccessfully,
-  onDeletedSuccessfuly,
-}: commentDeleteInterface) {
+function CommentDU({ comment, userId }: commentDeleteInterface) {
+  const { updateComment, deleteComment, comments } = useTask();
   const [commentContent, setCommentContent] = useState(comment.content);
   const [isUpdating, setIsUpdating] = useState(false);
   useEffect(() => {
@@ -24,18 +19,14 @@ function CommentDU({
 
   const SaveChanges = () => {
     setIsUpdating(false);
-    // API call to update comment
     const newComment = {
       ...comment,
       content: commentContent,
     };
-    onUpdatedSuccessfully(newComment);
+    updateComment(comment.id, newComment, comments);
   };
   const UpdateComment = () => {
     setIsUpdating(!isUpdating);
-  };
-  const deleteComment = () => {
-    onDeletedSuccessfuly(comment.id);
   };
 
   return (
@@ -90,7 +81,7 @@ function CommentDU({
           )}
           <span
             className="text-2xl p-2 text-white bg-purple-300 rounded-full hover:bg-purple-200 transition-all duration-300 "
-            onClick={deleteComment}
+            onClick={() => deleteComment(comment.id, comments)}
           >
             <MdDelete />
           </span>

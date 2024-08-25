@@ -19,6 +19,8 @@ const ColumnContainer = ({
   ownTasks,
   deleteTask,
   updateTask,
+  errorMsg,
+  setErrorMsg,
 }: ColumnContainerProps) => {
   const {
     createTask: createT,
@@ -31,8 +33,6 @@ const ColumnContainer = ({
 
   const [createMode, setCreateMode] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [editModeTask, setEditModeTask] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const TasksId = useMemo(
     () => ownTasks.map((task) => task.id) || [],
@@ -52,7 +52,7 @@ const ColumnContainer = ({
       type: "Status",
       state,
     },
-    disabled: editMode || editModeTask,
+    disabled: editMode,
   });
 
   const style = {
@@ -141,8 +141,6 @@ const ColumnContainer = ({
                 deleteTask={deleteTask}
                 tasks={tasks}
                 updateTask={updateTask}
-                editMode={editModeTask}
-                setEditMode={setEditModeTask}
               />
             ))}
           </SortableContext>

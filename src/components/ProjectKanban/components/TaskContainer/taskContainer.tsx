@@ -11,12 +11,12 @@ import { useProject } from "../../../../utils/Contexte/ProjectContext/projectCon
 const TaskContainer = ({
   task,
   deleteTask,
-  editMode,
-  setEditMode,
   setErrorMsg,
 }: TaskContainerProps) => {
   const { deleteTask: deleteT, project } = useProject();
   const [mouseIsOver, setMouseIsOver] = useState(false);
+  const [editModeTask, setEditModeTask] = useState<boolean>(false);
+
   const {
     attributes,
     listeners,
@@ -30,7 +30,7 @@ const TaskContainer = ({
       type: "Task",
       task,
     },
-    disabled: editMode,
+    disabled: editModeTask,
   });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -46,19 +46,19 @@ const TaskContainer = ({
       />
     );
   }
-  if (editMode) {
+  if (editModeTask) {
     return (
       <TaskProvider
         projectId={project?.id || ""}
         taskId={parseInt(task.id.toString().split("-")[1])}
         key={task.id}
       >
-        <TaskModifModel setEditMode={setEditMode} />
+        <TaskModifModel setEditMode={setEditModeTask} />
       </TaskProvider>
     );
   }
   const EnterEditMode = () => {
-    setEditMode(true);
+    setEditModeTask(true);
   };
 
   return (

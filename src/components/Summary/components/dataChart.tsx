@@ -28,7 +28,6 @@ export default function DataChart({ tasks }: DataChartProps) {
       )
     );
   }, [tasks]);
-  console.log(done, toDodo, inProgress, tasks);
   return (
     <div className="w-full" style={{ height: "400px" }}>
       {done.length === 0 && toDodo.length === 0 && inProgress.length === 0 ? (

@@ -31,7 +31,6 @@ const Summary = () => {
       const targetDate = new Date(currentDate);
       return targetDate >= today && targetDate <= sevenDaysAgo;
     };
-
     setCreatedTasks(
       tasks.filter((task) => task.createdAt && isWithinLastWeek(task.createdAt))
     );
@@ -43,7 +42,7 @@ const Summary = () => {
     );
     setDoneTasks(
       tasks.filter(
-        (task) => task.statusId && +task.statusId === +taskStatus[6].id
+        (task) => task?.statusId && +task?.statusId === +taskStatus[6]?.id
       )
     );
   }, [tasks]);

@@ -41,7 +41,6 @@ export default function Settings() {
     else await removeMember(+user?.id);
     navigate("/home");
   }
-  console.log(showConfirmLeave);
   return (
     <>
       <div className="relative">

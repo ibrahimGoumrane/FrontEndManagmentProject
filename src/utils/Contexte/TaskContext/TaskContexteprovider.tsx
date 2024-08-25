@@ -1,10 +1,15 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { CommentData } from "../../../models/Comment";
+import {
+  commentCreation,
+  CommentData,
+  commentUpdate,
+} from "../../../models/Comment";
 import { Id, Task, TaskModification } from "../../../models/Tasks";
 import {
-  deleteComment,
+  deleteComment as deleteCommentApi,
   getCommentByTaskId,
-  updateComment as saveComment,
+  updateComment as updateCommentApi,
+  createComment as createCommentApi,
 } from "../../../network/CommentApi";
 import { TaskContext } from "./taskContexte";
 import { AddTaskToLocalStorage, clearLocalStorage } from "./utils/utilities";
@@ -34,10 +39,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     return null;
   });
 
-  const [comments, setComments] = useState<CommentData[]>(() => {
-    const savedComments = localStorage.getItem(`comments${taskId}`);
-    return savedComments ? JSON.parse(savedComments) : [];
-  });
+  const [comments, setComments] = useState<CommentData[]>([]);
 
   const updateTask = useCallback(
     async (newTask: TaskModification | null) => {
@@ -55,15 +57,35 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     },
     [task, updateT, projectId, taskId]
   );
-
-  const updateComments = useCallback(
-    async (commentsData: CommentData[]) => {
-      await deleteComment(taskId);
-      const commentsDb = await Promise.all(
-        commentsData.map((comment) => saveComment(comment))
+  const createComment = useCallback(
+    async (comment: commentCreation, comments: CommentData[]) => {
+      const createComment = await createCommentApi(comment);
+      const commentsDb = [...comments, createComment];
+      setComments(commentsDb);
+    },
+    [taskId]
+  );
+  const updateComment = useCallback(
+    async (
+      commentId: string,
+      comment: commentUpdate,
+      comments: CommentData[]
+    ) => {
+      const updateComment = await updateCommentApi(commentId, comment);
+      const commentsDb = comments.map((comment) =>
+        +comment.id === +commentId ? updateComment : comment
       );
       setComments(commentsDb);
-      localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsDb));
+    },
+    [taskId]
+  );
+  const deleteComment = useCallback(
+    async (commentId: string, comments: CommentData[]) => {
+      await deleteCommentApi(commentId);
+      const commentsDb = comments.filter(
+        (comment) => +comment.id !== +commentId
+      );
+      setComments(commentsDb);
     },
     [taskId]
   );
@@ -78,7 +100,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     async function fetchComments() {
       const commentsData: CommentData[] = await getCommentByTaskId(taskId);
       setComments(commentsData);
-      localStorage.setItem(`comments${taskId}`, JSON.stringify(commentsData));
     }
     fetchComments();
   }, [taskId]);
@@ -89,7 +110,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         task,
         comments,
         updateTask,
-        updateComments,
+        createComment,
+        updateComment,
+        deleteComment,
         resetData,
       }}
     >

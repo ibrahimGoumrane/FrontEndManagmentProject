@@ -23,32 +23,41 @@ export function onDragStart(
     }
   }
 }
-export function onDragEnd(
+export async function onDragEnd(
   event: DragEndEvent,
   tasks: Task[],
   setStatus: React.Dispatch<React.SetStateAction<TaskStatus[]>>,
   setActiveTask: React.Dispatch<React.SetStateAction<Task | null>>,
   setActiveStatus: React.Dispatch<React.SetStateAction<TaskStatus | null>>,
-  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => void
+  updateT: (taskId: number, newTask: Task, saveTodb?: boolean) => Promise<void>,
+  setErrorMsg: React.Dispatch<React.SetStateAction<string>>
 ) {
   setActiveStatus(null);
   setActiveTask(null);
-  const { active, over } = event;
-  if (!over) return;
-  const ActiveId = active.id;
-  const overId = over.id;
-  const isActiveTask = active.data.current?.type === "Task";
-  if (isActiveTask) {
-    const newtask = active?.data?.current?.task;
-    const formattedTaskId = newtask.id.toString().replace("task-", "");
-    updateT(+formattedTaskId, newtask);
+  try {
+    const { active, over } = event;
+    if (!over) return;
+    const ActiveId = active.id;
+    const overId = over.id;
+    const isActiveTask = active.data.current?.type === "Task";
+    if (isActiveTask) {
+      const newtask = active?.data?.current?.task;
+      const formattedTaskId = newtask.id.toString().replace("task-", "");
+
+      await updateT(+formattedTaskId, newtask);
+    }
+    if (ActiveId === overId) return;
+    setStatus((status) => {
+      const activeIndex = getArrayIndex(ActiveId, status);
+      const overIndex = getArrayIndex(overId, status);
+      return arrayMove(status, activeIndex, overIndex);
+    });
+  } catch (error) {
+    setErrorMsg(
+      "Warning :Error updating task ur changes are not being Save : " +
+        (error as Error).message
+    );
   }
-  if (ActiveId === overId) return;
-  setStatus((status) => {
-    const activeIndex = getArrayIndex(ActiveId, status);
-    const overIndex = getArrayIndex(overId, status);
-    return arrayMove(status, activeIndex, overIndex);
-  });
 }
 export function onDragOver(
   event: DragEndEvent,

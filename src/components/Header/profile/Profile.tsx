@@ -6,15 +6,16 @@ import { LogOut } from "../../../network/UserApi";
 import { useUser } from "../../../utils/Contexte/UserContext/userContexte";
 import { useNavigate } from "react-router-dom";
 const Profile = () => {
-  const { user, profilePic } = useUser();
+  const { user, profilePic, updateUser } = useUser();
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
   const { name } = user!;
   function HandlerLogoutClick() {
     LogOut();
+    updateUser(null);
     setShowProfile(false);
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   }
   function handleProfileClick() {
     setShowProfile(false);

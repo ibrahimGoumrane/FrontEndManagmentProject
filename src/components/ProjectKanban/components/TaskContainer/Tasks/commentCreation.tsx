@@ -7,7 +7,7 @@ interface CommentCreationProps {
 }
 
 const CommentCreation = ({ idTask, idUser }: CommentCreationProps) => {
-  const { comments, updateComments } = useTask();
+  const { comments, createComment } = useTask();
   const [commentValue, setCommentValue] = useState<string>("");
   const saveCommentButton = useRef<HTMLDivElement | null>(null);
 
@@ -27,33 +27,15 @@ const CommentCreation = ({ idTask, idUser }: CommentCreationProps) => {
     }
   }, [commentValue]);
 
-  const updateCommentData = () => {
-    if (commentValue) {
-      if (comments) {
-        updateComments([
-          ...comments,
-          {
-            id: "-1",
-            taskId: +idTask,
-            userId: +idUser,
-            content: commentValue,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ]);
-      } else {
-        updateComments([
-          {
-            id: "-1",
-            taskId: +idTask,
-            userId: +idUser,
-            content: commentValue,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        ]);
-      }
-    }
+  const createCommentData = () => {
+    createComment(
+      {
+        userId: idUser,
+        taskId: idTask,
+        content: commentValue,
+      },
+      comments
+    );
     setCommentValue("");
   };
 
@@ -92,7 +74,7 @@ const CommentCreation = ({ idTask, idUser }: CommentCreationProps) => {
               color="success"
               type="submit"
               className="w-full text-nowrap h-full hidden"
-              onClick={updateCommentData}
+              onClick={createCommentData}
             >
               Save Comment
             </Button>

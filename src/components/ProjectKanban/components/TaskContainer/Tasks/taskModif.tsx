@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TaskModification } from "../../../../../models/Tasks";
-import { User } from "../../../../../models/Users";
-import { getUserData } from "../../../../../network/UserApi";
-import { useProject } from "../../../../../utils/Contexte/ProjectContext/projectContexte";
+import { PopUpType } from "../../../../../models/utils";
 import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte";
 import { useUser } from "../../../../../utils/Contexte/UserContext/userContexte";
+import PopUp from "../../../../utils/popUp";
 import CommentCreation from "./commentCreation";
 import CommentDU from "./commentDU";
 import MainTaskData from "./mainTaskData";
@@ -15,99 +14,66 @@ interface taskModifProps {
 
 const TaskModifModel = ({ setEditMode }: taskModifProps) => {
   const { user } = useUser();
-  const { comments, updateTask, task, updateComments } = useTask();
-  const { taskStatus } = useProject();
+  const { comments, updateTask, task } = useTask();
 
   const [taskState, setTasks] = useState(task);
-  const [userData, setUserData] = useState<User | null>(null);
   const [description, setDescription] = useState("");
   const [updateDescription, setupdateDescription] = useState<boolean>(false);
-  const saveDescriptionButton = useRef<HTMLDivElement | null>(null);
-
+  const [errorText, setErrorText] = useState<string>("");
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const DescriptionHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setDescription(newValue);
   };
-  useEffect(() => {
-    if (
-      description.toString().localeCompare(taskState?.description || "") != 0
-    ) {
-      if (saveDescriptionButton.current) {
-        saveDescriptionButton.current.style.display = "block";
-      }
-    } else {
-      if (saveDescriptionButton.current) {
-        saveDescriptionButton.current.style.display = "none";
-      }
-    }
-  }, [description]);
 
-  const updateTaskData = () => {
-    updateTask({ description: description });
-    setupdateDescription(false);
-    if (saveDescriptionButton.current) {
-      saveDescriptionButton.current.style.display = "none";
-      setDescription("");
-    }
+  const handleUpdateDescription = () => {
+    setupdateDescription(true);
+    descriptionRef.current?.focus();
   };
-  const State = useMemo(() => {
-    const returnedValue = taskStatus.find(
-      (state) => state.id === taskState?.statusId
-    );
-    return returnedValue;
-  }, [taskState, taskStatus]);
-  useEffect(() => {
-    async function fetchData() {
-      setTasks(task);
-      if (task?.AssigneeId !== null) {
-        if (task?.AssigneeId !== undefined) {
-          const userInfo = await getUserData(task.AssigneeId);
-          setUserData(userInfo);
-        }
-      }
+
+  const updateTaskData = async () => {
+    try {
+      await updateTask({ description: description });
+      setupdateDescription(false);
+    } catch (error) {
       if (task?.description) {
         setDescription(task?.description);
       }
+      setupdateDescription(false);
+      setErrorText((error as Error).message);
     }
-    fetchData();
+  };
+  useEffect(() => {
+    setTasks(task);
+    if (task?.description) {
+      setDescription(task?.description);
+    }
   }, [task]);
 
-  const [showTaskModif, setShowTaskModif] = useState(true);
-  const ToggleShowModif = () => setShowTaskModif(!showTaskModif);
-  const onSubmitSuccessfull = (task: TaskModification) => {
-    updateTask(task);
+  const onSubmitSuccessfull = async (task: TaskModification) => {
+    await updateTask(task);
   };
 
   return (
-    <div className="mainBg ">
-      <div className="flex h-5/6 w-[80vw] items-center justify-center ">
-        <div className="bg-purple-400  p-10 rounded-l-md mt-10 flex items-start justify-start  flex-col h-full w-full ">
+    <div className="absolute inset-0 z-50 bg-gray-200/30 flex items-start  justify-center">
+      {errorText && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={errorText}
+          setSuccess={() => setErrorText("")}
+        />
+      )}
+      <div className="flex mt-12 items-center justify-center bg-purple-500 p-10 rounded-lg gap-10 h-5/6">
+        <div className="flex items-start justify-start flex-col h-full w-[30vw]">
           <div className="flex flex-col items-start w-full gap-1 my-5 text-black text-nowrap text-left  basis-1/3">
-            <h1 className="font-light  duration-150 italic ">
-              <div className="font-mono text-3xl  text-white relative effect inline-block">
-                <span>{taskState?.name}</span>
-                <span className="font-light text-sm absolute bottom-0 right-0  text-black">
-                  {State?.name}
-                </span>
-              </div>
-              <div>
-                <span className="text-white font-mono text-xl">
-                  Assigned to :{" "}
-                </span>
-                <span className="text-black  font-mono text-sm">
-                  {userData?.name ? userData?.name : "No Assign Yet"}
-                </span>
-              </div>
-            </h1>
-
             <div className="flex items-start justify-start flex-col  w-full">
-              <span className="text-2xl italic font-serif font-light text-white  mb-1 inline-block">
+              <div className="text-xl  italic capitalize text-white text-left font-mono ">
                 Description
-              </span>
+              </div>
               <div
                 className={`italic lowercase font-bold text-purple-500  text-wrap pl-2    font-mono text-md relative flex-grow-0   flex items-start  justify-start w-full bg-white rounded-md  h-32
                   ${updateDescription ? "hidden" : ""}`}
-                onClick={() => setupdateDescription(true)}
+                onClick={handleUpdateDescription}
               >
                 <span
                   dangerouslySetInnerHTML={{
@@ -121,11 +87,12 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
               <div
                 className={` lowercase font-semibold  text-wrap font-sans text-xs relative flex-grow-0  flex items-start  justify-start w-full bg-white rounded-md  h-40
                   ${updateDescription ? "" : "hidden"}`}
-                onBlur={updateTaskData}
               >
                 <textarea
                   name=""
                   id=""
+                  onBlur={updateTaskData}
+                  ref={descriptionRef}
                   value={description}
                   onChange={DescriptionHandler}
                   onKeyDown={(e) => {
@@ -137,10 +104,10 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
               </div>
             </div>
           </div>
-          <div className="basis-2/3 w-full h-full  flex flex-col">
-            <h1 className="font-mono text-3xl italic  text-white relative task inline-block">
+          <div className="basis-2/3 w-full h-full flex flex-col mt-auto">
+            <div className="text-xl  italic capitalize  text-white  text-left font-mono ">
               Comments
-            </h1>
+            </div>
             <div className="h- flex items-start flex-col basis-5/6 justify-start space-y-5 mt-2">
               {user?.id && task?.id && (
                 <CommentCreation idUser={+user?.id} idTask={+task?.id} />
@@ -158,21 +125,6 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
                             key={index}
                             comment={comment}
                             userId={+user?.id ?? 0}
-                            onDeletedSuccessfuly={(commentId) => {
-                              const newComments = comments.filter(
-                                (com) => com.id !== commentId
-                              );
-                              updateComments(newComments);
-                            }}
-                            onUpdatedSuccessfully={(comment) => {
-                              const newComments = [
-                                ...comments.filter(
-                                  (com) => com.id !== comment.id
-                                ),
-                                comment,
-                              ];
-                              updateComments(newComments);
-                            }}
                           />
                         )
                     )}
@@ -188,15 +140,10 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
             </div>
           </div>
         </div>
-        <div className=" bg-purple-400  rounded-r-md mt-10  flex items-center justify-center flex-col h-full w-1/2">
-          <MainTaskData
-            taskState={taskState!}
-            setEditMode={setEditMode}
-            showTaskModif={showTaskModif}
-            ToggleShowModif={ToggleShowModif}
-            onSubmitSuccessfull={onSubmitSuccessfull}
-          />
-        </div>
+        <MainTaskData
+          setEditMode={setEditMode}
+          onSubmitSuccessfull={onSubmitSuccessfull}
+        />
       </div>
     </div>
   );

@@ -54,6 +54,8 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
   const statusId = useMemo(() => status.map((stat) => stat.id), [status]);
   const [activeStatus, setActiveStatus] = useState<TaskStatus | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -77,7 +79,8 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
               setStatus,
               setActiveTask,
               setActiveStatus,
-              updateT
+              updateT,
+              setErrorMsg
             )
           }
           onDragOver={(event) => onDragOver(event, setTasks)}
@@ -93,6 +96,8 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
                   createTask={createTask}
                   status={status}
                   tasks={tasks}
+                  setErrorMsg={setErrorMsg}
+                  errorMsg={errorMsg}
                   ownTasks={tasks.filter((task) => task.statusId === stat.id)}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
@@ -110,6 +115,8 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
                 createTask={createTask}
                 status={status}
                 tasks={tasks}
+                setErrorMsg={setErrorMsg}
+                errorMsg={errorMsg}
                 ownTasks={tasks.filter(
                   (task) => task.statusId === activeStatus.id
                 )}
@@ -124,8 +131,6 @@ const KanbanBoard = ({ taskStatus, projectTasks }: KanbanBoardProps) => {
                 deleteTask={deleteTask}
                 tasks={tasks}
                 updateTask={updateTask}
-                editMode={false}
-                setEditMode={() => {}}
               />
             )}
           </DragOverlay>

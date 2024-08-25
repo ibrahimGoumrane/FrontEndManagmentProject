@@ -1,4 +1,4 @@
-import { CommentData } from "../models/Comment";
+import { commentCreation, CommentData, commentUpdate } from "../models/Comment";
 import { Id } from "../models/Status";
 import { fetchData } from "./utilies";
 
@@ -14,7 +14,7 @@ export const getCommentByTaskId = async (
   return response;
 };
 export const createComment = async (
-  data: CommentData
+  data: commentCreation
 ): Promise<CommentData> => {
   const response = await fetchData(`/api/comments/`, {
     method: "POST",
@@ -26,9 +26,10 @@ export const createComment = async (
   return response;
 };
 export const updateComment = async (
-  data: CommentData
+  commentId: Id,
+  data: commentUpdate
 ): Promise<CommentData> => {
-  const response = await fetchData(`/api/comments/${data.id}`, {
+  const response = await fetchData(`/api/comments/${commentId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

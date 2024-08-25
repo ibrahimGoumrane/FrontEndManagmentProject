@@ -1,35 +1,49 @@
 import { Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UnauthorizedError } from "../../../../../errors/http_errors";
-import { Task, TaskModification } from "../../../../../models/Tasks";
+import { TaskModification } from "../../../../../models/Tasks";
 import { useProject } from "../../../../../utils/Contexte/ProjectContext/projectContexte";
-import Input from "../components/InputTask";
-import SelectUnique from "../../../../utils/SelectUnique";
-import CircularIndeterminate from "../../../../utils/spinner";
+import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte";
 import {
   getTaskModificationFields,
   TaskModificationField,
 } from "../../../../ProjectTaskTeamForms/Form/formFields";
+import SelectUnique from "../../../../utils/SelectUnique";
+import CircularIndeterminate from "../../../../utils/spinner";
+import Input from "../components/InputTask";
 
 interface TaskModifProps {
-  onSubmitSuccessfull: (task: TaskModification) => void;
-  onTaskModifError: (error: UnauthorizedError) => void;
+  onSubmitSuccessfull: (task: TaskModification) => Promise<void>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  task: Task | null;
 }
 
 export default function TaskModif({
   onSubmitSuccessfull,
-  onTaskModifError,
   setEditMode,
-  task: taskState,
 }: TaskModifProps) {
+  const { task: taskState } = useTask();
   const [task, setTask] = useState(taskState);
   const [errorText, setErrorText] = useState<string | null>(null);
   const [fields, setFields] = useState<TaskModificationField[]>([]);
-
+  const [isAuthorised, setIsAuthorised] = useState<boolean>(true);
   const { members } = useProject();
+
+  useEffect(() => {
+    async function checkAuto() {
+      try {
+        if (taskState) {
+          await onSubmitSuccessfull(taskState as TaskModification);
+          setIsAuthorised(true);
+        } else {
+          setIsAuthorised(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setIsAuthorised(false);
+      }
+    }
+    checkAuto();
+  }, []);
 
   useEffect(() => {
     async function fetchFields() {
@@ -83,12 +97,7 @@ export default function TaskModif({
       setEditMode(false);
       setErrorText("");
     } catch (error) {
-      if (error instanceof UnauthorizedError) {
-        onTaskModifError(error);
-        setErrorText(error.message);
-      } else {
-        setErrorText("An error occurred");
-      }
+      setErrorText((error as Error).message);
       console.error(error);
     }
   }
@@ -160,17 +169,19 @@ export default function TaskModif({
             onClick={onCancelCreation}
             className="w-full text-nowrap"
           >
-            Cancel
+            Go Back
           </Button>
-          <Button
-            variant="contained"
-            color="success"
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full text-nowrap "
-          >
-            {isSubmitting ? "Updating Task..." : "Update"}
-          </Button>
+          {isAuthorised && (
+            <Button
+              variant="contained"
+              color="success"
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full text-nowrap "
+            >
+              {isSubmitting ? "Updating Task..." : "Update"}
+            </Button>
+          )}
         </Stack>
       </div>
     </form>
