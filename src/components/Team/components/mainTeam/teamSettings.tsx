@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useTeam } from "../../../../utils/Contexte/TeamContext/teamContexte";
 import { IoClose } from "react-icons/io5";
 import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
+import { useNavigate } from "react-router-dom";
+import { PopUpType } from "../../../../models/utils";
+import PopUp from "../../../utils/popUp";
 
 interface TeamSettingsProps {
   showTeamSettings: boolean;
@@ -12,9 +15,11 @@ export default function TeamSettings({
   showTeamSettings,
   setShowTeamSettings,
 }: TeamSettingsProps) {
-  const { team, teamImg, teamMembers } = useTeam();
+  const { team, teamImg, teamMembers, deleteTeam } = useTeam();
+  const navigate = useNavigate();
   const { user } = useUser();
   const [teamOwner, setTeamOwner] = useState<string>("No owner found");
+  const [error, setError] = useState<string>("");
   useEffect(() => {
     if (!team?.ownerId) return;
     const owner = teamMembers.find((member) => +member.id === +team?.ownerId);
@@ -25,6 +30,16 @@ export default function TeamSettings({
       setShowTeamSettings(false);
     }
   };
+  const handleTeamDelete = async () => {
+    try {
+      if (team) {
+        await deleteTeam();
+        navigate("/home");
+      }
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  };
   return (
     <div
       className={
@@ -33,8 +48,15 @@ export default function TeamSettings({
       }
       onClick={handleClose}
     >
+      {error && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={error}
+          setSuccess={() => setError("")}
+        />
+      )}
       <div className=" min-h-screen  flex items-center justify-center flex-col  max-w-screen-lg sm:mx-8 xl:mx-auto text-center">
-        <div className=" space-y-5 col-span-8 overflow-hidden rounded-xl max-w-screen-md sm:bg-gray-100 sm:px-16 sm:shadow min-h-[80vh] shadow-slate-900 shadow-inner">
+        <div className="space-y-5 col-span-8 overflow-hidden rounded-xl min-w-[40vw] sm:bg-gray-100 sm:px-16 sm:shadow min-h-[80vh] shadow-slate-900 shadow-inner">
           <div className="flex items-center justify-between w-full border-b">
             <h1 className=" py-6 text-4xl text-left font-semibold ">
               Team Settings
@@ -93,7 +115,10 @@ export default function TeamSettings({
                 Deleting this team will remove all team members and all team
                 related data. This action cannot be undone.
               </p>
-              <button className="ml-auto text-md  font-semibold text-rose-600 underline decoration-2">
+              <button
+                className="ml-auto text-md  font-semibold text-rose-600 underline decoration-2"
+                onClick={handleTeamDelete}
+              >
                 Continue with deletion
               </button>
             </div>

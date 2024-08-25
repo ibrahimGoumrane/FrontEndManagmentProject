@@ -53,9 +53,19 @@ const TaskModifModel = ({ setEditMode }: taskModifProps) => {
   const onSubmitSuccessfull = async (task: TaskModification) => {
     await updateTask(task);
   };
-
+  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setEditMode(false);
+    }
+  };
   return (
-    <div className="absolute inset-0 z-50 bg-gray-200/30 flex items-start  justify-center">
+    <div
+      className={
+        "bg-black/40 fixed inset-0 z-50 flex items-center justify-center  "
+      }
+      onClick={handleClose}
+    >
+      {" "}
       {errorText && (
         <PopUp
           type={PopUpType.Failed}

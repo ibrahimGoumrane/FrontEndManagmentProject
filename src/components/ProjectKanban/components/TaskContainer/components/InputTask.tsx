@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { useTask } from "../../../../../utils/Contexte/TaskContext/taskContexte";
 import { toDateTimeLocal } from "../../../../../utils/utility";
 
 interface InputProps {
@@ -16,11 +15,19 @@ interface InputProps {
   type?: string; // Add this prop to specify the type of input
   [x: string]: unknown;
 }
-
 const fixedInputClass =
   "italic lowercase font-bold pl-2 rounded-md appearance-none relative block w-full px-3 py-2 rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
 const fixedLabelClass =
   "block text-gray-700 text-sm font-light font-semibold text-white";
+function CheckData(initialValue: string | number) {
+  if (!isNaN(+initialValue)) {
+    return +initialValue;
+  }
+  if (new Date(initialValue).toString() !== "Invalid Date") {
+    return toDateTimeLocal(new Date(initialValue).toISOString());
+  }
+  return initialValue;
+}
 
 export default function Input({
   labelText,
@@ -33,32 +40,18 @@ export default function Input({
   type = "text", // Default to text input
   value: initialValue = "",
 }: InputProps) {
-  const { task } = useTask();
-  const [item, setItem] = useState<string | number>(initialValue);
-  const [Labelvalue, setLabelvalue] = useState<string | number>(initialValue);
+  const [item, setItem] = useState<string | number>(() =>
+    CheckData(initialValue)
+  );
+  const [Labelvalue, setLabelvalue] = useState<string | number>(item);
   const [updateValue, setUpdateValue] = useState<boolean>(false);
-
-  useEffect(() => {
-    setItem(initialValue);
-  }, [initialValue]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    if (type === "datetime-local") {
-      if (task?.startDate) {
-        const startDateValue = new Date(task?.startDate);
-        const endDateValue = new Date(newValue);
-        if (endDateValue < startDateValue) {
-          setItem(toDateTimeLocal(task?.startDate));
-          return;
-        }
-      }
-    }
     setItem(newValue);
   };
-
   const handleOnBlur = () => {
-    setLabelvalue(item);
+    setLabelvalue(CheckData(item));
     setUpdateValue(false);
   };
 

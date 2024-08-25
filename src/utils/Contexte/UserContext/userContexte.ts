@@ -26,7 +26,7 @@ export const UserContext = createContext<
         saveToDb?: boolean
       ) => Promise<void>;
       updateProjects: (
-        projects: Project[],
+        newProject: Project[],
         saveToDb?: boolean
       ) => Promise<void>;
       resetData: () => void;

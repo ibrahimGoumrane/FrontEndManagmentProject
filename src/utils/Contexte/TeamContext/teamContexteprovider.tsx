@@ -22,7 +22,7 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
   teamId,
   children,
 }) => {
-  const { teams, updateTeams } = useUser();
+  const { teams, updateTeams, user } = useUser();
   const [team, setTeam] = useState<Team | null>(null);
 
   const [teamMembers, setteamMembers] = useState<User[]>([]);
@@ -48,16 +48,31 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
     [teamId]
   );
   const removeMember = useCallback(
-    async (newMemberId: number) => {
-      const updatedMembers = await removeTeamMember(+teamId, newMemberId);
-      setteamMembers(updatedMembers);
+    async (newMemberId: number, saveDb = true) => {
+      if (!user) return;
+      if (saveDb) {
+        const updatedMembers = await removeTeamMember(+teamId, newMemberId);
+        setteamMembers(updatedMembers);
+      } else {
+        setteamMembers(
+          teamMembers.filter((member) => +member.id !== +newMemberId)
+        );
+      }
+      //check if the user is still in the team
+      const inTeam = teamMembers.findIndex(
+        (member) => +member.id === +user?.id
+      );
+      if (inTeam === -1) {
+        const newTeams = teams?.filter((team) => +team.id !== +teamId) || [];
+        updateTeams(newTeams);
+      }
     },
     [teamId]
   );
 
   const deleteTeam = useCallback(async () => {
-    const newTeams = teams?.filter((team) => +team.id !== +teamId) || [];
     await deleteTeamUsingId(+teamId);
+    const newTeams = teams?.filter((team) => +team.id !== +teamId) || [];
     updateTeams(newTeams);
   }, [teamId, teams, updateTeams]);
 

@@ -206,30 +206,35 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
   const updateMembers = useCallback(
     async (newMembers: autorisationModel[], saveTodb: boolean = true) => {
-      if (!saveTodb) {
-        setMembers(newMembers);
-        localStorage.setItem(`members${projectId}`, JSON.stringify(newMembers));
-        //check if the user stil exsist in the project
-        const isExsist = newMembers.findIndex((member) => {
-          return member.id.toString() === user?.id.toString();
-        });
-        if (isExsist === -1) {
-          resetData();
-        } else {
-          updateProjects(
-            projects?.map((project) => {
-              if (+projectId === project.id) {
-                return { ...project, members: newMembers };
-              }
-              return project;
-            }) || []
-          );
-        }
-        return;
+      let savedMembers = newMembers;
+      if (saveTodb) {
+        savedMembers = await updateProjectMembers(projectId, newMembers);
       }
-      const members = await updateProjectMembers(projectId, newMembers);
-      setMembers(members);
-      localStorage.setItem(`members${projectId}`, JSON.stringify(members));
+      const isExsist = savedMembers.findIndex((member) => {
+        return member.id.toString() === user?.id.toString();
+      });
+      if (isExsist === -1) {
+        resetData();
+        updateProjects(
+          projects?.filter(
+            (project) => project.id?.toString() !== projectId.toString()
+          ) || []
+        );
+      } else {
+        updateProjects(
+          projects?.map((project) => {
+            if (+projectId === project.id) {
+              return { ...project, members: savedMembers };
+            }
+            return project;
+          }) || []
+        );
+        setMembers(savedMembers);
+        localStorage.setItem(
+          `members${projectId}`,
+          JSON.stringify(savedMembers)
+        );
+      }
     },
     [projectId]
   );
@@ -304,6 +309,8 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   }, [tasks]);
   useEffect(() => {
     async function fetchProject() {
+      console.log("fetching project");
+      console.log(project);
       try {
         const projectData: Project = await getProjectData(projectId);
         setProject(projectData);

@@ -12,6 +12,7 @@ const TaskContainer = ({
   task,
   deleteTask,
   setErrorMsg,
+  setEditTask,
 }: TaskContainerProps) => {
   const { deleteTask: deleteT, project } = useProject();
   const [mouseIsOver, setMouseIsOver] = useState(false);
@@ -58,9 +59,9 @@ const TaskContainer = ({
     );
   }
   const EnterEditMode = () => {
+    setEditTask && setEditTask(true);
     setEditModeTask(true);
   };
-
   return (
     <div
       ref={setNodeRef}

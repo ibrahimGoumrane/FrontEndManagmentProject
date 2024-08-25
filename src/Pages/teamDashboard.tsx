@@ -51,7 +51,6 @@ function TeamListing() {
     }
     fetchTeamData();
   }, [teams]);
-
   return (
     teamsData &&
     LocalTeamInfo && (
@@ -72,6 +71,7 @@ function TeamListing() {
                     id={t.id}
                     name={t.name}
                     key={t.name}
+                    teamImg={t.teamImage ? t.teamImage : ""}
                     active={teamId && +teamId === +t.id ? true : false}
                     navigate={navigate}
                   />

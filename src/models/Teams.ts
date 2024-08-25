@@ -7,6 +7,7 @@ export interface Team {
   id: string;
   name: string;
   ownerId: Id;
+  teamImage?: string;
 }
 export interface TeamCreation {
   name: string;

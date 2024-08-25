@@ -51,6 +51,7 @@ interface ColumnContainerProps {
 interface TaskContainerProps {
   task: Task;
   setErrorMsg?: React.Dispatch<React.SetStateAction<string>>;
+  setEditTask?: React.Dispatch<React.SetStateAction<boolean>>;
   deleteTask: (
     taskId: Id,
     deleteT: (newTaskId: string) => Promise<void>,

@@ -3,6 +3,7 @@ export interface TChat {
   teamId: string;
   userId: string;
   userName: string;
+  profileImg?: string;
   message: string;
   createdAt?: string;
   updatedAt?: string;

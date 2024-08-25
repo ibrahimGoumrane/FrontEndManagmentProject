@@ -34,6 +34,8 @@ const ColumnContainer = ({
   const [createMode, setCreateMode] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
 
+  const [editTask, setEditTask] = useState<boolean>(false);
+
   const TasksId = useMemo(
     () => ownTasks.map((task) => task.id) || [],
     [ownTasks]
@@ -52,9 +54,8 @@ const ColumnContainer = ({
       type: "Status",
       state,
     },
-    disabled: editMode,
+    disabled: editMode || editTask,
   });
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -141,6 +142,7 @@ const ColumnContainer = ({
                 deleteTask={deleteTask}
                 tasks={tasks}
                 updateTask={updateTask}
+                setEditTask={setEditTask}
               />
             ))}
           </SortableContext>

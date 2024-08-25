@@ -6,11 +6,15 @@ import { useState } from "react";
 import PopUp from "../utils/popUp.tsx";
 import { PopUpType } from "../../models/utils.ts";
 import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte.ts";
+import { useUser } from "../../utils/Contexte/UserContext/userContexte.ts";
+import { useNavigate } from "react-router-dom";
 
 const MembersComponent = () => {
   const [successMessage, setSuccess] = useState<boolean>(false);
+  const { user } = useUser();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const { members, updateMembers } = useProject();
+  const navigate = useNavigate();
   function handleDelete(id: string, moduleId: string, memeberId: string) {
     async function deleteAuth() {
       try {
@@ -45,6 +49,9 @@ const MembersComponent = () => {
         return member.id.toString() !== memeberId.toString();
       });
       await updateMembers(newMembersList, true);
+      if (memeberId.toString() === user?.id.toString()) {
+        navigate("/home");
+      }
     } catch (error) {
       setErrorMessage((error as Error).message);
     }

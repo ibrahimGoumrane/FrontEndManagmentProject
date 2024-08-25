@@ -55,7 +55,7 @@ export default function MainChatPage({ teamId }: Props) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [teamChat]); // Dependency array ensures scrolling when LocalTeamInfo changes
-
+  console.log(teamChat);
   return (
     <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-slate-200 h-full p-4">
       <div
@@ -100,6 +100,7 @@ export default function MainChatPage({ teamId }: Props) {
                   <TeamMessage
                     message={chat.message}
                     sender={chat.userName}
+                    profileImg={chat.profileImg ? chat.profileImg : ""}
                     senderId={chat.userId}
                     date={chat.createdAt || new Date().toISOString()}
                   />

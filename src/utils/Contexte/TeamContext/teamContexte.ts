@@ -10,7 +10,7 @@ export const TeamContext = createContext<
       teamImg: string;
       updateTeam: (newTeam: Team) => Promise<void>;
       addMember: (newMemberId: number) => Promise<void>;
-      removeMember: (newMemberId: number) => Promise<void>;
+      removeMember: (newMemberId: number, saveDb?: boolean) => Promise<void>;
       deleteTeam: () => Promise<void>;
       resetData: () => void;
     }

@@ -139,3 +139,12 @@ export async function deleteTeam(id: number) {
   });
   return response;
 }
+export default function leaveTeam(id: number) {
+  const response = fetchData(`/api/teams/leave/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}

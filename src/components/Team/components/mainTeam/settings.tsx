@@ -8,6 +8,8 @@ import { useUser } from "../../../../utils/Contexte/UserContext/userContexte";
 import { useNavigate } from "react-router-dom";
 import ModalUnstyled from "../../../ProjectComponent/components/modal";
 import { PopUpType } from "../../../../models/utils";
+import leaveTeam from "../../../../network/TeamApi";
+import PopUp from "../../../utils/popUp";
 
 export default function Settings() {
   const { team, deleteTeam, removeMember } = useTeam();
@@ -17,6 +19,7 @@ export default function Settings() {
   const [showMembers, setShowMembers] = useState(false);
   const [showTeamSettings, setShowTeamSettings] = useState(false);
   const [showConfirmLeave, setShowConfirmLeave] = useState(false);
+  const [error, setError] = useState("");
   function handleClick() {
     setShowSettings((showSettings) => !showSettings);
   }
@@ -33,16 +36,31 @@ export default function Settings() {
     setShowConfirmLeave(true);
   }
   async function handleConfirmLeave() {
-    if (team?.ownerId === user?.id) {
-      await deleteTeam();
-      return navigate("/home");
+    try {
+      if (team?.ownerId === user?.id) {
+        await deleteTeam();
+        return navigate("/home");
+      }
+      if (!user?.id) return navigate("*");
+      else {
+        if (!team?.id) return navigate("*");
+        await leaveTeam(+team?.id);
+        removeMember(+user.id, false);
+      }
+      navigate("/home");
+    } catch (error) {
+      setError((error as Error).message);
     }
-    if (!user?.id) return navigate("*");
-    else await removeMember(+user?.id);
-    navigate("/home");
   }
   return (
     <>
+      {error && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={error}
+          setSuccess={() => setError("")}
+        />
+      )}
       <div className="relative">
         <div
           className="text-xl p-3   rounded-md flex items-center justify-center text-white bg-indigo-600  font-semibold relative cursor-pointer"
