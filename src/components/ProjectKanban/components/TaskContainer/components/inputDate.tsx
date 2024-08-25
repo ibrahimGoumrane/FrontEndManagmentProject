@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
+import { toDateTimeLocal } from "../../../../../utils/utility";
 
 interface InputProps {
   labelText: string;
@@ -11,15 +12,25 @@ interface InputProps {
   stylesLabel?: string;
   stylesInput?: string;
   value?: string | number;
-  type?: string; // Add this prop to specify the type of input
   [x: string]: unknown;
 }
+
 const fixedInputClass =
   "italic lowercase font-bold pl-2 rounded-md appearance-none relative block w-full px-3 py-2 rounded h-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm";
 const fixedLabelClass =
   "block text-gray-700 text-sm font-light font-semibold text-white";
 
-export default function Input({
+function formatDateTime(initialValue: string | number) {
+  if (typeof initialValue === "string" || typeof initialValue === "number") {
+    const parsedDate = new Date(initialValue);
+    if (!isNaN(parsedDate.getTime())) {
+      return toDateTimeLocal(parsedDate.toISOString());
+    }
+  }
+  return "";
+}
+
+export default function InputDate({
   labelText,
   name,
   labelFor,
@@ -27,10 +38,11 @@ export default function Input({
   stylesInput,
   stylesLabel,
   error,
-  type = "text", // Default to text input
   value: initialValue = "",
 }: InputProps) {
-  const [item, setItem] = useState<string | number>(initialValue);
+  const [item, setItem] = useState<string | number>(
+    formatDateTime(initialValue)
+  );
   const [Labelvalue, setLabelvalue] = useState<string | number>(item);
   const [updateValue, setUpdateValue] = useState<boolean>(false);
 
@@ -38,8 +50,9 @@ export default function Input({
     const newValue = event.target.value;
     setItem(newValue);
   };
+
   const handleOnBlur = () => {
-    setLabelvalue(item);
+    setLabelvalue(formatDateTime(item));
     setUpdateValue(false);
   };
 
@@ -72,7 +85,7 @@ export default function Input({
           onChange: handleChange,
           value: item,
         })}
-        type={type}
+        type="datetime-local"
         className={`${stylesInput ? stylesInput : fixedInputClass} ${
           error ? "border-red-400" : ""
         } ${updateValue || !Labelvalue ? "" : "hidden"}`}

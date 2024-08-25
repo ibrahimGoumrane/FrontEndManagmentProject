@@ -1,7 +1,6 @@
 import { Flowbite, type CustomFlowbiteTheme } from "flowbite-react";
-import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte";
-import MainProjectManip from "./main";
 import SecondNav from "../SecondNav/SecondNav";
+import MainProjectManip from "./main";
 
 const customTheme: CustomFlowbiteTheme = {
   tabs: {
@@ -44,20 +43,6 @@ interface MainProjectDataProps {
 }
 
 const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
-  const {
-    project,
-    tasks,
-    projectStatus,
-    projectState,
-    members,
-    taskStatus,
-    projectImg,
-    updateProject,
-    createStatus,
-    updateMembers,
-    updateProjectState,
-  } = useProject();
-
   return (
     <Flowbite theme={{ theme: customTheme }}>
       <section className="flex items-start justify-start min-h-[90vh]">
@@ -65,19 +50,7 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
           <SecondNav TogglePojectCreation={TogglePojectCreation} />
         </div>
         <div className="flex-grow flex-shrink min-w-0">
-          <MainProjectManip
-            project={project || {}}
-            tasks={tasks}
-            projectImg={projectImg}
-            projectStatus={projectStatus}
-            projectState={projectState || { id: -1, name: "" }}
-            members={members}
-            taskStatus={taskStatus}
-            createStatus={createStatus}
-            updateProject={updateProject}
-            updateMembers={updateMembers}
-            updateProjectState={updateProjectState}
-          />
+          <MainProjectManip />
         </div>
       </section>
     </Flowbite>

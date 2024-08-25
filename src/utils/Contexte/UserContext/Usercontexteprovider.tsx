@@ -2,17 +2,15 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
-  useState,
   useRef,
+  useState,
 } from "react";
+import { io, Socket } from "socket.io-client";
 import { Project } from "../../../models/Projects";
 import { Task } from "../../../models/Tasks";
 import { Team } from "../../../models/Teams";
 import { User } from "../../../models/Users";
-import {
-  getUserProjects,
-  updateProject as saveProjects,
-} from "../../../network/ProjectApi";
+import { getUserProjects } from "../../../network/ProjectApi";
 import { getSkillsName, saveSkills } from "../../../network/SkillsApi";
 import { getActiveUserTasks } from "../../../network/TasksApi";
 import { getTeamByUserId } from "../../../network/TeamApi";
@@ -22,61 +20,41 @@ import {
   updateUser as saveUser,
   updateProfile,
 } from "../../../network/UserApi";
-import { UserContext } from "./userContexte";
-import { io, Socket } from "socket.io-client";
 import { serverAddress } from "../../../Settings/Settings";
+import { UserContext } from "./userContexte";
 
 interface UserProviderProps {
   children: ReactNode;
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem("userdata");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
+  //User State Declaration
+  const [user, setUser] = useState<User | null>(null);
   const socket = useRef<Socket>();
-
-  const [profilePic, setProfilePic] = useState<string>(() => {
-    const savedImg = localStorage.getItem("userImg");
-    return savedImg ? JSON.parse(savedImg) : null;
-  });
-  const [skills, setSkills] = useState<string[]>(() => {
-    const savedSkills = localStorage.getItem("userskills");
-    return savedSkills ? JSON.parse(savedSkills) : [];
-  });
-
-  const [teams, setTeams] = useState<Team[]>(() => {
-    const savedTeams = localStorage.getItem("userTeams");
-    return savedTeams ? JSON.parse(savedTeams) : [];
-  });
-
+  const [profilePic, setProfilePic] = useState<string>("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [activeTasks, setActiveTasks] = useState<{
     assigned: Task[];
     created: Task[];
-  }>(() => {
-    const savedTasks = localStorage.getItem("userTasks");
-    return savedTasks ? JSON.parse(savedTasks) : { assigned: [], created: [] };
+  }>({
+    assigned: [],
+    created: [],
   });
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  const [projects, setProjects] = useState<Project[]>(() => {
-    const savedProjects = localStorage.getItem("userProjects");
-    return savedProjects ? JSON.parse(savedProjects) : [];
-  });
+  //update the state of the user
   const updateUser = useCallback(async (newUser: User | null) => {
     setUser(newUser);
     if (newUser) {
-      localStorage.setItem("userdata", JSON.stringify(newUser));
       await saveUser(newUser);
     } else {
-      localStorage.removeItem("userdata");
+      localStorage.clear();
     }
   }, []);
   const updateSkills = useCallback(async (newSkills: string[]) => {
     const data = await saveSkills(newSkills);
     setSkills(data);
-    localStorage.setItem("userskills", JSON.stringify(newSkills));
   }, []);
   const updateProfilePic = useCallback(async (newProfilePic: FileList) => {
     const formdata = new FormData();
@@ -84,41 +62,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const newPic = await updateProfile(formdata);
     setProfilePic(newPic);
-
-    localStorage.setItem("userImg", JSON.stringify(newPic));
   }, []);
   const updateTeams = useCallback((newTeams: Team[]) => {
     setTeams(newTeams);
-    localStorage.setItem("userTeams", JSON.stringify(newTeams));
   }, []);
 
   const updateActiveTasks = useCallback(
-    async (
-      newTasks: { assigned: Task[]; created: Task[] },
-      saveToDb: boolean = true
-    ) => {
-      if (!saveToDb) {
-        setActiveTasks(newTasks);
-        localStorage.setItem("userTasks", JSON.stringify(newTasks));
-        return;
-      }
+    async (newTasks: { assigned: Task[]; created: Task[] }) => {
+      setActiveTasks(newTasks);
     },
     []
   );
 
-  const updateProjects = useCallback(
-    async (newProjects: Project[], saveToDb: boolean = true) => {
-      setProjects(newProjects);
-      if (!saveToDb) {
-        setProjects(newProjects);
-        localStorage.setItem("userProjects", JSON.stringify(newProjects));
-        return;
-      }
-      await Promise.all(newProjects.map((project) => saveProjects(project)));
-      localStorage.setItem("userProjects", JSON.stringify(newProjects));
-    },
-    []
-  );
+  const updateProjects = useCallback(async (newProjects: Project[]) => {
+    setProjects(newProjects);
+  }, []);
 
   const resetData = () => {
     setUser(null);
@@ -133,12 +91,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (user) return;
-
     async function fetchUser() {
       try {
         const loggedUserData = await getLoggedInUser();
         setUser(loggedUserData);
-        localStorage.setItem("userdata", JSON.stringify(loggedUserData));
       } catch (error) {
         resetData();
         localStorage.clear();
@@ -154,11 +110,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (user) {
           const loggedUserImg = await getUserProfile(user?.id);
           setProfilePic(loggedUserImg);
-          localStorage.setItem("userImg", JSON.stringify(loggedUserImg));
         }
       } catch (error) {
-        resetData();
-        localStorage.clear();
+        console.error(error);
       }
     }
     fetchProfilePic();
@@ -179,8 +133,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-
     async function fetchUserData() {
       if (!user) return;
 
@@ -192,16 +144,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           getUserProjects(),
         ]);
       setSkills(userSkillsData);
-      localStorage.setItem("userskills", JSON.stringify(userSkillsData));
 
       setTeams(userTeamsData);
-      localStorage.setItem("userTeams", JSON.stringify(userTeamsData));
 
       setActiveTasks(userTasksData);
-      localStorage.setItem("userTasks", JSON.stringify(userTasksData));
 
       setProjects(userProjectsData);
-      localStorage.setItem("userProjects", JSON.stringify(userProjectsData));
     }
     fetchUserData();
   }, [user]);

@@ -144,6 +144,21 @@ export const leaveProject = async (id: number | string): Promise<Project> => {
   });
   return response;
 };
+export const kickProjectMember = async (
+  projectId: number | string,
+  memberId: number | string
+): Promise<void> => {
+  const response = await fetchData(
+    `/api/projects/removeMember/${memberId}?moduleId=${projectId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response;
+};
 export const updateProjectMembers = async (
   projectId: number | string,
   members: autorisationModel[]
@@ -157,7 +172,6 @@ export const updateProjectMembers = async (
   });
   return response;
 };
-
 //stuff related to activities
 export const getActivities = async (
   projectId: number | string,

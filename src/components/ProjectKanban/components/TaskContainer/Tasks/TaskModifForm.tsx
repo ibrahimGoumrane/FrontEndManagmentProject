@@ -11,6 +11,9 @@ import {
 import SelectUnique from "../../../../utils/SelectUnique";
 import CircularIndeterminate from "../../../../utils/spinner";
 import Input from "../components/InputTask";
+import InputDate from "../components/inputDate";
+import { PopUpType } from "../../../../../models/utils";
+import PopUp from "../../../../utils/popUp";
 
 interface TaskModifProps {
   onSubmitSuccessfull: (task: TaskModification) => Promise<void>;
@@ -23,7 +26,7 @@ export default function TaskModif({
 }: TaskModifProps) {
   const { task: taskState } = useTask();
   const [task, setTask] = useState(taskState);
-  const [errorText, setErrorText] = useState<string | null>(null);
+  const [errorText, setErrorText] = useState<string>("");
   const [fields, setFields] = useState<TaskModificationField[]>([]);
   const [isAuthorised, setIsAuthorised] = useState<boolean>(true);
   const { members } = useProject();
@@ -73,29 +76,9 @@ export default function TaskModif({
 
   async function onSubmit(credentials: TaskModification) {
     try {
-      const savedData: TaskModification = {};
-      if (!credentials.StoryPoint) {
-        savedData.StoryPoint = undefined;
-      } else {
-        savedData.StoryPoint = +credentials.StoryPoint;
-      }
-      if (credentials.AssigneeId == 0 || !credentials.AssigneeId) {
-        savedData.AssigneeId = undefined;
-      } else {
-        savedData.AssigneeId = +credentials.AssigneeId;
-      }
-      if (credentials.creatorId == 0 || !credentials.creatorId) {
-        savedData.creatorId = undefined;
-      } else {
-        savedData.creatorId = +credentials.creatorId ?? 0;
-      }
-      savedData.name = credentials.name;
-      savedData.statusId = credentials.statusId && +credentials.statusId;
-      savedData.endDate = credentials.endDate;
-
-      onSubmitSuccessfull(savedData);
+      const savedData = validateData(credentials);
+      await onSubmitSuccessfull(savedData);
       setEditMode(false);
-      setErrorText("");
     } catch (error) {
       setErrorText((error as Error).message);
       console.error(error);
@@ -107,7 +90,28 @@ export default function TaskModif({
   ): string | undefined {
     return errors[fieldName]?.message;
   }
-
+  function validateData(credentials: TaskModification) {
+    const savedData: TaskModification = {};
+    if (!credentials.StoryPoint) {
+      savedData.StoryPoint = undefined;
+    } else {
+      savedData.StoryPoint = +credentials.StoryPoint;
+    }
+    if (credentials.AssigneeId == 0 || !credentials.AssigneeId) {
+      savedData.AssigneeId = undefined;
+    } else {
+      savedData.AssigneeId = +credentials.AssigneeId;
+    }
+    if (credentials.creatorId == 0 || !credentials.creatorId) {
+      savedData.creatorId = undefined;
+    } else {
+      savedData.creatorId = +credentials.creatorId ?? 0;
+    }
+    savedData.name = credentials.name;
+    savedData.statusId = credentials.statusId && +credentials.statusId;
+    savedData.endDate = credentials.endDate;
+    return savedData;
+  }
   function onCancelCreation() {
     setTask(taskState);
     setEditMode(false);
@@ -131,35 +135,62 @@ export default function TaskModif({
         }
       }}
     >
+      {errorText && (
+        <PopUp
+          type={PopUpType.Failed}
+          message={errorText}
+          setSuccess={() => {
+            setEditMode(false);
+          }}
+        />
+      )}
       <div className="flex flex-col w-full h-full ">
         {errorText && <div className="text-red-500">{errorText}</div>}
         <div className="grid space-y-5 mb-2">
-          {fields.map((field, index) =>
-            field.type === "select" ? (
-              <SelectUnique
-                key={index}
-                labelText={field.labelText}
-                labelFor={field.labelFor}
-                name={field.name}
-                register={register}
-                options={field.options ? field.options : []}
-                error={getErrorMessage(field.name as keyof TaskModification)}
-                value={task?.[field.name]?.toString() ?? ""}
-              />
-            ) : (
-              <Input
-                key={index}
-                labelText={field.labelText}
-                labelFor={field.labelFor}
-                register={register}
-                placeholder={field.placeholder}
-                name={field.name}
-                type={field.type}
-                error={getErrorMessage(field.name as keyof TaskModification)}
-                value={task?.[field.name]?.toString() ?? ""}
-              />
-            )
-          )}
+          {fields.map((field, index) => {
+            if (field.type === "select") {
+              return (
+                <SelectUnique
+                  key={index}
+                  labelText={field.labelText}
+                  labelFor={field.labelFor}
+                  name={field.name}
+                  register={register}
+                  options={field.options ? field.options : []}
+                  error={getErrorMessage(field.name as keyof TaskModification)}
+                  value={task?.[field.name]?.toString() ?? ""}
+                />
+              );
+            } else if (field.type === "datetime-local") {
+              return (
+                <InputDate
+                  key={index}
+                  labelText={field.labelText}
+                  labelFor={field.labelFor}
+                  register={register}
+                  placeholder={field.placeholder}
+                  name={field.name}
+                  type={field.type}
+                  error={getErrorMessage(field.name as keyof TaskModification)}
+                  value={task?.[field.name]?.toString() ?? ""}
+                />
+              );
+            } else {
+              return (
+                <Input
+                  key={index}
+                  labelText={field.labelText}
+                  labelFor={field.labelFor}
+                  register={register}
+                  placeholder={field.placeholder}
+                  name={field.name}
+                  type={field.type}
+                  error={getErrorMessage(field.name as keyof TaskModification)}
+                  value={task?.[field.name]?.toString() ?? ""}
+                />
+              );
+            }
+          })}
         </div>
 
         <Stack direction="row" spacing={2} mt={"20px"}>

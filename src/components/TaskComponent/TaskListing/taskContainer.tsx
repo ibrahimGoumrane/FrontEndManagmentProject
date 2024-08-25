@@ -1,18 +1,9 @@
 import { Fade } from "@mui/material";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import {
-  DataGrid,
-  GridColDef,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector,
-} from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
-import { Task, getTask } from "../../../models/Tasks";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { getTask, Task } from "../../../models/Tasks";
 import { getTaskData } from "../../../network/TasksApi";
 import { formatDateTime } from "../../../utils/utility";
 import "./taskContainer.css";
@@ -67,28 +58,6 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   },
 }));
 
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      variant="outlined"
-      shape="rounded"
-      page={page + 1}
-      count={pageCount}
-      renderItem={(props2) => <PaginationItem component="div" {...props2} />}
-      onChange={(event: React.ChangeEvent<unknown>, value: number) =>
-        apiRef.current.setPage(value - 1)
-      }
-    />
-  );
-}
-
-const PAGE_SIZE = 5;
-
 const columns: GridColDef[] = [
   { field: "id", headerName: "Id", width: 150 },
   { field: "name", headerName: "Task Name", width: 150 },
@@ -120,6 +89,7 @@ const columns: GridColDef[] = [
   { field: "createdAt", headerName: "Created At", width: 150 },
   { field: "updatedAt", headerName: "Updated At", width: 150 },
 ];
+const PAGE_SIZE = 10;
 
 function TaskContainer({ tasksData, isVisible }: taskProps) {
   const [rows, setRows] = useState<GridRowProp[]>([]);
@@ -135,6 +105,7 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
         const newRows = await Promise.all(
           tasksData.map((task) => getTaskData(task.id))
         );
+        console.log(newRows);
         const rows = newRows?.map((row) => {
           row.startDate = row.startDate
             ? formatDateTime(row.startDate)
@@ -155,7 +126,6 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
           row.description = row.description?.split("<br>").join("\n");
           return row;
         });
-
         setRows(rows);
       }
       setLoading(false);
@@ -166,15 +136,12 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
   if (!isVisible) return null; // Don't render the DataGrid if the tab is not visible
 
   return (
-    <div className="task-container">
+    <div className="task-container max-w-[94vw]">
       <StyledDataGrid
         getRowId={(rows) => rows.id}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[PAGE_SIZE]}
-        slots={{
-          pagination: CustomPagination,
-        }}
+        pageSizeOptions={[5, 10, 25]}
         rows={rows}
         columns={columns}
         className="task"

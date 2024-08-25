@@ -18,17 +18,11 @@ export const UserContext = createContext<
       updateSkills: (skills: string[]) => Promise<void>;
       updateProfilePic: (newProfilePic: FileList) => Promise<void>;
       updateTeams: (teams: Team[]) => void;
-      updateActiveTasks: (
-        tasks: {
-          assigned: Task[];
-          created: Task[];
-        },
-        saveToDb?: boolean
-      ) => Promise<void>;
-      updateProjects: (
-        newProject: Project[],
-        saveToDb?: boolean
-      ) => Promise<void>;
+      updateActiveTasks: (tasks: {
+        assigned: Task[];
+        created: Task[];
+      }) => Promise<void>;
+      updateProjects: (newProject: Project[]) => Promise<void>;
       resetData: () => void;
     }
   | undefined

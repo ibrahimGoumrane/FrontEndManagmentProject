@@ -69,19 +69,19 @@ const Summary = () => {
           date={"next"}
         />
       </div>
-      <div className="grid grid-cols-2  flex-1 w-[90%] h-full gap-5 mx-auto">
-        <div className="flex items-start flex-1 justify-start flex-col border-2 border-slate-600/20  rounded-xl bg-purple-100 my-5 p-4">
-          <div className="flex items-start flex-col gap-2 ">
+      <div className="flex flex-1 w-[90%] h-full gap-5 mx-auto">
+        <div className="flex items-start  justify-start flex-col border-2 border-slate-600/20 rounded-xl bg-purple-100 my-5 p-4 basis-[45%]">
+          <div className="flex items-start flex-col gap-2">
             <span className="text-2xl font-bold">Status Overview</span>
             <span className="text-sm font-sm italic text-slate-900">
               Get an overview of your project progression
             </span>
           </div>
-
           <DataChart tasks={tasks} />
         </div>
-        <div className="flex items-start flex-1 justify-start flex-col border-2 border-slate-600/20  rounded-xl bg-purple-100 my-5 p-4">
-          <div className="flex items-start flex-col gap-2 ">
+
+        <div className="flex items-start justify-start flex-col border-2 border-slate-600/20 rounded-xl bg-purple-100 my-5 p-4 basis-[55%] ">
+          <div className="flex items-start flex-col gap-2 w-full">
             <span className="text-2xl font-bold">Project Activity</span>
             <span className="text-sm font-sm italic text-slate-900">
               Stay up to date with what's happening across the project.

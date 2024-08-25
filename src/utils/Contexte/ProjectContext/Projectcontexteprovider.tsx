@@ -1,7 +1,14 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  ActivityMap,
+  MEMBERACTIVITYTYPE,
+  TASKACTIVITYTYPE,
+} from "../../../models/activity";
+import { autorisationModel } from "../../../models/auth";
 import { Project, ProjectModif } from "../../../models/Projects";
 import { ProjectStatus, TaskStatus } from "../../../models/Status";
 import { Id, Task } from "../../../models/Tasks";
+import { getProjectAuth } from "../../../network/authApi";
 import {
   getActivities,
   getProjectData,
@@ -9,7 +16,6 @@ import {
   getProjectMembers,
   getProjectState,
   updateProject as saveProjectData,
-  updateProjectMembers,
   updateProjectPic,
 } from "../../../network/ProjectApi";
 import {
@@ -20,22 +26,14 @@ import {
   updateTaskStatus as updateTaskS,
 } from "../../../network/StatusApi";
 import {
-  deleteTasks,
   createTask as createT,
-  getProjectTasks,
+  deleteTasks,
   getActiveUserTasks,
+  getProjectTasks,
   updateTask as updateT,
 } from "../../../network/TasksApi";
-import { ProjectContext } from "./projectContexte";
-import { clearLocalStorage } from "./utils/utilities";
 import { useUser } from "../UserContext/userContexte";
-import { getProjectAuth } from "../../../network/authApi";
-import { autorisationModel } from "../../../models/auth";
-import {
-  ActivityMap,
-  TASKACTIVITYTYPE,
-  MEMBERACTIVITYTYPE,
-} from "../../../models/activity";
+import { ProjectContext } from "./projectContexte";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -46,41 +44,18 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   projectId,
   children,
 }) => {
-  const { projects, updateProjects, updateActiveTasks, user } = useUser();
-
-  const [project, setProject] = useState<Project | null>(() => {
-    const projectData = localStorage.getItem(`project${projectId}`);
-    return projectData ? JSON.parse(projectData) : null;
-  });
-
-  const [tasks, setTask] = useState<Task[]>(() => {
-    const savedTasks = localStorage.getItem(`tasks${projectId}`);
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
+  const { projects, updateProjects, updateActiveTasks, user, activeTasks } =
+    useUser();
+  //State defintions
+  const [project, setProject] = useState<Project | null>(null);
+  const [tasks, setTask] = useState<Task[]>([]);
   const [activity, setActivity] = useState<ActivityMap>();
-  const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>(() => {
-    const savedTasks = localStorage.getItem("projectStatus");
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-  const [projectImg, setProjectImg] = useState<string>(() => {
-    const savedTasks = localStorage.getItem("projectImg${projectId}");
-    return savedTasks ? JSON.parse(savedTasks) : "";
-  });
-  const [projectState, setProjectState] = useState<ProjectStatus | null>(() => {
-    const projectState = localStorage.getItem(`projectState${projectId}`);
-    return projectState ? JSON.parse(projectState) : null;
-  });
-  const [members, setMembers] = useState<autorisationModel[]>(() => {
-    const savedMembers = localStorage.getItem(`members${projectId}`);
-    return savedMembers ? JSON.parse(savedMembers) : [];
-  });
-  const [taskStatus, setTaskStatus] = useState<TaskStatus[]>(() => {
-    const savedTasks = localStorage.getItem(`taskStatus${projectId}`);
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-
+  const [projectStatus, setProjectStatus] = useState<ProjectStatus[]>([]);
+  const [projectImg, setProjectImg] = useState<string>("");
+  const [projectState, setProjectState] = useState<ProjectStatus | null>(null);
+  const [members, setMembers] = useState<autorisationModel[]>([]);
+  const [taskStatus, setTaskStatus] = useState<TaskStatus[]>([]);
   // State Manipulations
-
   const updateProject = useCallback(
     async (newProject: ProjectModif | null) => {
       if (newProject) {
@@ -90,21 +65,15 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           endDate: newProject.endDate?.toISOString(),
         };
         const Project = await saveProjectData(savedProjectData);
-        localStorage.setItem(`project${projectId}`, JSON.stringify(Project));
         setProject(Project);
         updateProjects(
-          projects?.map((p) => (p.id === +projectId ? Project : p)) || [
-            Project,
-          ],
-          false
+          projects?.map((p) => (p.id === +projectId ? Project : p)) || [Project]
         );
       } else {
-        localStorage.removeItem(`project${projectId}`);
         updateProjects(
           projects?.slice()?.filter((pro) => {
-            return pro?.id !== project?.id;
-          }) ?? [],
-          false
+            return pro?.id?.toString() !== projectId.toString();
+          }) ?? []
         );
         setProject(null);
       }
@@ -125,7 +94,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       );
       const newTasks = [...tasks, newT];
       setTask(newTasks);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
     },
     [projectId, tasks]
   );
@@ -134,7 +102,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       await deleteTasks(newTaskId, projectId);
       const newTasks = tasks.filter((task) => +task.id !== +newTaskId);
       setTask(newTasks);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
     },
     [projectId, tasks]
   );
@@ -157,7 +124,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         return task;
       });
       setTask(newTasks);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(newTasks));
     },
     [projectId, tasks]
   );
@@ -166,10 +132,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       const newStatus = await createTaskStatus(newTaskStatus.name, projectId);
       const newTaskStatuses = [...taskStatus, newStatus];
       setTaskStatus(newTaskStatuses);
-      localStorage.setItem(
-        `taskStatus${projectId}`,
-        JSON.stringify(newTaskStatuses)
-      );
     },
     [projectId, taskStatus]
   );
@@ -183,10 +145,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         return status;
       });
       setTaskStatus(newTaskStatuses);
-      localStorage.setItem(
-        `taskStatus${projectId}`,
-        JSON.stringify(newTaskStatuses)
-      );
     },
     [projectId, taskStatus]
   );
@@ -197,29 +155,36 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         (status) => +status.id !== +newStatusId
       );
       setTaskStatus(newTaskStatuses);
-      localStorage.setItem(
-        `taskStatus${projectId}`,
-        JSON.stringify(newTaskStatuses)
-      );
     },
     [projectId, taskStatus]
   );
+  function updateUserContext(projectId: string) {
+    // remove project from user projects
+    const newProjects =
+      projects?.filter((proj) => proj?.id?.toString() !== projectId) || [];
+    updateProjects(newProjects);
+    //remove tasks from user tasks
+    const newAssigneedTasks =
+      activeTasks?.assigned.filter(
+        (task) => task?.projectId?.toString() !== projectId
+      ) || [];
+    const newCreatedTasks =
+      activeTasks?.created.filter(
+        (task) => task?.projectId?.toString() !== projectId
+      ) || [];
+    updateActiveTasks({
+      assigned: newAssigneedTasks,
+      created: newCreatedTasks,
+    });
+  }
   const updateMembers = useCallback(
-    async (newMembers: autorisationModel[], saveTodb: boolean = true) => {
-      let savedMembers = newMembers;
-      if (saveTodb) {
-        savedMembers = await updateProjectMembers(projectId, newMembers);
-      }
+    async (newMembers: autorisationModel[], projectId: string) => {
+      const savedMembers = newMembers;
       const isExsist = savedMembers.findIndex((member) => {
         return member.id.toString() === user?.id.toString();
       });
       if (isExsist === -1) {
-        resetData();
-        updateProjects(
-          projects?.filter(
-            (project) => project.id?.toString() !== projectId.toString()
-          ) || []
-        );
+        updateUserContext(projectId);
       } else {
         updateProjects(
           projects?.map((project) => {
@@ -230,14 +195,11 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           }) || []
         );
         setMembers(savedMembers);
-        localStorage.setItem(
-          `members${projectId}`,
-          JSON.stringify(savedMembers)
-        );
       }
     },
     [projectId]
   );
+
   const updatePicture = useCallback(
     async (newPicture: FileList) => {
       const formData = new FormData();
@@ -254,7 +216,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         });
         updateProjects(newProjects);
       }
-      localStorage.setItem(`projectImg${projectId}`, JSON.stringify(response));
     },
     [projectId, projects, updateProjects]
   );
@@ -266,80 +227,45 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
           (status) => status.id == newProjectState.id
         );
         setProjectState(newProjectStatus || null);
-        localStorage.setItem(
-          `projectState${projectId}`,
-          JSON.stringify(newProjectStatus)
-        );
       } else if (newProjectState) {
         setProjectState(newProjectState);
-        localStorage.setItem(
-          `projectState${projectId}`,
-          JSON.stringify(newProjectState)
-        );
-      } else {
-        localStorage.removeItem(`projectState${projectId}`);
       }
     },
     [projectId, projectStatus]
   );
 
-  const resetData = useCallback(() => {
-    setProject(null);
-    const newProjects = projects?.filter((project) => {
-      if (+projectId === project.id) {
-        return false;
-      }
-      return true;
-    });
-    updateProjects(newProjects || []);
-    setTask([]);
-    setProjectState(null);
-    setMembers([]);
-    setTaskStatus([]);
-    clearLocalStorage(projectId);
-  }, [projectId, projects, updateProjects]);
-
   // Fetching data from DB -> FrontEnd
   useEffect(() => {
     async function fetchNewUserTasks() {
       const userTasksData = await getActiveUserTasks();
-      updateActiveTasks(userTasksData, false);
+      updateActiveTasks(userTasksData);
     }
     fetchNewUserTasks();
   }, [tasks]);
+
   useEffect(() => {
     async function fetchProject() {
-      console.log("fetching project");
-      console.log(project);
       try {
         const projectData: Project = await getProjectData(projectId);
         setProject(projectData);
-        localStorage.setItem(
-          `project${projectId}`,
-          JSON.stringify(projectData)
-        );
       } catch (error) {
-        resetData();
+        console.error(error);
       }
     }
     fetchProject();
-  }, [projectId, resetData]);
+  }, [projectId]);
   //Fetching Project Image
   useEffect(() => {
     async function fetchProjectImg() {
       try {
         const projectData = await getProjectImg(projectId);
         setProjectImg(projectData);
-        localStorage.setItem(
-          `projectImg${projectId}`,
-          JSON.stringify(projectData)
-        );
       } catch (error) {
-        resetData();
+        console.error(error);
       }
     }
     fetchProjectImg();
-  }, [projectId, resetData]);
+  }, [projectId]);
 
   //FETCHING PROJECT ACTIVITY
   useEffect(() => {
@@ -368,19 +294,18 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         };
         setActivity(activityData);
       } catch (error) {
-        resetData();
+        console.error(error);
       }
     }
 
     fetchProjectActivity();
-  }, [projectId, resetData]);
+  }, [projectId]);
 
   // Fetching Tasks
   useEffect(() => {
     async function fetchTasks() {
       const tasksData = await getProjectTasks(projectId);
       setTask(tasksData);
-      localStorage.setItem(`tasks${projectId}`, JSON.stringify(tasksData));
     }
     fetchTasks();
   }, [projectId]);
@@ -388,12 +313,8 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   // Fetching Project Status
   useEffect(() => {
     async function fetchProjectStatus() {
-      const ProjectStatus = localStorage.getItem("projectStatus");
-      const statusData = ProjectStatus
-        ? JSON.parse(ProjectStatus)
-        : await getProjectStatus();
+      const statusData = await getProjectStatus();
       setProjectStatus(statusData);
-      localStorage.setItem("projectStatus", JSON.stringify(statusData));
     }
     fetchProjectStatus();
   }, []);
@@ -403,14 +324,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     async function fetchProjectState() {
       const stateData = await getProjectState(projectId);
       setProjectState(stateData);
-      if (stateData) {
-        localStorage.setItem(
-          `projectState${projectId}`,
-          JSON.stringify(stateData)
-        );
-      } else {
-        localStorage.removeItem(`projectState${projectId}`);
-      }
     }
     fetchProjectState();
   }, [projectId]);
@@ -425,7 +338,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         })
       );
       setMembers(fetchMembersAuth);
-      localStorage.setItem(`members${projectId}`, JSON.stringify(membersData));
     }
     fetchMembers();
   }, [projectId]);
@@ -435,10 +347,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     async function fetchTaskStatus() {
       const statusData = await getTaskStatus(projectId);
       setTaskStatus(statusData);
-      localStorage.setItem(
-        `taskStatus${projectId}`,
-        JSON.stringify(statusData)
-      );
     }
     fetchTaskStatus();
   }, [projectId]);
@@ -464,7 +372,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
         updateProject,
         updateMembers,
         updateProjectState,
-        resetData,
       }}
     >
       {children}

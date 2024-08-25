@@ -12,7 +12,6 @@ import {
   createComment as createCommentApi,
 } from "../../../network/CommentApi";
 import { TaskContext } from "./taskContexte";
-import { AddTaskToLocalStorage, clearLocalStorage } from "./utils/utilities";
 import { useProject } from "../ProjectContext/projectContexte";
 import { updateTask as saveTask } from "../../../network/TasksApi.ts";
 
@@ -27,18 +26,16 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   taskId,
   children,
 }) => {
-  const { updateTask: updateT } = useProject();
+  const { updateTask: updateT, tasks } = useProject();
 
+  //task state declaration
   const [task, setTask] = useState<Task | null>(() => {
-    const tasksDataLS = localStorage.getItem(`tasks${projectId}`);
-    const tasksData: Task[] = tasksDataLS ? JSON.parse(tasksDataLS) : [];
-    if (tasksData) {
-      const taskData = tasksData.find((task) => task.id === taskId);
+    if (tasks) {
+      const taskData = tasks.find((task) => +task.id === +taskId);
       return taskData ? taskData : null;
     }
     return null;
   });
-
   const [comments, setComments] = useState<CommentData[]>([]);
 
   const updateTask = useCallback(
@@ -52,10 +49,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
         setTask(DbTask);
 
         updateT(+DbTask.id, DbTask, false);
-        AddTaskToLocalStorage(projectId, taskId, DbTask);
       }
     },
-    [task, updateT, projectId, taskId]
+    [task, updateT, projectId]
   );
   const createComment = useCallback(
     async (comment: commentCreation, comments: CommentData[]) => {
@@ -63,7 +59,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       const commentsDb = [...comments, createComment];
       setComments(commentsDb);
     },
-    [taskId]
+    []
   );
   const updateComment = useCallback(
     async (
@@ -77,7 +73,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       );
       setComments(commentsDb);
     },
-    [taskId]
+    []
   );
   const deleteComment = useCallback(
     async (commentId: string, comments: CommentData[]) => {
@@ -87,14 +83,13 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
       );
       setComments(commentsDb);
     },
-    [taskId]
+    []
   );
 
   const resetData = useCallback(() => {
     setTask(null);
     setComments([]);
-    clearLocalStorage(taskId); // This should remove related task data from local storage
-  }, [taskId]);
+  }, []);
 
   useEffect(() => {
     async function fetchComments() {

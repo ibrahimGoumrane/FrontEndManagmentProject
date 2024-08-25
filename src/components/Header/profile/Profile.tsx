@@ -14,7 +14,6 @@ const Profile = () => {
     LogOut();
     updateUser(null);
     setShowProfile(false);
-    localStorage.clear();
     navigate("/");
   }
   function handleProfileClick() {

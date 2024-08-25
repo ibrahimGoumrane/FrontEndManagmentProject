@@ -30,10 +30,9 @@ export const ProjectContext = createContext<
       updateProject: (newProject: ProjectModif | null) => Promise<void>;
       updateMembers: (
         users: autorisationModel[],
-        saveTodb: boolean
+        projectId: string
       ) => Promise<void>;
       updateProjectState: (state: ProjectStatus) => Promise<void>;
-      resetData: () => void;
     }
   | undefined
 >(undefined);

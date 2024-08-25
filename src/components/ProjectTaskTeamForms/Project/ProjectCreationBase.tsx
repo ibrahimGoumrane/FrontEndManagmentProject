@@ -25,8 +25,8 @@ export default function ProjectCreationBase({
   }, [setShowProjectCreation, showProjectCreation]);
 
   const onCreatedSuccessfully = (project: Project) => {
-    if (projects) updateProjects([...projects, project], false);
-    else updateProjects([project], false);
+    if (projects) updateProjects([...projects, project]);
+    else updateProjects([project]);
     setShow(true);
     TogglePojectCreation();
   };

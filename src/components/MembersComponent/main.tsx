@@ -8,12 +8,13 @@ import { PopUpType } from "../../models/utils.ts";
 import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte.ts";
 import { useUser } from "../../utils/Contexte/UserContext/userContexte.ts";
 import { useNavigate } from "react-router-dom";
+import { kickProjectMember } from "../../network/ProjectApi.ts";
 
 const MembersComponent = () => {
   const [successMessage, setSuccess] = useState<boolean>(false);
   const { user } = useUser();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { members, updateMembers } = useProject();
+  const { members, updateMembers, project } = useProject();
   const navigate = useNavigate();
   function handleDelete(id: string, moduleId: string, memeberId: string) {
     async function deleteAuth() {
@@ -34,7 +35,10 @@ const MembersComponent = () => {
             ...newMembers,
             auth: newAuth,
           };
-          updateMembers([...newMembersList, updatedUser], false);
+          updateMembers(
+            [...newMembersList, updatedUser],
+            project?.id?.toString() ?? ""
+          );
         }
         setSuccess(true);
       } catch (error) {
@@ -48,7 +52,8 @@ const MembersComponent = () => {
       const newMembersList = members.filter((member) => {
         return member.id.toString() !== memeberId.toString();
       });
-      await updateMembers(newMembersList, true);
+      await kickProjectMember(project?.id?.toString() ?? "", memeberId);
+      updateMembers(newMembersList, project?.id?.toString() ?? "");
       if (memeberId.toString() === user?.id.toString()) {
         navigate("/home");
       }

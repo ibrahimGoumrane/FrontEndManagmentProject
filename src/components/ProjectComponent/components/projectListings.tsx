@@ -1,15 +1,9 @@
 import { Fade } from "@mui/material";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import {
   DataGrid,
   GridColDef,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector,
   GridSlots,
   GridToolbarContainer,
   GridToolbarFilterButton,
@@ -80,27 +74,7 @@ const StyledDataGrid = styled(DataGrid)(() => ({
   },
 }));
 
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      variant="outlined"
-      shape="rounded"
-      page={page + 1}
-      count={pageCount}
-      renderItem={(props2) => <PaginationItem component="div" {...props2} />}
-      onChange={(event: React.ChangeEvent<unknown>, value: number) =>
-        apiRef.current.setPage(value - 1)
-      }
-    />
-  );
-}
-
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "Id", width: 150 },
@@ -202,7 +176,6 @@ function ProjectListing() {
               onPaginationModelChange={setPaginationModel}
               pageSizeOptions={[PAGE_SIZE]}
               slots={{
-                pagination: CustomPagination,
                 toolbar: CustomToolbar as GridSlots["toolbar"],
               }}
               rows={rows}

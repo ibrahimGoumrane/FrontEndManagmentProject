@@ -3,49 +3,23 @@ import { useEffect, useRef, useState } from "react";
 import { FaPerson } from "react-icons/fa6";
 import { HiAdjustments, HiUserCircle } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
-import { autorisationModel } from "../../models/auth";
-import { Project, ProjectModif } from "../../models/Projects";
-import type { ProjectStatus, TaskStatus } from "../../models/Status";
-import type { Task } from "../../models/Tasks";
+import { useNavigate } from "react-router-dom";
+import { PopUpType } from "../../models/utils";
+import { leaveProject } from "../../network/ProjectApi";
+import { useProject } from "../../utils/Contexte/ProjectContext/projectContexte";
+import { useUser } from "../../utils/Contexte/UserContext/userContexte";
 import MembersComponent from "../MembersComponent/main";
+import ModalUnstyled from "../ProjectComponent/components/modal";
 import ProjectModifModal from "../ProjectComponent/projectModifModal";
 import Summary from "../Summary/main";
 import TaskContainer from "../TaskComponent/TaskListing/taskContainer";
 import KanbanBoard from "./kanbanBoard";
-import ModalUnstyled from "../ProjectComponent/components/modal";
-import { leaveProject } from "../../network/ProjectApi";
-import { useNavigate } from "react-router-dom";
-import { PopUpType } from "../../models/utils";
-import { useUser } from "../../utils/Contexte/UserContext/userContexte";
 
-interface ComponentProps {
-  project: Project;
-  tasks: Task[];
-  projectStatus: ProjectStatus[];
-  projectState: ProjectStatus;
-  projectImg: string;
-  members: autorisationModel[];
-  taskStatus: TaskStatus[];
-  updateProject: (newProject: ProjectModif | null) => Promise<void>;
-  updateMembers: (
-    users: autorisationModel[],
-    saveTodb: boolean
-  ) => Promise<void>;
-  updateProjectState: (state: ProjectStatus) => Promise<void>;
-  createStatus: (newTaskStatus: TaskStatus) => void;
-}
-
-const MainProjectManip = ({
-  project,
-  tasks,
-  members,
-  projectImg,
-  taskStatus,
-  updateMembers,
-  createStatus,
-}: ComponentProps) => {
+const MainProjectManip = () => {
+  const { project, tasks, taskStatus, projectImg, createStatus } = useProject();
   const tabsRef = useRef<TabsRef>(null);
-  const { user } = useUser();
+  const { updateActiveTasks, updateProjects, activeTasks, projects } =
+    useUser();
   const [activeTab, setActiveTab] = useState(0);
   const [showTasks, setShowTasks] = useState(false);
   const navigate = useNavigate();
@@ -62,15 +36,33 @@ const MainProjectManip = ({
   function LeaveProject() {
     async function handleLeaveProject() {
       // leave project
-      if (project.id) {
-        await leaveProject(project.id);
-        const newMembersList = members.filter((member) => {
-          return member.id.toString() !== user?.id.toString();
-        });
-        updateMembers(newMembersList, false);
+      if (project?.id) {
+        await leaveProject(project?.id);
+        updateUserContext();
         navigate("/home");
         setShowLeaveProject(false);
       }
+    }
+    function updateUserContext() {
+      // remove project from user projects
+      const newProjects =
+        projects?.filter(
+          (proj) => proj?.id?.toString() !== project?.id?.toString()
+        ) || [];
+      updateProjects(newProjects);
+      //remove tasks from user tasks
+      const newAssigneedTasks =
+        activeTasks?.assigned.filter(
+          (task) => task?.projectId?.toString() !== project?.id?.toString()
+        ) || [];
+      const newCreatedTasks =
+        activeTasks?.created.filter(
+          (task) => task?.projectId?.toString() !== project?.id?.toString()
+        ) || [];
+      updateActiveTasks({
+        assigned: newAssigneedTasks,
+        created: newCreatedTasks,
+      });
     }
     handleLeaveProject();
   }
@@ -102,7 +94,7 @@ const MainProjectManip = ({
                   className="w-12 h-12 rounded-full"
                 />
                 <span className="text-md italic text-white font-bold flex flex-col-reverse">
-                  {project.name}
+                  {project?.name}
                   <span>
                     {new Date().toLocaleDateString("en-US", {
                       weekday: "long",
