@@ -155,7 +155,9 @@ const MainProjectManip = () => {
                 <MembersComponent />
               </Tabs.Item>
               <Tabs.Item title="Tasks" icon={HiAdjustments}>
-                <TaskContainer tasksData={tasks} isVisible={showTasks} />
+                {showTasks && (
+                  <TaskContainer key={project?.id} isVisible={showTasks} />
+                )}
               </Tabs.Item>
             </Tabs>
           </div>

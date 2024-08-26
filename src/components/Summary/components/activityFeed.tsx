@@ -79,7 +79,7 @@ export default function ActivityFeed() {
       </div>
       <div className="h-full w-full p-2 max-h-[15vh] overflow-y-auto overflow-x-hidden">
         <div className="flex flex-col items-start justify-start overflow-y-auto max-h-[13vh]  p-2">
-          <h2 className="text-xs font-extrabold text-purple-400">Deleted</h2>
+          <h2 className="text-xs font-extrabold text-purple-400">Updated</h2>
           {updateActivity.length > 0 ? (
             updateActivity.map((activity, index) => (
               <div

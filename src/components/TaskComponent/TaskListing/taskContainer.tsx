@@ -3,12 +3,11 @@ import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { getTask, Task } from "../../../models/Tasks";
+import { getTask } from "../../../models/Tasks";
 import { getTaskData } from "../../../network/TasksApi";
-import { formatDateTime } from "../../../utils/utility";
 import "./taskContainer.css";
+import { useProject } from "../../../utils/Contexte/ProjectContext/projectContexte";
 interface taskProps {
-  tasksData: Task[];
   isVisible: boolean;
 }
 
@@ -61,7 +60,12 @@ const StyledDataGrid = styled(DataGrid)(() => ({
 const columns: GridColDef[] = [
   { field: "id", headerName: "Id", width: 150 },
   { field: "name", headerName: "Task Name", width: 150 },
-  { field: "startDate", headerName: "Start Date", width: 150 },
+  {
+    field: "startDate",
+    headerName: "Start Date",
+    width: 150,
+    type: "dateTime",
+  },
   { field: "creatorName", headerName: "Creator", width: 150 },
   {
     field: "description",
@@ -85,40 +89,42 @@ const columns: GridColDef[] = [
   },
   { field: "statusName", headerName: "Status", width: 150 },
   { field: "AssigneName", headerName: "Assignee", width: 150 },
-  { field: "endDate", headerName: "End Date", width: 150 },
-  { field: "createdAt", headerName: "Created At", width: 150 },
-  { field: "updatedAt", headerName: "Updated At", width: 150 },
+  { field: "endDate", headerName: "End Date", width: 150, type: "dateTime" },
+  {
+    field: "createdAt",
+    headerName: "Created At",
+    width: 150,
+    type: "dateTime",
+  },
+  {
+    field: "updatedAt",
+    headerName: "Updated At",
+    width: 150,
+    type: "dateTime",
+  },
 ];
 const PAGE_SIZE = 10;
 
-function TaskContainer({ tasksData, isVisible }: taskProps) {
+function TaskContainer({ isVisible }: taskProps) {
+  const { tasks, project } = useProject(); // Assuming you can access projectId
+
   const [rows, setRows] = useState<GridRowProp[]>([]);
   const [loading, setLoading] = useState(true);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: PAGE_SIZE,
     page: 0,
   });
-
   useEffect(() => {
     async function fetchTaskInfo() {
-      if (tasksData && tasksData.length > 0) {
+      if (tasks && tasks.length > 0) {
         const newRows = await Promise.all(
-          tasksData.map((task) => getTaskData(task.id))
+          tasks.map((task) => getTaskData(task.id))
         );
-        console.log(newRows);
         const rows = newRows?.map((row) => {
-          row.startDate = row.startDate
-            ? formatDateTime(row.startDate)
-            : "No start Date Found";
-          row.endDate = row.endDate
-            ? formatDateTime(row.endDate)
-            : "No end Date Found";
-          row.createdAt = row.createdAt
-            ? formatDateTime(row.createdAt)
-            : "No created Date Found";
-          row.updatedAt = row.updatedAt
-            ? formatDateTime(row.updatedAt)
-            : "No updated Date Found";
+          row.startDate = row.startDate ? new Date(row.startDate) : null;
+          row.endDate = row.endDate ? new Date(row.endDate) : null;
+          row.createdAt = row.createdAt ? new Date(row.createdAt) : undefined;
+          row.updatedAt = row.updatedAt ? new Date(row.updatedAt) : undefined;
           row.StoryPoint = row.StoryPoint ? row.StoryPoint : -1;
           row.AssigneName = row.AssigneName
             ? row.AssigneName
@@ -126,12 +132,13 @@ function TaskContainer({ tasksData, isVisible }: taskProps) {
           row.description = row.description?.split("<br>").join("\n");
           return row;
         });
+        console.log("rows", rows);
         setRows(rows);
       }
       setLoading(false);
     }
     fetchTaskInfo();
-  }, [tasksData]);
+  }, [tasks, project?.id]);
 
   if (!isVisible) return null; // Don't render the DataGrid if the tab is not visible
 

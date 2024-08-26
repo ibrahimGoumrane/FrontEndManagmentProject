@@ -266,7 +266,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }
     fetchProjectImg();
   }, [projectId]);
-
   //FETCHING PROJECT ACTIVITY
   useEffect(() => {
     async function fetchProjectActivity() {
@@ -350,7 +349,6 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }
     fetchTaskStatus();
   }, [projectId]);
-
   return (
     <ProjectContext.Provider
       value={{

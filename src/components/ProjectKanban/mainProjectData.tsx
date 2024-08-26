@@ -1,6 +1,7 @@
 import { Flowbite, type CustomFlowbiteTheme } from "flowbite-react";
 import SecondNav from "../SecondNav/SecondNav";
 import MainProjectManip from "./main";
+import { useParams } from "react-router-dom";
 
 const customTheme: CustomFlowbiteTheme = {
   tabs: {
@@ -43,6 +44,8 @@ interface MainProjectDataProps {
 }
 
 const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
+  const { id: projectId } = useParams<{ id: string }>();
+
   return (
     <Flowbite theme={{ theme: customTheme }}>
       <section className="flex items-start justify-start min-h-[90vh]">
@@ -50,7 +53,7 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
           <SecondNav TogglePojectCreation={TogglePojectCreation} />
         </div>
         <div className="flex-grow flex-shrink min-w-0">
-          <MainProjectManip />
+          <MainProjectManip key={projectId} />
         </div>
       </section>
     </Flowbite>

@@ -20,15 +20,15 @@ export interface getTask {
   id: Id;
   name?: string;
   statusName?: string;
-  startDate?: string | null;
-  endDate?: string | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
   StoryPoint?: number | null;
   AssigneName?: string | null;
   projectName?: string | null;
   description?: string | null;
   creatorName?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface TaskModification {
   name?: string | undefined;

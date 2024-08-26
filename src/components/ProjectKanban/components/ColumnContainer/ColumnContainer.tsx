@@ -27,7 +27,6 @@ const ColumnContainer = ({
     deleteStatus: deleteS,
     updateStatus: updateS,
   } = useProject();
-
   const [name, setStatusName] = useState<string>(state.name);
   const [taskName, setTaskName] = useState<string>("");
 
