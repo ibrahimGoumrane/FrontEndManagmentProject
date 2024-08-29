@@ -45,10 +45,7 @@ function MenuWork({ tasks, name }: WorkProps) {
       <Dropdown.Divider />
       {shownTasks && shownTasks?.length !== 0 ? (
         shownTasks?.map((task, index) => (
-          <Dropdown.Item
-            key={index}
-            onClick={() => navigate(`/home/project/tasks/${task?.id}`)}
-          >
+          <Dropdown.Item key={index}>
             <div className="w-full flex items-center justify-start">
               <Avatar
                 alt="Task Avatar"
