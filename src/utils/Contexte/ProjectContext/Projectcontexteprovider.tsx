@@ -34,6 +34,7 @@ import {
 } from "../../../network/TasksApi";
 import { useUser } from "../UserContext/userContexte";
 import { ProjectContext } from "./projectContexte";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectProviderProps {
   projectId: Id;
@@ -47,6 +48,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   const { projects, updateProjects, updateActiveTasks, user, activeTasks } =
     useUser();
   //State defintions
+  const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTask] = useState<Task[]>([]);
   const [activity, setActivity] = useState<ActivityMap>();
@@ -236,14 +238,20 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
 
   // Fetching data from DB -> FrontEnd
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchNewUserTasks() {
       const userTasksData = await getActiveUserTasks();
       updateActiveTasks(userTasksData);
     }
     fetchNewUserTasks();
-  }, [tasks]);
+  }, [user, updateActiveTasks]);
 
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchProject() {
       try {
         const projectData: Project = await getProjectData(projectId);
@@ -253,9 +261,13 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     }
     fetchProject();
-  }, [projectId]);
+  }, [projectId, user]);
   //Fetching Project Image
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
+
     async function fetchProjectImg() {
       try {
         const projectData = await getProjectImg(projectId);
@@ -265,9 +277,12 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       }
     }
     fetchProjectImg();
-  }, [projectId]);
+  }, [projectId, user]);
   //FETCHING PROJECT ACTIVITY
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchProjectActivity() {
       try {
         const [
@@ -298,38 +313,54 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     }
 
     fetchProjectActivity();
-  }, [projectId]);
+  }, [projectId, user]);
 
   // Fetching Tasks
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
+
     async function fetchTasks() {
       const tasksData = await getProjectTasks(projectId);
       setTask(tasksData);
     }
     fetchTasks();
-  }, [projectId]);
+  }, [projectId, user]);
 
   // Fetching Project Status
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
+
     async function fetchProjectStatus() {
       const statusData = await getProjectStatus();
       setProjectStatus(statusData);
     }
     fetchProjectStatus();
-  }, []);
+  }, [user]);
 
   // Fetching Project State
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
+
     async function fetchProjectState() {
       const stateData = await getProjectState(projectId);
       setProjectState(stateData);
     }
     fetchProjectState();
-  }, [projectId]);
+  }, [projectId, user]);
 
   // Fetching Members
   useEffect(() => {
     async function fetchMembers() {
+      if (!user) {
+        return navigate("/");
+      }
+
       const membersData = await getProjectMembers(projectId);
       const fetchMembersAuth = await Promise.all(
         membersData.map(async (user) => {
@@ -339,16 +370,20 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
       setMembers(fetchMembersAuth);
     }
     fetchMembers();
-  }, [projectId]);
+  }, [projectId, user]);
 
   // Fetching Task Status
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
+
     async function fetchTaskStatus() {
       const statusData = await getTaskStatus(projectId);
       setTaskStatus(statusData);
     }
     fetchTaskStatus();
-  }, [projectId]);
+  }, [projectId, user]);
   return (
     <ProjectContext.Provider
       value={{

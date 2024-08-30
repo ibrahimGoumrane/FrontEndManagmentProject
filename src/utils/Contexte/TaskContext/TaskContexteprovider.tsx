@@ -14,6 +14,8 @@ import {
 import { TaskContext } from "./taskContexte";
 import { useProject } from "../ProjectContext/projectContexte";
 import { updateTask as saveTask } from "../../../network/TasksApi.ts";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserContext/userContexte.ts";
 
 interface TaskProviderProps {
   projectId: Id;
@@ -26,7 +28,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   taskId,
   children,
 }) => {
+  const { user } = useUser();
   const { updateTask: updateT, tasks } = useProject();
+  const navigate = useNavigate();
 
   //task state declaration
   const [task, setTask] = useState<Task | null>(() => {
@@ -92,6 +96,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchComments() {
       const commentsData: CommentData[] = await getCommentByTaskId(taskId);
       setComments(commentsData);

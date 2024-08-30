@@ -48,8 +48,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setUser(newUser);
     if (newUser) {
       await saveUser(newUser);
-    } else {
-      localStorage.clear();
     }
   }, []);
   const updateSkills = useCallback(async (newSkills: string[]) => {
@@ -97,7 +95,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setUser(loggedUserData);
       } catch (error) {
         resetData();
-        localStorage.clear();
       }
     }
     fetchUser();
@@ -123,7 +120,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     socket.current = io(serverAddress, {
       withCredentials: true, // Important to match credentials in CORS policy
     });
-
+    socket.current.on("connect_error", function () {
+      resetData();
+      user && updateUser(null);
+    });
     return () => {
       // Cleanup on component unmount
       if (socket.current) {

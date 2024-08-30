@@ -17,6 +17,8 @@ export default function MessageForm() {
           teamId,
           userId: user?.id,
           userName: user?.name,
+          profileImg:
+            typeof user?.profileImg === "string" ? user?.profileImg : "",
           message,
         };
         if (socket.current) {

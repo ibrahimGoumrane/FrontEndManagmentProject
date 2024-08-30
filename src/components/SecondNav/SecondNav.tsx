@@ -14,6 +14,8 @@ interface SecondNavProps {
 }
 
 function SecondNav({ TogglePojectCreation }: SecondNavProps) {
+  const { id: projectId } = useParams<{ id: string }>();
+
   const { user, projects } = useUser();
   const { projectStatus } = useProject();
   const [show, setShow] = useState(false);
@@ -22,7 +24,6 @@ function SecondNav({ TogglePojectCreation }: SecondNavProps) {
     setShow(!show);
   };
 
-  const { id: projectId } = useParams<{ id: string }>();
   return (
     <div
       className={

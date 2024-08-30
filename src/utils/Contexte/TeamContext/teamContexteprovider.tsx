@@ -12,6 +12,7 @@ import {
 } from "../../../network/TeamApi.ts";
 import { useUser } from "../UserContext/userContexte.ts";
 import { TeamContext } from "./teamContexte.ts";
+import { useNavigate } from "react-router-dom";
 
 interface TeamproviderProps {
   teamId: string;
@@ -23,8 +24,9 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
   children,
 }) => {
   const { teams, updateTeams, user } = useUser();
-  const [team, setTeam] = useState<Team | null>(null);
+  const navigate = useNavigate();
 
+  const [team, setTeam] = useState<Team | null>(null);
   const [teamMembers, setteamMembers] = useState<User[]>([]);
   const [teamImg, setTeamImg] = useState<string>("");
   const updateTeam = useCallback(
@@ -82,6 +84,9 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchTeamData() {
       const teamData = await getTeamById(+teamId);
       setTeam(teamData);
@@ -91,6 +96,9 @@ export const Teamprovider: React.FC<TeamproviderProps> = ({
     fetchTeamData();
   }, [teamId]);
   useEffect(() => {
+    if (!user) {
+      return navigate("/");
+    }
     async function fetchteamImg() {
       try {
         const TeamData = await getTeamImg(+teamId);

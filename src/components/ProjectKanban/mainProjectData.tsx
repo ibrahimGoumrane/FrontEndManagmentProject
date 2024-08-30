@@ -53,7 +53,7 @@ const MainProjectData = ({ TogglePojectCreation }: MainProjectDataProps) => {
           <SecondNav TogglePojectCreation={TogglePojectCreation} />
         </div>
         <div className="flex-grow flex-shrink min-w-0">
-          <MainProjectManip key={projectId} />
+          <MainProjectManip key={"main" + projectId} />
         </div>
       </section>
     </Flowbite>
