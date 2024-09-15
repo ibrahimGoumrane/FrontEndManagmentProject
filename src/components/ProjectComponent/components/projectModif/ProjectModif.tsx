@@ -62,13 +62,17 @@ export default function ProjectModifComponent({
     getFields();
   }, []);
 
-  const onDeleteProject = () => {
-    if (project?.id) {
-      deleteProject(project?.id);
-      updateProject(null);
-      navigate("/home");
-    } else {
-      navigate("*");
+  const onDeleteProject = async () => {
+    try {
+      if (project?.id) {
+        await deleteProject(project?.id);
+        updateProject(null);
+        navigate("/home");
+      } else {
+        navigate("*");
+      }
+    } catch (error) {
+      setErrorText((error as Error).message);
     }
   };
 
