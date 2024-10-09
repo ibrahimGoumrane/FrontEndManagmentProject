@@ -12,7 +12,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/uploads/, "/uploads"),
       },
     },
-    host: "0.0.0.0", // Listen on all interfaces
+    host: "localhost", // Listen on all interfaces
     port: 5173,
   },
 });
